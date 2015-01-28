@@ -17,4 +17,10 @@ interface EntityDocumentLookup {
 	 * @throws EntityNotFoundException
 	 */
 	public function getEntityDocumentForId( EntityId $entityId );
+
+	/**
+	 * @param EntityId[] $entityIds
+	 * @return EntityDocument[]
+	 */
+	public function getEntityDocumentsForIds( array $entityIds );
 }

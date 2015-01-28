@@ -48,6 +48,24 @@ class EntityLookupTest extends \PHPUnit_Framework_TestCase {
 		$entityLookup->getEntityDocumentForId( new ItemId( 'Q1' ) );
 	}
 
+	public function testGetEntityDocumentsForIds() {
+		$item = new Item( new ItemId( 'Q1' ) );
+
+		$entityDocumentLookupMock = $this->getMockBuilder( 'Wikibase\EntityStore\EntityDocumentLookup' )
+			->disableOriginalConstructor()
+			->getMock();
+		$entityDocumentLookupMock->expects( $this->once() )
+			->method( 'getEntityDocumentsForIds' )
+			->with( $this->equalTo( array( new ItemId( 'Q1' ) ) ) )
+			->willReturn( array( $item ) );
+
+		$entityLookup = new EntityLookup( $entityDocumentLookupMock );
+		$this->assertEquals(
+			array( $item ),
+			$entityLookup->getEntityDocumentsForIds( array( new ItemId( 'Q1' ) ) )
+		);
+	}
+
 	public function testGetItemForId() {
 		$item = new Item( new ItemId( 'Q1' ) );
 

@@ -40,6 +40,13 @@ class EntityLookup implements ItemLookup, PropertyLookup, EntityDocumentLookup {
 	}
 
 	/**
+	 * @see EntityDocumentLookup:getEntityDocumentsForIds
+	 */
+	public function getEntityDocumentsForIds( array $entityIds ) {
+		return $this->entityDocumentLookup->getEntityDocumentsForIds( $entityIds );
+	}
+
+	/**
 	 * @see ItemLookup::getItemForId
 	 */
 	public function getItemForId( ItemId $itemId ) {

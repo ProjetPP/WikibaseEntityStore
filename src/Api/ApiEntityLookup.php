@@ -31,7 +31,7 @@ class ApiEntityLookup implements EntityDocumentLookup {
 	 * @see EntityDocumentLookup::getEntityDocumentForId
 	 */
 	public function getEntityDocumentForId( EntityId $entityId ) {
-		$entities = $this->getEntitiesFromApi( array( $entityId ) );
+		$entities = $this->getEntityDocumentsForIds( array( $entityId ) );
 
 		if( empty( $entities ) ) {
 			throw new EntityNotFoundException( $entityId );
@@ -40,7 +40,10 @@ class ApiEntityLookup implements EntityDocumentLookup {
 		return reset( $entities );
 	}
 
-	private function getEntitiesFromApi( array $entityIds ) {
+	/**
+	 * @see EntityDocumentLookup::getEntityDocumentsForIds
+	 */
+	public function getEntityDocumentsForIds( array $entityIds ) {
 		$revisions = $this->revisionsGetter->getRevisions( $entityIds );
 
 		$entities = array();

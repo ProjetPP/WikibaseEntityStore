@@ -16,6 +16,22 @@ use Wikibase\DataModel\ItemContent;
  */
 class ApiEntityLookupTest extends \PHPUnit_Framework_TestCase {
 
+	public function testGetEntityDocumentsForIds() {
+		$item = new Item( new ItemId( 'Q42' ) );
+
+		$revisionGetterMock = $this->getMockBuilder( 'Wikibase\Api\Service\RevisionsGetter' )
+			->disableOriginalConstructor()
+			->getMock();
+		$revisionGetterMock->expects( $this->once() )
+			->method( 'getRevisions' )
+			->with( $this->equalTo( array( new ItemId( 'Q42' ) ) ) )
+			->will( $this->returnValue( new Revisions( array( new Revision( new ItemContent( $item ) ) ) ) ) );
+
+		$lookup = new ApiEntityLookup( $revisionGetterMock );
+
+		$this->assertEquals( array( $item ), $lookup->getEntityDocumentsForIds( array( new ItemId( 'Q42' ) ) ) );
+	}
+
 	public function testGetEntityDocumentForId() {
 		$item = new Item( new ItemId( 'Q42' ) );
 
@@ -29,7 +45,7 @@ class ApiEntityLookupTest extends \PHPUnit_Framework_TestCase {
 
 		$lookup = new ApiEntityLookup( $revisionGetterMock );
 
-		$this->assertEquals($item, $lookup->getEntityDocumentForId( new ItemId( 'Q42' ) ) );
+		$this->assertEquals( $item, $lookup->getEntityDocumentForId( new ItemId( 'Q42' ) ) );
 	}
 
 	public function testGetEntityDocumentWithException() {
