@@ -26,7 +26,8 @@
 		"data-values/validators": "~0.1.0",
 		"data-values/data-types": "~0.4.0",
 		"data-values/serialization": "~1.0",
-		"addwiki/wikibase-api": "~0.4"
+		"addwiki/wikibase-api": "~0.4",
+		"doctrine/mongodb": "~1.1"
 	},
 	"require-dev": {
 		"squizlabs/php_codesniffer": "~2.1",
