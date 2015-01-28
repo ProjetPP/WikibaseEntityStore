@@ -29,6 +29,7 @@
 		"addwiki/wikibase-api": "~0.4"
 	},
 	"require-dev": {
+		"squizlabs/php_codesniffer": "~2.1",
 		"symfony/console": "~2.6"
 	},
 	"suggest": {
@@ -38,5 +39,18 @@
 		"psr-4": {
 			"Wikibase\\EntityStore\\": "src/"
 		}
+	},
+	"scripts": {
+		"test": [
+			"composer validate --no-interaction",
+			"phpunit"
+		],
+		"cs": [
+			"vendor/bin/phpcs src/* tests/* --standard=phpcs.xml --extensions=php -sp"
+		],
+		"ci": [
+			"composer test",
+			"composer cs"
+		]
 	}
 }

@@ -2,7 +2,6 @@
 
 namespace Wikibase\EntityStore;
 
-use Wikibase\DataModel\Entity\EntityId;
 use Wikibase\DataModel\Entity\EntityDocument;
 
 /**

@@ -2,8 +2,8 @@
 
 namespace Wikibase\EntityStore;
 
-use Wikibase\DataModel\Entity\EntityId;
 use Wikibase\DataModel\Entity\EntityDocument;
+use Wikibase\DataModel\Entity\EntityId;
 
 /**
  * @licence GPLv2+

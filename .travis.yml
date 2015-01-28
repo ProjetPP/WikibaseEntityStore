@@ -5,12 +5,16 @@ php:
   - 5.6
   - hhvm
 
+sudo: false
+
 before_script:
-  - composer self-update
   - composer install --prefer-source
 
+install:
+  - travis_retry composer install --prefer-source
+
 script:
-  - phpunit --coverage-clover=coverage.clover
+  - composer ci
 
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar
