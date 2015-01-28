@@ -2,13 +2,15 @@
 
 namespace Wikibase\EntityStore\Api;
 
+use Wikibase\EntityStore\EntityStoreTest;
+
 /**
  * @covers Wikibase\EntityStore\Api\ApiEntityStore
  *
  * @licence GPLv2+
  * @author Thomas Pellissier Tanon
  */
-class ApiEntityStoreTest extends \PHPUnit_Framework_TestCase {
+class ApiEntityStoreTest extends EntityStoreTest {
 
 	public function testGetEntityDocumentLookup() {
 		$mediawikiApiMock = $this->getMockBuilder( 'Mediawiki\Api\MediawikiApi' )

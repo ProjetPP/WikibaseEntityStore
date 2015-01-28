@@ -9,25 +9,33 @@ use Wikibase\DataModel\Entity\PropertyLookup;
  * @licence GPLv2+
  * @author Thomas Pellissier Tanon
  */
-interface EntityStore {
+abstract class EntityStore {
 
 	/**
 	 * @return EntityDocumentLookup
 	 */
-	public function getEntityDocumentLookup();
+	public function getEntityDocumentLookup() {
+		throw new FeatureNotSupportedException( 'EntityDocumentLookup not supported.' );
+	}
 
 	/**
 	 * @return ItemLookup
 	 */
-	public function getItemLookup();
+	public function getItemLookup() {
+		throw new FeatureNotSupportedException( 'ItemLookup not supported.' );
+	}
 
 	/**
 	 * @return PropertyLookup
 	 */
-	public function getPropertyLookup();
+	public function getPropertyLookup() {
+		throw new FeatureNotSupportedException( 'PropertyLookup not supported.' );
+	}
 
 	/**
 	 * @return EntityDocumentSaver
 	 */
-	public function getEntityDocumentSaver();
+	public function getEntityDocumentSaver() {
+		throw new FeatureNotSupportedException( 'EntityDocumentSaver not supported.' );
+	}
 }

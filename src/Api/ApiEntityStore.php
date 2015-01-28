@@ -11,7 +11,7 @@ use Wikibase\EntityStore\Internal\EntityLookup;
  * @licence GPLv2+
  * @author Thomas Pellissier Tanon
  */
-class ApiEntityStore implements EntityStore {
+class ApiEntityStore extends EntityStore {
 
 	/**
 	 * @var ApiEntityLookup
@@ -25,7 +25,7 @@ class ApiEntityStore implements EntityStore {
 		$this->entityLookup = $this->newApiEntityLookup( $api );
 	}
 
-	private function newAPiEntityLookup( MediawikiApi $api ) {
+	private function newApiEntityLookup( MediawikiApi $api ) {
 		$factory = new WikibaseFactory( $api );
 		return new ApiEntityLookup( $factory->newRevisionsGetter() );
 	}
@@ -49,12 +49,5 @@ class ApiEntityStore implements EntityStore {
 	 */
 	public function getPropertyLookup() {
 		return new EntityLookup( $this->entityLookup );
-	}
-
-	/**
-	 * @see EntityStore::getEntityDocumentSaver
-	 */
-	public function getEntityDocumentSaver() {
-		//TODO???
 	}
 }
