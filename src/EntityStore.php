@@ -33,6 +33,20 @@ abstract class EntityStore {
 	}
 
 	/**
+	 * @return ItemForTermLookup
+	 */
+	public function getItemForTermLookup() {
+		throw new FeatureNotSupportedException( 'ItemForTermLookup not supported.' );
+	}
+
+	/**
+	 * @return PropertyForTermLookup
+	 */
+	public function getPropertyForTermLookup() {
+		throw new FeatureNotSupportedException( 'PropertyForTermLookup not supported.' );
+	}
+
+	/**
 	 * @return EntityDocumentSaver
 	 */
 	public function getEntityDocumentSaver() {
