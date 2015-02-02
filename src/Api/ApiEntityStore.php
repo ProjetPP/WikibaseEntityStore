@@ -4,7 +4,9 @@ namespace Wikibase\EntityStore\Api;
 
 use Mediawiki\Api\MediawikiApi;
 use Wikibase\Api\WikibaseFactory;
+use Wikibase\DataModel\Entity\BasicEntityIdParser;
 use Wikibase\EntityStore\EntityStore;
+use Wikibase\EntityStore\Internal\EntityForTermLookup;
 use Wikibase\EntityStore\Internal\EntityLookup;
 
 /**
@@ -14,20 +16,30 @@ use Wikibase\EntityStore\Internal\EntityLookup;
 class ApiEntityStore extends EntityStore {
 
 	/**
-	 * @var ApiEntityLookup
+	 * @var EntityLookup
 	 */
 	private $entityLookup;
+
+	/**
+	 * @var EntityForTermLookup
+	 */
+	private $entityForTermLookup;
 
 	/**
 	 * @param MediawikiApi $api
 	 */
 	public function __construct( MediawikiApi $api ) {
-		$this->entityLookup = $this->newApiEntityLookup( $api );
+		$this->entityLookup = $this->newEntityLookup( $api );
+		$this->entityForTermLookup = $this->newEntityForTermLookup( $api );
 	}
 
-	private function newApiEntityLookup( MediawikiApi $api ) {
+	private function newEntityLookup( MediawikiApi $api ) {
 		$factory = new WikibaseFactory( $api );
-		return new ApiEntityLookup( $factory->newRevisionsGetter() );
+		return new EntityLookup( new ApiEntityLookup( $factory->newRevisionsGetter() ) );
+	}
+
+	private function newEntityForTermLookup( MediawikiApi $api ) {
+		return new EntityForTermLookup( new ApiEntityForTermLookup( $api, new BasicEntityIdParser(), $this->entityLookup ) );
 	}
 
 	/**
@@ -41,13 +53,27 @@ class ApiEntityStore extends EntityStore {
 	 * @see EntityStore::getItemLookup
 	 */
 	public function getItemLookup() {
-		return new EntityLookup( $this->entityLookup );
+		return $this->entityLookup;
 	}
 
 	/**
 	 * @see EntityStore::getPropertyLookup
 	 */
 	public function getPropertyLookup() {
-		return new EntityLookup( $this->entityLookup );
+		return $this->entityLookup;
+	}
+
+	/**
+	 * @see EntityStore::getItemForTermLookup
+	 */
+	public function getItemForTermLookup() {
+		return $this->entityForTermLookup;
+	}
+
+	/**
+	 * @see EntityStore::getPropertyForTermLookup
+	 */
+	public function getPropertyForTermLookup() {
+		return $this->entityForTermLookup;
 	}
 }

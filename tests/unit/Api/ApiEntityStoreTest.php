@@ -38,4 +38,22 @@ class ApiEntityStoreTest extends EntityStoreTest {
 
 		$this->assertInstanceOf( 'Wikibase\DataModel\Entity\PropertyLookup', $store->getPropertyLookup() );
 	}
+
+	public function testGetItemForTermLookup() {
+		$mediawikiApiMock = $this->getMockBuilder( 'Mediawiki\Api\MediawikiApi' )
+			->disableOriginalConstructor()
+			->getMock();
+		$store = new ApiEntityStore( $mediawikiApiMock );
+
+		$this->assertInstanceOf( 'Wikibase\EntityStore\ItemForTermLookup', $store->getItemForTermLookup() );
+	}
+
+	public function testGetPropertyForTermLookup() {
+		$mediawikiApiMock = $this->getMockBuilder( 'Mediawiki\Api\MediawikiApi' )
+			->disableOriginalConstructor()
+			->getMock();
+		$store = new ApiEntityStore( $mediawikiApiMock );
+
+		$this->assertInstanceOf( 'Wikibase\EntityStore\PropertyForTermLookup', $store->getPropertyForTermLookup() );
+	}
 }

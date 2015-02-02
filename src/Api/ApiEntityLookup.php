@@ -23,7 +23,7 @@ class ApiEntityLookup implements EntityDocumentLookup {
 	/**
 	 * @param RevisionsGetter $revisionGetter
 	 */
-	public function __construct(RevisionsGetter $revisionGetter) {
+	public function __construct( RevisionsGetter $revisionGetter ) {
 		$this->revisionsGetter = $revisionGetter;
 	}
 
