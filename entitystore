@@ -1,0 +1,10 @@
+#!/usr/bin/env php
+
+<?php
+
+require_once __DIR__ . '/vendor/autoload.php';
+
+use Wikibase\EntityStore\Console\CliApplicationFactory;
+
+$app = new CliApplicationFactory();
+$app->newApplication()->run();

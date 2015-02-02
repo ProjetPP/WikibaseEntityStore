@@ -2,6 +2,8 @@
 
 namespace Wikibase\EntityStore\Console;
 
+use Symfony\Component\Console\Application;
+
 /**
  * @licence GPLv2+
  * @author Thomas Pellissier Tanon
@@ -9,11 +11,10 @@ namespace Wikibase\EntityStore\Console;
 class CliApplicationFactory {
 
 	public function newApplication() {
-		$application = new Application();
-		$application->setName( 'WikibaseEntityStoreMongoDB' );
-	}
+		$application = new Application( 'WikibaseEntityStore' );
 
-	public function newCreateCommand() {
+		$application->add( new MongoDbImportJsonDumpCommand() );
 
+		return $application;
 	}
 }
