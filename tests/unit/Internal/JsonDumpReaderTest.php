@@ -12,17 +12,15 @@ class JsonDumpReaderTest extends \PHPUnit_Framework_TestCase {
 
 	private function getReader( $fileName ) {
 		$serialization = new EntitySerializationFactory();
+		$logger = $this->getMock( 'Psr\Log\LoggerInterface' );
 
-		return new JsonDumpReader(__DIR__ . '/../../data/' . $fileName, $serialization->newEntityDeserializer());
+		return new JsonDumpReader(__DIR__ . '/../../data/' . $fileName, $serialization->newEntityDeserializer(), $logger );
 	}
 
 	/**
 	 * @dataProvider iteratorProvider
 	 */
-	public function testIterator( $fileName, $expectedEntities, $withWarning = false ) {
-		if( $withWarning ) {
-			$this->setExpectedException( 'PHPUnit_Framework_Error_Notice' );
-		}
+	public function testIterator( $fileName, $expectedEntities ) {
 		$entityIds = array();
 
 		foreach( $this->getReader( $fileName ) as $entity ) {
@@ -40,8 +38,7 @@ class JsonDumpReaderTest extends \PHPUnit_Framework_TestCase {
 			),
 			array(
 				'invalid.json',
-				array( 'Q1', 'P16', 'P22' ),
-				true
+				array( 'Q1', 'P16', 'P22' )
 			)
 		);
 	}

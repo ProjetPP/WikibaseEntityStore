@@ -5,6 +5,7 @@ namespace Wikibase\EntityStore\Internal;
 use Deserializers\Deserializer;
 use Deserializers\Exceptions\DeserializationException;
 use Iterator;
+use Psr\Log\LoggerInterface;
 use Wikibase\DataModel\Entity\EntityDocument;
 
 /**
@@ -31,12 +32,19 @@ class JsonDumpReader implements Iterator {
 	private $currentEntity = null;
 
 	/**
+	 * @var LoggerInterface
+	 */
+	private $logger;
+
+	/**
 	 * @param string $fileName
 	 * @param Deserializer $entityDeserializer
+	 * @param LoggerInterface $logger
 	 */
-	public function __construct( $fileName, Deserializer $entityDeserializer ) {
+	public function __construct( $fileName, Deserializer $entityDeserializer, LoggerInterface $logger ) {
 		$this->fileStream = fopen( $fileName, 'r' );
 		$this->entityDeserializer = $entityDeserializer;
+		$this->logger = $logger;
 	}
 
 	public function __destruct() {
@@ -66,11 +74,13 @@ class JsonDumpReader implements Iterator {
 			$line = trim( $line, ", \n\t\r" );
 
 			if( $line !== '' && $line[0] === '{' ) {
+				$json = json_decode( $line, true );
 				try {
-					$this->currentEntity = $this->entityDeserializer->deserialize( json_decode( $line, true ) );
+					$this->currentEntity = $this->entityDeserializer->deserialize( $json );
 					return;
 				} catch( DeserializationException $e ) {
-					trigger_error( 'Invalid entity' );
+					$id = array_key_exists( 'id', $json ) ? $json['id'] : '';
+					$this->logger->error( 'Deserialization of entity ' . $id . ' failed' );
 				}
 			}
 		}

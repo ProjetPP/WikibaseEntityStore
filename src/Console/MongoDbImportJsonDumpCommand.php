@@ -9,6 +9,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use Wikibase\EntityStore\Internal\EntitySerializationFactory;
 use Wikibase\EntityStore\Internal\JsonDumpReader;
@@ -47,8 +48,13 @@ class MongoDbImportJsonDumpCommand extends Command {
 		$entitySaver = $store->getEntityDocumentSaver();
 		$serialization = new EntitySerializationFactory();
 
+		$dumpReader = new JsonDumpReader(
+			$input->getArgument( 'file' ),
+			$serialization->newEntityDeserializer(),
+			new ConsoleLogger( $output )
+		);
 		$count = 0;
-		foreach( new JsonDumpReader( $input->getArgument( 'file' ), $serialization->newEntityDeserializer() ) as $entity ) {
+		foreach( $dumpReader as $entity ) {
 			$entitySaver->saveEntityDocument( $entity );
 			$count++;
 
