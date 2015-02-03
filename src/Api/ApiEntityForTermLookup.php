@@ -118,6 +118,6 @@ class ApiEntityForTermLookup implements EntityDocumentForTermLookup {
 			$label
 		);
 
-		return trim($label);
+		return trim( $label );
 	}
 }

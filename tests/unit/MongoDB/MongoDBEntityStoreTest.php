@@ -47,4 +47,22 @@ class MongoDBEntityStoreTest extends EntityStoreTest {
 
 		$this->assertInstanceOf( 'Wikibase\EntityStore\EntityDocumentSaver', $store->getEntityDocumentSaver() );
 	}
+
+	public function testGetItemForTermLookup() {
+		$collectionMock = $this->getMockBuilder( 'Doctrine\MongoDB\Collection' )
+			->disableOriginalConstructor()
+			->getMock();
+		$store = new MongoDBEntityStore( $collectionMock );
+
+		$this->assertInstanceOf( 'Wikibase\EntityStore\ItemForTermLookup', $store->getItemForTermLookup() );
+	}
+
+	public function testGetPropertyForTermLookup() {
+		$collectionMock = $this->getMockBuilder( 'Doctrine\MongoDB\Collection' )
+			->disableOriginalConstructor()
+			->getMock();
+		$store = new MongoDBEntityStore( $collectionMock );
+
+		$this->assertInstanceOf( 'Wikibase\EntityStore\PropertyForTermLookup', $store->getPropertyForTermLookup() );
+	}
 }

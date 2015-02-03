@@ -64,5 +64,6 @@ class MongoDbImportJsonDumpCommand extends Command {
 
 	protected function setupEntityCollection( Collection $collection ) {
 		$collection->ensureIndex( array( 'id' => 1 ), array( 'unique' => true ) );
+		$collection->ensureIndex( array( 'searchterms' => 1, 'type' => 1 ) );
 	}
 }

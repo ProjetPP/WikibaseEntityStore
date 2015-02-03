@@ -5,6 +5,11 @@ namespace Wikibase\EntityStore\MongoDB;
 use Deserializers\Exceptions\DeserializationException;
 use Wikibase\DataModel\Entity\Item;
 use Wikibase\DataModel\Entity\ItemId;
+use Wikibase\DataModel\Term\AliasGroup;
+use Wikibase\DataModel\Term\AliasGroupList;
+use Wikibase\DataModel\Term\Fingerprint;
+use Wikibase\DataModel\Term\Term;
+use Wikibase\DataModel\Term\TermList;
 
 /**
  * @covers Wikibase\EntityStore\MongoDB\MongoDBDocumentBuilder
@@ -15,7 +20,14 @@ use Wikibase\DataModel\Entity\ItemId;
 class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 
 	public function testBuildDocumentForEntity() {
-		$item = new Item( new ItemId( 'Q1' ) );
+		$item = new Item(
+			new ItemId( 'Q1' ),
+			new Fingerprint(
+				new TermList( array( new Term( 'en', 'foo') ) ),
+				new TermList( array( new Term( 'en', 'bar') ) ),
+				new AliasGroupList( array( new AliasGroup( 'fr', array( 'baz', 'bat' ) ) ) )
+			)
+		);
 
 		$entitySerializerMock = $this->getMock( 'Serializers\Serializer' );
 		$entitySerializerMock->expects( $this->once() )
@@ -28,7 +40,14 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 		$documentBuilder = new MongoDBDocumentBuilder( $entitySerializerMock, $entityDeserializerMock );
 
 		$this->assertEquals(
-			array( 'id' => 'Q1' ),
+			array(
+				'id' => 'Q1',
+				'searchterms' => array(
+					array( 'language' => 'en', 'value' => 'foo' ),
+					array( 'language' => 'fr', 'value' => 'baz' ),
+					array( 'language' => 'fr', 'value' => 'bat' )
+				)
+			),
 			$documentBuilder->buildDocumentForEntity( $item )
 		);
 	}
@@ -66,6 +85,53 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals(
 			null,
 			$documentBuilder->buildEntityForDocument( array( 'i' => 'Q1' ) )
+		);
+	}
+
+	/**
+	 * @dataProvider buildTermForSearchProvider
+	 */
+	public function testBuildTermForSearch( Term $term, $serialization ) {
+		$entitySerializerMock = $this->getMock( 'Serializers\Serializer' );
+		$entityDeserializerMock = $this->getMock( 'Deserializers\Deserializer' );
+		$documentBuilder = new MongoDBDocumentBuilder( $entitySerializerMock, $entityDeserializerMock );
+
+		$this->assertEquals(
+			$serialization,
+			$documentBuilder->buildTermForSearch( $term )
+		);
+	}
+
+	public function buildTermForSearchProvider() {
+		return array(
+			array(
+				new Term( 'en', 'test' ),
+				array(
+					'language' => 'en',
+					'value' => 'test'
+				)
+			),
+			array(
+				new Term( 'fr', 'Être' ),
+				array(
+					'language' => 'fr',
+					'value' => 'être'
+				)
+			),
+			array(
+				new Term( 'en', 'FOO-BAR\'BAZ' ),
+				array(
+					'language' => 'en',
+					'value' => 'foo bar baz'
+				)
+			),
+			array(
+				new Term( 'en', '\'test-' ),
+				array(
+					'language' => 'en',
+					'value' => 'test'
+				)
+			),
 		);
 	}
 }
