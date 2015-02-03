@@ -27,3 +27,105 @@ Use one of the below methods:
             "ppp/wikibase-entity-store": "~1.0"
         }
     }
+
+
+## Usage
+
+### Features
+
+The entity storage system is based on the abstract class EntityStore that provides different services to manipulate entities.
+
+These services are:
+
+```php
+    $store = MY_ENTITY_STORE;
+
+    //Retrieves the item Q1
+    try {
+        $item = $store->getItemLookup()->getItemForId( new ItemId( 'Q1' ) );
+    } catch( ItemNotFoundException $e ) {
+        //Item not found
+    }
+
+    //Retrieves the property P1
+    try {
+        $item = $store->getPropertyLookup()->getPropertyForId( new PropertyId( 'P1' ) );
+    } catch( PropertyNotFoundException $e ) {
+        //Property not found
+    }
+
+    //Retrieves the item Q1 as EntityDocument
+    try {
+        $item = $store->getEntityLookup()->getEntityDocumentForId( new ItemId( 'Q1' ) );
+    } catch( EntityNotFoundException $e ) {
+        //Property not found
+    }
+
+    //Retrieves the item Q1 and the property P1 as EntityDocuments
+    $entities = $store->getEntityLookup()->getEntityDocumentsForIds( array( new ItemId( 'Q1' ), new PropertyId( 'P1' ) ) );
+
+    //Retrieves the items that have as label or alias the term "Nyan Cat" in English (with a case insensitive compare)
+    $entities = $store->getItemForTermLookup()->getItemsForTerm( new Term( 'en', 'Nyan Cat' ) );
+
+    //Retrieves the properties that have as label or alias the term "foo" in French (with a case insensitive compare)
+    $entities = $store->getPropertyForTermLookup()->getPropertiesForTerm( new Term( 'fr', 'Foo' ) );
+```
+
+### Backends
+
+### API Backend
+The API backend is the most easy to use one. It uses the API of a Wikibase instance.
+
+Example:
+
+```php
+    $store = new Wikibase\EntityStore\Api\ApiEntityStore(
+        new \Mediawiki\Api\MediawikiApi('http://www.wikidata.org/w/api.php' )
+    );
+```
+
+### MongoDB Backend
+The MongoDB backend uses a MonboDB database
+
+Example:
+
+```php
+    //Connect to MongoDB
+    $connection = new Connection( MY_DATABASE );
+	if( !$connection->connect() ) {
+		throw new RuntimeException( 'Fail to connect to the database' );
+	}
+
+    //Gets the collection where entities are stored
+	$collection = $connection
+		->selectDatabase( 'wikibase' )
+		->selectCollection( 'entity' );
+
+    $store = new Wikibase\EntityStore\MongoDB\MongDBEntityStore( $collection );
+```
+
+You can fill the MongoDB database from Wikidata JSON dumps using this script:
+
+```
+     php entitystore mongodb:import-json-dump MY_JSON_DUMP
+```
+
+Options to configure on which database the script act are available. See
+
+```
+     php entitystore mongodb:import-json-dump --help
+```
+
+### Cache support
+
+IIt is possible, in order to get far better performances, to add a cache layer on top of EntityStore:
+
+```php
+
+    $store = MY_ENTITY_STORE;
+
+    $cache = new ArrayCache(); //A very simple cache
+    $cacheLifeTime = 100000; //Life time of cache in seconds
+
+    $cachedStore = new \Wikibase\EntityStore\Cache\CachedEntityStore( $store, $cache, $cacheLifeTime );
+```
