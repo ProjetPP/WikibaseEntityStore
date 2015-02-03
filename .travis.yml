@@ -5,14 +5,13 @@ php:
   - 5.6
   - hhvm
 
+sudo: false
+
 services:
   - mongodb
 
-before_script:
-  - echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - composer install --prefer-source
-
 install:
+  - echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - travis_retry composer install --prefer-source
 
 script:
