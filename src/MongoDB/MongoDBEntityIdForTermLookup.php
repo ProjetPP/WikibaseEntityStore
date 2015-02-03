@@ -4,7 +4,7 @@ namespace Wikibase\EntityStore\MongoDB;
 
 use Doctrine\MongoDB\Collection;
 use Wikibase\DataModel\Term\Term;
-use Wikibase\EntityStore\EntityDocumentForTermLookup;
+use Wikibase\EntityStore\EntityIdForTermLookup;
 
 /**
  * Internal class
@@ -12,7 +12,7 @@ use Wikibase\EntityStore\EntityDocumentForTermLookup;
  * @licence GPLv2+
  * @author Thomas Pellissier Tanon
  */
-class MongoDBEntityForTermLookup implements EntityDocumentForTermLookup {
+class MongoDBEntityIdForTermLookup implements EntityIdForTermLookup {
 
 	/**
 	 * @var Collection
@@ -36,19 +36,22 @@ class MongoDBEntityForTermLookup implements EntityDocumentForTermLookup {
 	/**
 	 * @see EntityDocumentLookup::getEntityDocumentsForTerm
 	 */
-	public function getEntityDocumentsForTerm( Term $term, $entityType = null ) {
-		$documents = $this->collection->find( $this->buildGetEntityForTermQuery( $term, $entityType ) );
+	public function getEntityIdsForTerm( Term $term, $entityType = null ) {
+		$documents = $this->collection->find(
+			$this->buildGetEntityIdForTermQuery( $term, $entityType ),
+			array( 'id' => 1 )
+		);
 
 		$entities = array();
 
 		foreach( $documents as $document ) {
-			$entities[] = $this->documentBuilder->buildEntityForDocument( $document );
+			$entities[] = $this->documentBuilder->buildEntityIdForDocument( $document );
 		}
 
 		return $entities;
 	}
 
-	private function buildGetEntityForTermQuery( Term $term, $entityType = null ) {
+	private function buildGetEntityIdForTermQuery( Term $term, $entityType = null ) {
 		$query = $this->collection->createQueryBuilder()
 			->field( 'searchterms' )->equals( $this->documentBuilder->buildTermForSearch( $term ) );
 

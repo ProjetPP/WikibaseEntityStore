@@ -31,18 +31,18 @@ class EntityStoreTest extends \PHPUnit_Framework_TestCase {
 		$storeMock->getPropertyLookup();
 	}
 
-	public function testGetItemForTermLookup() {
+	public function testGetItemIdForTermLookup() {
 		$storeMock = $this->getMockForAbstractClass( 'Wikibase\EntityStore\EntityStore' );
 
 		$this->setExpectedException( 'Wikibase\EntityStore\FeatureNotSupportedException');
-		$storeMock->getItemForTermLookup();
+		$storeMock->getItemIdForTermLookup();
 	}
 
-	public function testGetPropertyForTermLookup() {
+	public function testGetPropertyIdForTermLookup() {
 		$storeMock = $this->getMockForAbstractClass( 'Wikibase\EntityStore\EntityStore' );
 
 		$this->setExpectedException( 'Wikibase\EntityStore\FeatureNotSupportedException');
-		$storeMock->getPropertyForTermLookup();
+		$storeMock->getPropertyIdForTermLookup();
 	}
 
 

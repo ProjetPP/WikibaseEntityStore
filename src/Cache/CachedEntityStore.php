@@ -4,7 +4,6 @@ namespace Wikibase\EntityStore\Cache;
 
 use Doctrine\Common\Cache\Cache;
 use Wikibase\EntityStore\EntityStore;
-use Wikibase\EntityStore\Internal\EntityLookup;
 
 /**
  * @licence GPLv2+
@@ -23,9 +22,9 @@ class CachedEntityStore extends EntityStore {
 	private $entityCache;
 
 	/**
-	 * @var EntityDocumentForTermCache
+	 * @var EntityIdForTermCache
 	 */
-	private $entityForTermCache;
+	private $entityIdForTermCache;
 
 	/**
 	 * @param EntityStore $entityStore
@@ -35,7 +34,7 @@ class CachedEntityStore extends EntityStore {
 	public function __construct( EntityStore $entityStore, Cache $cache, $lifeTime = 0 ) {
 		$this->entityStore = $entityStore;
 		$this->entityCache = new EntityDocumentCache( $cache, $lifeTime );
-		$this->entityForTermCache = new EntityDocumentForTermCache( $cache, $lifeTime );
+		$this->entityIdForTermCache = new EntityIdForTermCache( $cache, $lifeTime );
 	}
 
 	/**
@@ -67,16 +66,16 @@ class CachedEntityStore extends EntityStore {
 	}
 
 	/**
-	 * @see EntityStore::getItemForTermLookup
+	 * @see EntityStore::getItemIdForTermLookup
 	 */
-	public function getItemForTermLookup() {
-		return new CachedItemForTermLookup( $this->entityStore->getItemForTermLookup(), $this->entityForTermCache );
+	public function getItemIdForTermLookup() {
+		return new CachedItemIdForTermLookup( $this->entityStore->getItemIdForTermLookup(), $this->entityIdForTermCache );
 	}
 
 	/**
-	 * @see EntityStore::getPropertyForTermLookup
+	 * @see EntityStore::getPropertyIdForTermLookup
 	 */
-	public function getPropertyForTermLookup() {
-		return new CachedPropertyForTermLookup( $this->entityStore->getPropertyForTermLookup(), $this->entityForTermCache );
+	public function getPropertyIdForTermLookup() {
+		return new CachedPropertyIdForTermLookup( $this->entityStore->getPropertyIdForTermLookup(), $this->entityIdForTermCache );
 	}
 }

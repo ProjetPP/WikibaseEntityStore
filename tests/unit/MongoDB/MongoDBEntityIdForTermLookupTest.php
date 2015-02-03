@@ -3,21 +3,18 @@
 namespace Wikibase\EntityStore\MongoDB;
 
 use Doctrine\MongoDB\Query\Builder;
-use Wikibase\DataModel\Entity\Item;
 use Wikibase\DataModel\Entity\ItemId;
 use Wikibase\DataModel\Term\Term;
 
 /**
- * @covers Wikibase\EntityStore\MongoDB\MongoDBEntityForTermLookup
+ * @covers Wikibase\EntityStore\MongoDB\MongoDBEntityIdForTermLookup
  *
  * @licence GPLv2+
  * @author Thomas Pellissier Tanon
  */
-class MongoDBEntityForTermLookupTest extends \PHPUnit_Framework_TestCase {
+class MongoDBEntityIdForTermLookupTest extends \PHPUnit_Framework_TestCase {
 
-	public function testGetEntityDocumentsForTermWithoutType() {
-		$item = new Item( new ItemId( 'Q1' ) );
-
+	public function testGetEntityIdsForTermWithoutType() {
 		$collectionMock = $this->getMockBuilder( 'Doctrine\MongoDB\Collection' )
 			->disableOriginalConstructor()
 			->getMock();
@@ -35,25 +32,23 @@ class MongoDBEntityForTermLookupTest extends \PHPUnit_Framework_TestCase {
 			->disableOriginalConstructor()
 			->getMock();
 		$documentBuilderMock->expects( $this->once() )
-			->method( 'buildEntityForDocument' )
+			->method( 'buildEntityIdForDocument' )
 			->with( $this->equalTo( array( 'id' => 'Q1' ) ) )
-			->willReturn( $item );
+			->willReturn( new ItemId( 'Q1' ) );
 		$documentBuilderMock->expects( $this->once() )
 			->method( 'buildTermForSearch' )
 			->with( $this->equalTo( new Term( 'en', 'foo' ) ) )
 			->willReturn( array( 'language' => 'en', 'value' => 'foo' ) );
 
-		$lookup = new MongoDBEntityForTermLookup( $collectionMock, $documentBuilderMock );
+		$lookup = new MongoDBEntityIdForTermLookup( $collectionMock, $documentBuilderMock );
 
 		$this->assertEquals(
-			array( $item ),
-			$lookup->getEntityDocumentsForTerm( new Term( 'en', 'foo' ) )
+			array( new ItemId( 'Q1' ) ),
+			$lookup->getEntityIdsForTerm( new Term( 'en', 'foo' ) )
 		);
 	}
 
-	public function testGetEntityDocumentsForTermWithType() {
-		$item = new Item( new ItemId( 'Q1' ) );
-
+	public function testGetEntityIdsForTermWithType() {
 		$collectionMock = $this->getMockBuilder( 'Doctrine\MongoDB\Collection' )
 			->disableOriginalConstructor()
 			->getMock();
@@ -72,19 +67,19 @@ class MongoDBEntityForTermLookupTest extends \PHPUnit_Framework_TestCase {
 			->disableOriginalConstructor()
 			->getMock();
 		$documentBuilderMock->expects( $this->once() )
-			->method( 'buildEntityForDocument' )
+			->method( 'buildEntityIdForDocument' )
 			->with( $this->equalTo( array( 'id' => 'Q1' ) ) )
-			->willReturn( $item );
+			->willReturn( new ItemId( 'Q1' ) );
 		$documentBuilderMock->expects( $this->once() )
 			->method( 'buildTermForSearch' )
 			->with( $this->equalTo( new Term( 'en', 'foo' ) ) )
 			->willReturn( array( 'language' => 'en', 'value' => 'foo' ) );
 
-		$lookup = new MongoDBEntityForTermLookup( $collectionMock, $documentBuilderMock );
+		$lookup = new MongoDBEntityIdForTermLookup( $collectionMock, $documentBuilderMock );
 
 		$this->assertEquals(
-			array( $item ),
-			$lookup->getEntityDocumentsForTerm( new Term( 'en', 'foo' ), 'item' )
+			array( new ItemId( 'Q1' ) ),
+			$lookup->getEntityIdsForTerm( new Term( 'en', 'foo' ), 'item' )
 		);
 	}
 }

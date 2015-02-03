@@ -5,14 +5,14 @@ namespace Wikibase\EntityStore\Cache;
 use Doctrine\Common\Cache\Cache;
 use OutOfBoundsException;
 use RuntimeException;
-use Wikibase\DataModel\Entity\EntityDocument;
+use Wikibase\DataModel\Entity\EntityId;
 use Wikibase\DataModel\Term\Term;
 
 /**
  * @licence GPLv2+
  * @author Thomas Pellissier Tanon
  */
-class EntityDocumentForTermCache {
+class EntityIdForTermCache {
 
 	const CACHE_ID_PREFIX = 'wikibase-store-entityforterm-';
 
@@ -40,7 +40,7 @@ class EntityDocumentForTermCache {
 	/**
 	 * @param Term $term
 	 * @param string $entityType
-	 * @return EntityDocument[]
+	 * @return EntityId[]
 	 * @throws OutOfBoundsException
 	 */
 	public function fetch( Term $term, $entityType ) {
@@ -65,7 +65,7 @@ class EntityDocumentForTermCache {
 	/**
 	 * @param Term $term
 	 * @param string $entityType
-	 * @param EntityDocument[] $entities
+	 * @param EntityId[] $entities
 	 */
 	public function save( Term $term, $entityType, array $entities ) {
 		if( !$this->cache->save(

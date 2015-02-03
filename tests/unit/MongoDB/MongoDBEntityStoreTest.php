@@ -54,7 +54,7 @@ class MongoDBEntityStoreTest extends EntityStoreTest {
 			->getMock();
 		$store = new MongoDBEntityStore( $collectionMock );
 
-		$this->assertInstanceOf( 'Wikibase\EntityStore\ItemForTermLookup', $store->getItemForTermLookup() );
+		$this->assertInstanceOf( 'Wikibase\EntityStore\ItemIdForTermLookup', $store->getItemIdForTermLookup() );
 	}
 
 	public function testGetPropertyForTermLookup() {
@@ -63,6 +63,6 @@ class MongoDBEntityStoreTest extends EntityStoreTest {
 			->getMock();
 		$store = new MongoDBEntityStore( $collectionMock );
 
-		$this->assertInstanceOf( 'Wikibase\EntityStore\PropertyForTermLookup', $store->getPropertyForTermLookup() );
+		$this->assertInstanceOf( 'Wikibase\EntityStore\PropertyIdForTermLookup', $store->getPropertyIdForTermLookup() );
 	}
 }

@@ -4,11 +4,11 @@ namespace Wikibase\EntityStore;
 
 use Doctrine\MongoDB\Connection;
 use RuntimeException;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\NullOutput;
 use Wikibase\DataModel\Entity\ItemId;
 use Wikibase\DataModel\Term\Term;
 use Wikibase\EntityStore\Console\CliApplicationFactory;
-use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Output\NullOutput;
 use Wikibase\EntityStore\MongoDB\MongoDBEntityStore;
 
 /**
@@ -27,10 +27,9 @@ class MongoDBTest extends \PHPUnit_Framework_TestCase {
 			$store->getItemLookup()->getItemForId( new ItemId( 'Q1' ) )->getId()
 		);
 
-		$items = $store->getItemForTermLookup()->getItemsForTerm( new Term( 'en', 'universe') );
 		$this->assertEquals(
-			new ItemId( 'Q1' ),
-			$items[0]->getId()
+			array( new ItemId( 'Q1' ) ),
+			$store->getItemIdForTermLookup()->getItemIdsForTerm( new Term( 'en', 'universe' ) )
 		);
 	}
 

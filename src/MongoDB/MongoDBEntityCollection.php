@@ -89,6 +89,7 @@ class MongoDBEntityCollection implements EntityDocumentLookup, EntityDocumentSav
 	private function serializeEntityIds( array $entityIds ) {
 		$serializations = array();
 
+		/** @var EntityId $entityId */
 		foreach( $entityIds as $entityId ) {
 			$serializations[] = $entityId->getSerialization();
 		}

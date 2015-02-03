@@ -3,6 +3,7 @@
 namespace Wikibase\EntityStore\MongoDB;
 
 use Deserializers\Exceptions\DeserializationException;
+use Wikibase\DataModel\Entity\BasicEntityIdParser;
 use Wikibase\DataModel\Entity\Item;
 use Wikibase\DataModel\Entity\ItemId;
 use Wikibase\DataModel\Term\AliasGroup;
@@ -37,7 +38,7 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 
 		$entityDeserializerMock = $this->getMock( 'Deserializers\Deserializer' );
 
-		$documentBuilder = new MongoDBDocumentBuilder( $entitySerializerMock, $entityDeserializerMock );
+		$documentBuilder = new MongoDBDocumentBuilder( $entitySerializerMock, $entityDeserializerMock, new BasicEntityIdParser() );
 
 		$this->assertEquals(
 			array(
@@ -63,7 +64,7 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 			->with( $this->equalTo( array( 'id' => 'Q1' ) ) )
 			->willReturn( $item );
 
-		$documentBuilder = new MongoDBDocumentBuilder( $entitySerializerMock, $entityDeserializerMock );
+		$documentBuilder = new MongoDBDocumentBuilder( $entitySerializerMock, $entityDeserializerMock, new BasicEntityIdParser() );
 
 		$this->assertEquals(
 			$item,
@@ -80,7 +81,7 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 			->with( $this->equalTo( array( 'i' => 'Q1' ) ) )
 			->willThrowException( new DeserializationException() );
 
-		$documentBuilder = new MongoDBDocumentBuilder( $entitySerializerMock, $entityDeserializerMock );
+		$documentBuilder = new MongoDBDocumentBuilder( $entitySerializerMock, $entityDeserializerMock, new BasicEntityIdParser() );
 
 		$this->assertEquals(
 			null,
@@ -94,7 +95,7 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 	public function testBuildTermForSearch( Term $term, $serialization ) {
 		$entitySerializerMock = $this->getMock( 'Serializers\Serializer' );
 		$entityDeserializerMock = $this->getMock( 'Deserializers\Deserializer' );
-		$documentBuilder = new MongoDBDocumentBuilder( $entitySerializerMock, $entityDeserializerMock );
+		$documentBuilder = new MongoDBDocumentBuilder( $entitySerializerMock, $entityDeserializerMock, new BasicEntityIdParser() );
 
 		$this->assertEquals(
 			$serialization,

@@ -3,24 +3,19 @@
 namespace Wikibase\EntityStore\Api;
 
 use Wikibase\DataModel\Entity\BasicEntityIdParser;
-use Wikibase\DataModel\Entity\Item;
 use Wikibase\DataModel\Entity\ItemId;
-use Wikibase\DataModel\Entity\Property;
 use Wikibase\DataModel\Entity\PropertyId;
 use Wikibase\DataModel\Term\Term;
 
 /**
- * @covers Wikibase\EntityStore\Api\ApiEntityForTermLookup
+ * @covers Wikibase\EntityStore\Api\ApiEntityIdForTermLookup
  *
  * @licence GPLv2+
  * @author Thomas Pellissier Tanon
  */
-class ApiEntityForTermLookupTest extends \PHPUnit_Framework_TestCase {
+class ApiEntityIdForTermLookupTest extends \PHPUnit_Framework_TestCase {
 
-	public function testGetEntityDocumentsForTerm() {
-		$item1 = new Item( new ItemId( 'Q1' ) );
-		$item2 = new Item( new ItemId( 'Q2' ) );
-
+	public function testGetEntityIdsForTerm() {
 		$mediawikiApiMock = $this->getMockBuilder( 'Mediawiki\Api\MediawikiApi' )
 			->disableOriginalConstructor()
 			->getMock();
@@ -52,23 +47,15 @@ class ApiEntityForTermLookupTest extends \PHPUnit_Framework_TestCase {
 				)
 			) ) );
 
-		$entityDocumentLookupMock = $this->getMockBuilder( 'Wikibase\EntityStore\EntityDocumentLookup' )
-			->disableOriginalConstructor()
-			->getMock();
-		$entityDocumentLookupMock->expects( $this->once() )
-			->method( 'getEntityDocumentsForIds' )
-			->with( $this->equalTo( array( new ItemId( 'Q1' ), new ItemId( 'Q2' ) ) ) )
-			->willReturn( array( $item1, $item2 ) );
+		$lookup = new ApiEntityIdForTermLookup( $mediawikiApiMock, new BasicEntityIdParser() );
 
-		$lookup = new ApiEntityForTermLookup( $mediawikiApiMock, new BasicEntityIdParser(), $entityDocumentLookupMock );
-
-		$this->assertEquals( array( $item1, $item2 ), $lookup->getEntityDocumentsForTerm( new Term( 'en', 'foo' ), 'item' ) );
+		$this->assertEquals(
+			array( new ItemId( 'Q1' ), new ItemId( 'Q2' ) ),
+			$lookup->getEntityIdsForTerm( new Term( 'en', 'foo' ), 'item' )
+		);
 	}
 
 	public function testGetEntityDocumentsForTermWithNoType() {
-		$item = new Item( new ItemId( 'Q1' ) );
-		$property = new Property( new PropertyId( 'P1' ), null, 'string' );
-
 		$mediawikiApiMock = $this->getMockBuilder( 'Mediawiki\Api\MediawikiApi' )
 			->disableOriginalConstructor()
 			->getMock();
@@ -96,16 +83,11 @@ class ApiEntityForTermLookupTest extends \PHPUnit_Framework_TestCase {
 				)
 			) );
 
-		$entityDocumentLookupMock = $this->getMockBuilder( 'Wikibase\EntityStore\EntityDocumentLookup' )
-			->disableOriginalConstructor()
-			->getMock();
-		$entityDocumentLookupMock->expects( $this->once() )
-			->method( 'getEntityDocumentsForIds' )
-			->with( $this->equalTo( array( new ItemId( 'Q1' ), new PropertyId( 'P1' ) ) ) )
-			->willReturn( array( $item, $property ) );
+		$lookup = new ApiEntityIdForTermLookup( $mediawikiApiMock, new BasicEntityIdParser() );
 
-		$lookup = new ApiEntityForTermLookup( $mediawikiApiMock, new BasicEntityIdParser(), $entityDocumentLookupMock );
-
-		$this->assertEquals( array( $item, $property ), $lookup->getEntityDocumentsForTerm( new Term( 'en', 'foo' ) ) );
+		$this->assertEquals(
+			array( new ItemId( 'Q1' ), new PropertyId( 'P1' ) ),
+			$lookup->getEntityIdsForTerm( new Term( 'en', 'foo' ) )
+		);
 	}
 }

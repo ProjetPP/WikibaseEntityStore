@@ -5,8 +5,7 @@ namespace Wikibase\EntityStore\Api;
 use Mediawiki\Api\MediawikiApi;
 use Wikibase\DataModel\Entity\EntityIdParser;
 use Wikibase\DataModel\Term\Term;
-use Wikibase\EntityStore\EntityDocumentForTermLookup;
-use Wikibase\EntityStore\EntityDocumentLookup;
+use Wikibase\EntityStore\EntityIdForTermLookup;
 
 /**
  * Internal class
@@ -15,7 +14,7 @@ use Wikibase\EntityStore\EntityDocumentLookup;
  * @author Thomas Pellissier Tanon
  * @todo removes limit of 50 results?
  */
-class ApiEntityForTermLookup implements EntityDocumentForTermLookup {
+class ApiEntityIdForTermLookup implements EntityIdForTermLookup {
 
 	/**
 	 * @var MediawikiApi
@@ -28,38 +27,29 @@ class ApiEntityForTermLookup implements EntityDocumentForTermLookup {
 	private $entityIdParser;
 
 	/**
-	 * @var EntityDocumentLookup
-	 */
-	private $entityLookup;
-
-	/**
 	 * @param MediaWikiApi $api
 	 * @param EntityIdParser $entityIdParser
-	 * @param EntityDocumentLookup $entityLookup
 	 */
-	public function __construct( MediaWikiApi $api, EntityIdParser $entityIdParser, EntityDocumentLookup $entityLookup ) {
+	public function __construct( MediaWikiApi $api, EntityIdParser $entityIdParser ) {
 		$this->api = $api;
 		$this->entityIdParser = $entityIdParser;
-		$this->entityLookup = $entityLookup;
 	}
 
 	/**
-	 * @see EntityDocumentForTermLookup:getEntityDocumentsForTerm
+	 * @see EntityIdsForTermLookup::getEntityIdsForTerm
 	 */
-	public function getEntityDocumentsForTerm( Term $term, $entityType = null ) {
+	public function getEntityIdsForTerm( Term $term, $entityType = null ) {
 		if( $entityType === null ) {
-			$entityIds = array_merge(
+			return array_merge(
 				$this->getEntityIdsForTerm( $term, 'item' ),
 				$this->getEntityIdsForTerm( $term, 'property' )
 			);
 		} else {
-			$entityIds = $this->getEntityIdsForTerm( $term, $entityType );
+			return $this->getEntityIdsForTermWithType( $term, $entityType );
 		}
-
-		return $this->entityLookup->getEntityDocumentsForIds( $entityIds );
 	}
 
-	private function getEntityIdsForTerm( Term $term, $entityType) {
+	private function getEntityIdsForTermWithType( Term $term, $entityType) {
 		return $this->parseResult( $this->doQuery( $term, $entityType ), $term->getText() );
 	}
 

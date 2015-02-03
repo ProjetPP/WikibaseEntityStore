@@ -6,7 +6,7 @@ use Mediawiki\Api\MediawikiApi;
 use Wikibase\Api\WikibaseFactory;
 use Wikibase\DataModel\Entity\BasicEntityIdParser;
 use Wikibase\EntityStore\EntityStore;
-use Wikibase\EntityStore\Internal\EntityForTermLookup;
+use Wikibase\EntityStore\Internal\DispatchingEntityIdForTermLookup;
 use Wikibase\EntityStore\Internal\EntityLookup;
 
 /**
@@ -21,16 +21,16 @@ class ApiEntityStore extends EntityStore {
 	private $entityLookup;
 
 	/**
-	 * @var EntityForTermLookup
+	 * @var DispatchingEntityIdForTermLookup
 	 */
-	private $entityForTermLookup;
+	private $entityIdsForTermLookup;
 
 	/**
 	 * @param MediawikiApi $api
 	 */
 	public function __construct( MediawikiApi $api ) {
 		$this->entityLookup = $this->newEntityLookup( $api );
-		$this->entityForTermLookup = $this->newEntityForTermLookup( $api );
+		$this->entityIdsForTermLookup = $this->newEntityForTermLookup( $api );
 	}
 
 	private function newEntityLookup( MediawikiApi $api ) {
@@ -39,7 +39,7 @@ class ApiEntityStore extends EntityStore {
 	}
 
 	private function newEntityForTermLookup( MediawikiApi $api ) {
-		return new EntityForTermLookup( new ApiEntityForTermLookup( $api, new BasicEntityIdParser(), $this->entityLookup ) );
+		return new DispatchingEntityIdForTermLookup( new ApiEntityIdForTermLookup( $api, new BasicEntityIdParser() ) );
 	}
 
 	/**
@@ -64,16 +64,16 @@ class ApiEntityStore extends EntityStore {
 	}
 
 	/**
-	 * @see EntityStore::getItemForTermLookup
+	 * @see EntityStore::getItemIdForTermLookup
 	 */
-	public function getItemForTermLookup() {
-		return $this->entityForTermLookup;
+	public function getItemIdForTermLookup() {
+		return $this->entityIdsForTermLookup;
 	}
 
 	/**
-	 * @see EntityStore::getPropertyForTermLookup
+	 * @see EntityStore::getPropertyIdForTermLookup
 	 */
-	public function getPropertyForTermLookup() {
-		return $this->entityForTermLookup;
+	public function getPropertyIdForTermLookup() {
+		return $this->entityIdsForTermLookup;
 	}
 }

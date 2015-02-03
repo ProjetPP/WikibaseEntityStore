@@ -2,8 +2,8 @@
 
 namespace Wikibase\EntityStore\Cache;
 
-use Wikibase\EntityStore\EntityDocumentLookup;
 use Wikibase\DataModel\Entity\EntityId;
+use Wikibase\EntityStore\EntityDocumentLookup;
 use Wikibase\EntityStore\EntityNotFoundException;
 
 /**

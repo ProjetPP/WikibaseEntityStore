@@ -64,11 +64,11 @@ These services are:
     //Retrieves the item Q1 and the property P1 as EntityDocuments
     $entities = $store->getEntityLookup()->getEntityDocumentsForIds( array( new ItemId( 'Q1' ), new PropertyId( 'P1' ) ) );
 
-    //Retrieves the items that have as label or alias the term "Nyan Cat" in English (with a case insensitive compare)
-    $entities = $store->getItemForTermLookup()->getItemsForTerm( new Term( 'en', 'Nyan Cat' ) );
+    //Retrieves the ids of the items that have as label or alias the term "Nyan Cat" in English (with a case insensitive compare)
+    $itemIds = $store->getItemIdForTermLookup()->getItemIdsForTerm( new Term( 'en', 'Nyan Cat' ) );
 
-    //Retrieves the properties that have as label or alias the term "foo" in French (with a case insensitive compare)
-    $entities = $store->getPropertyForTermLookup()->getPropertiesForTerm( new Term( 'fr', 'Foo' ) );
+    //Retrieves the ids of the properties that have as label or alias the term "foo" in French (with a case insensitive compare)
+    $propertyIds = $store->getPropertyIdForTermLookup()->getPropertyIdsForTerm( new Term( 'fr', 'Foo' ) );
 ```
 
 ### Backends

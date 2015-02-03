@@ -6,6 +6,9 @@ use Deserializers\Deserializer;
 use Deserializers\Exceptions\DeserializationException;
 use Serializers\Serializer;
 use Wikibase\DataModel\Entity\EntityDocument;
+use Wikibase\DataModel\Entity\EntityId;
+use Wikibase\DataModel\Entity\EntityIdParser;
+use Wikibase\DataModel\Entity\EntityIdParsingException;
 use Wikibase\DataModel\Term\AliasGroup;
 use Wikibase\DataModel\Term\Fingerprint;
 use Wikibase\DataModel\Term\FingerprintProvider;
@@ -30,12 +33,23 @@ class MongoDBDocumentBuilder {
 	private $entityDeserializer;
 
 	/**
+	 * @var EntityIdParser
+	 */
+	private $entityIdParser;
+
+	/**
 	 * @param Serializer $entitySerializer
 	 * @param Deserializer $entityDeserializer
+	 * @param EntityIdParser $entityIdParser
 	 */
-	public function __construct( Serializer $entitySerializer, Deserializer $entityDeserializer ) {
+	public function __construct(
+		Serializer $entitySerializer,
+		Deserializer $entityDeserializer,
+		EntityIdParser $entityIdParser
+	) {
 		$this->entitySerializer = $entitySerializer;
 		$this->entityDeserializer = $entityDeserializer;
+		$this->entityIdParser = $entityIdParser;
 	}
 
 	/**
@@ -103,5 +117,18 @@ class MongoDBDocumentBuilder {
 		} catch( DeserializationException $exception ) {
 			return null;
 		}
+	}
+
+	/**
+	 * @param array $document
+	 * @return EntityId
+	 * @throws EntityIdParsingException
+	 */
+	public function buildEntityIdForDocument( array $document ) {
+		if( !array_key_exists( 'id', $document ) ) {
+			throw new EntityIdParsingException();
+		}
+
+		return $this->entityIdParser->parse( $document['id'] );
 	}
 }
