@@ -3,7 +3,7 @@
 [![Build Status](https://scrutinizer-ci.com/g/ProjetPP/WikibaseEntityStore/badges/build.png?b=master)](https://scrutinizer-ci.com/g/ProjetPP/WikibaseEntityStore/build-status/master)
 [![Code Coverage](https://scrutinizer-ci.com/g/ProjetPP/WikibaseEntityStore/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/ProjetPP/WikibaseEntityStore/?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ProjetPP/WikibaseEntityStore/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ProjetPP/WikibaseEntityStore/?branch=master)
-[![Dependency Status](https://www.versioneye.com/user/projects/5482b5fd3f594e77e9000006/badge.svg?style=flat)](https://www.versioneye.com/user/projects/5482b5fd3f594e77e9000006)
+[![Dependency Status](https://www.versioneye.com/user/projects/54d0e3fa3ca08473b400010f/badge.svg?style=flat)](https://www.versioneye.com/user/projects/54d0e3fa3ca08473b400010f)
 
 On [Packagist](https://packagist.org/packages/ppp/wikibase-entity-store):
 [![Latest Stable Version](https://poser.pugx.org/ppp/wikibase-entity-store/version.png)](https://packagist.org/packages/ppp/wikibase-entity-store)
@@ -106,15 +106,11 @@ Example:
 
 You can fill the MongoDB database from Wikidata JSON dumps using this script:
 
-```
      php entitystore mongodb:import-json-dump MY_JSON_DUMP
-```
 
 Options to configure on which database the script act are available. See
 
-```
      php entitystore mongodb:import-json-dump --help
-```
 
 ### Cache support
 
