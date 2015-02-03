@@ -1,9 +1,8 @@
 <?php
 
-namespace Wikibase\EntityStore\MongoDB;
+namespace Wikibase\EntityStore\Cache;
 
 use Doctrine\Common\Cache\ArrayCache;
-use Wikibase\EntityStore\Cache\CachedEntityStore;
 use Wikibase\EntityStore\EntityStoreTest;
 
 /**
@@ -60,5 +59,29 @@ class CachedEntityStoreTest extends EntityStoreTest {
 		$store = new CachedEntityStore( $storeMock, new ArrayCache() );
 
 		$this->assertInstanceOf( 'Wikibase\EntityStore\EntityDocumentSaver', $store->getEntityDocumentSaver() );
+	}
+
+	public function testGetItemForTermLookup() {
+		$storeMock = $this->getMockBuilder( 'Wikibase\EntityStore\EntityStore' )
+			->disableOriginalConstructor()
+			->getMock();
+		$storeMock->expects( $this->once() )
+			->method( 'getItemForTermLookup' )
+			->willReturn( $this->getMock( 'Wikibase\EntityStore\ItemForTermLookup' ) );
+		$store = new CachedEntityStore( $storeMock, new ArrayCache() );
+
+		$this->assertInstanceOf( 'Wikibase\EntityStore\ItemForTermLookup', $store->getItemForTermLookup() );
+	}
+
+	public function testGetPropertyForTermLookup() {
+		$storeMock = $this->getMockBuilder( 'Wikibase\EntityStore\EntityStore' )
+			->disableOriginalConstructor()
+			->getMock();
+		$storeMock->expects( $this->once() )
+			->method( 'getPropertyForTermLookup' )
+			->willReturn( $this->getMock( 'Wikibase\EntityStore\PropertyForTermLookup' ) );
+		$store = new CachedEntityStore( $storeMock, new ArrayCache() );
+
+		$this->assertInstanceOf( 'Wikibase\EntityStore\PropertyForTermLookup', $store->getPropertyForTermLookup() );
 	}
 }

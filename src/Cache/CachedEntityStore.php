@@ -23,11 +23,19 @@ class CachedEntityStore extends EntityStore {
 	private $entityCache;
 
 	/**
-	 * @param EntityStore $entityStore
+	 * @var EntityDocumentForTermCache
 	 */
-	public function __construct( EntityStore $entityStore, Cache $cache ) {
+	private $entityForTermCache;
+
+	/**
+	 * @param EntityStore $entityStore
+	 * @param Cache $cache
+	 * @param int $lifeTime
+	 */
+	public function __construct( EntityStore $entityStore, Cache $cache, $lifeTime = 0 ) {
 		$this->entityStore = $entityStore;
-		$this->entityCache = new EntityDocumentCache( $cache );
+		$this->entityCache = new EntityDocumentCache( $cache, $lifeTime );
+		$this->entityForTermCache = new EntityDocumentForTermCache( $cache, $lifeTime );
 	}
 
 	/**
@@ -56,5 +64,19 @@ class CachedEntityStore extends EntityStore {
 	 */
 	public function getEntityDocumentSaver() {
 		return $this->entityStore->getEntityDocumentSaver();
+	}
+
+	/**
+	 * @see EntityStore::getItemForTermLookup
+	 */
+	public function getItemForTermLookup() {
+		return new CachedItemForTermLookup( $this->entityStore->getItemForTermLookup(), $this->entityForTermCache );
+	}
+
+	/**
+	 * @see EntityStore::getPropertyForTermLookup
+	 */
+	public function getPropertyForTermLookup() {
+		return new CachedPropertyForTermLookup( $this->entityStore->getPropertyForTermLookup(), $this->entityForTermCache );
 	}
 }

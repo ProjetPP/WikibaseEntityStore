@@ -20,7 +20,7 @@ class EntityDocumentCacheTest extends \PHPUnit_Framework_TestCase {
 		$cache = new EntityDocumentCache( new ArrayCache() );
 		$cache->save( $item );
 
-		$this->assertEquals( $item, $cache->fetch( new ItemId('Q42') ) );
+		$this->assertEquals( $item, $cache->fetch( new ItemId( 'Q42' ) ) );
 	}
 
 	public function testFetchWithException() {
