@@ -92,14 +92,14 @@ Example:
 ```php
     //Connect to MongoDB
     $connection = new Connection( MY_DATABASE );
-	if( !$connection->connect() ) {
-		throw new RuntimeException( 'Fail to connect to the database' );
-	}
+    if( !$connection->connect() ) {
+        throw new RuntimeException( 'Fail to connect to the database' );
+    }
 
     //Gets the collection where entities are stored
-	$collection = $connection
-		->selectDatabase( 'wikibase' )
-		->selectCollection( 'entity' );
+    $collection = $connection
+        ->selectDatabase( 'wikibase' )
+        ->selectCollection( 'entity' );
 
     $store = new Wikibase\EntityStore\MongoDB\MongDBEntityStore( $collection );
 ```
