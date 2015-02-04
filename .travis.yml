@@ -14,7 +14,9 @@ install:
   - travis_retry composer install --prefer-source
 
 script:
-  - composer ci
+  - composer validate
+  - vendor/bin/phpcs src/* tests/* --standard=phpcs.xml --extensions=php -sp
+  - phpunit --coverage-clover=coverage.clover
 
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar
