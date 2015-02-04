@@ -44,6 +44,10 @@ class ApiEntityLookup implements EntityDocumentLookup {
 	 * @see EntityDocumentLookup::getEntityDocumentsForIds
 	 */
 	public function getEntityDocumentsForIds( array $entityIds ) {
+		if( empty( $entityIds ) ) {
+			return array();
+		}
+
 		$revisions = $this->revisionsGetter->getRevisions( $entityIds );
 
 		$entities = array();

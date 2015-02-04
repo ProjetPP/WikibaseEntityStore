@@ -32,6 +32,16 @@ class ApiEntityLookupTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals( array( $item ), $lookup->getEntityDocumentsForIds( array( new ItemId( 'Q42' ) ) ) );
 	}
 
+	public function testGetEntityDocumentsForIdsWithEmptyInput() {
+		$revisionGetterMock = $this->getMockBuilder( 'Wikibase\Api\Service\RevisionsGetter' )
+			->disableOriginalConstructor()
+			->getMock();
+
+		$lookup = new ApiEntityLookup( $revisionGetterMock );
+
+		$this->assertEquals( array(), $lookup->getEntityDocumentsForIds( array() ) );
+	}
+
 	public function testGetEntityDocumentForId() {
 		$item = new Item( new ItemId( 'Q42' ) );
 
