@@ -112,6 +112,15 @@ Options to configure on which database the script act are available. See
 
      php entitystore mongodb:import-json-dump --help
 
+### InMemory backend
+Backend based on an array of EntityDocuments. Useful for tests
+
+```php
+    $store = new Wikibase\EntityStore\InMemory\InMemoryEntityStore( array(
+        new Item( new ItemId( 'Q42' ) )
+    ) );
+```
+
 ### Cache support
 
 IIt is possible, in order to get far better performances, to add a cache layer on top of EntityStore:
