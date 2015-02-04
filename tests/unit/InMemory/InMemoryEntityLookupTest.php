@@ -4,7 +4,6 @@ namespace Wikibase\EntityStore\InMemory;
 
 use Wikibase\DataModel\Entity\Item;
 use Wikibase\DataModel\Entity\ItemId;
-use Wikibase\DataModel\ItemContent;
 
 /**
  * @covers Wikibase\EntityStore\InMemory\InMemoryEntityLookup

@@ -24,12 +24,15 @@ class ApiEntityLookupTest extends \PHPUnit_Framework_TestCase {
 			->getMock();
 		$revisionGetterMock->expects( $this->once() )
 			->method( 'getRevisions' )
-			->with( $this->equalTo( array( new ItemId( 'Q42' ) ) ) )
+			->with( $this->equalTo( array( new ItemId( 'Q42' ), new ItemId( 'Q43' ) ) ) )
 			->will( $this->returnValue( new Revisions( array( new Revision( new ItemContent( $item ) ) ) ) ) );
 
 		$lookup = new ApiEntityLookup( $revisionGetterMock );
 
-		$this->assertEquals( array( $item ), $lookup->getEntityDocumentsForIds( array( new ItemId( 'Q42' ) ) ) );
+		$this->assertEquals(
+			array( $item ),
+			$lookup->getEntityDocumentsForIds( array( new ItemId( 'Q42' ), new ItemId( 'Q43' ) ) )
+		);
 	}
 
 	public function testGetEntityDocumentsForIdsWithEmptyInput() {
