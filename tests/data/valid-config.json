@@ -1,0 +1,8 @@
+{
+
+    "backend": "mongodb",
+    "mongodb": {
+      "server": "",
+      "database": "wikibase"
+    }
+}

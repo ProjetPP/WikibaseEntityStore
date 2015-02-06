@@ -8,6 +8,7 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Wikibase\DataModel\Entity\ItemId;
 use Wikibase\DataModel\Term\Term;
+use Wikibase\EntityStore\Config\EntityStoreFromConfigurationBuilder;
 use Wikibase\EntityStore\Console\CliApplicationFactory;
 use Wikibase\EntityStore\MongoDB\MongoDBEntityStore;
 
@@ -20,7 +21,7 @@ class MongoDBTest extends \PHPUnit_Framework_TestCase {
 	public function testMongoDbStore() {
 		$this->setupMongoDB();
 
-		$store = new MongoDBEntityStore( $this->getEntityCollection() );
+		$store = $this->getEntityStoreFromConfiguration();
 
 		$this->assertEquals(
 			new ItemId( 'Q1' ),
@@ -43,14 +44,8 @@ class MongoDBTest extends \PHPUnit_Framework_TestCase {
 		$importCommand->run( $input, new NullOutput() );
 	}
 
-	private function getEntityCollection() {
-		$connection = new Connection( '' );
-		if( !$connection->connect() ) {
-			throw new RuntimeException( 'Fail to connect to the database' );
-		}
-
-		return $connection
-			->selectDatabase( 'wikibase' )
-			->selectCollection( 'entity' );
+	private function getEntityStoreFromConfiguration() {
+		$configBuilder = new EntityStoreFromConfigurationBuilder( __DIR__ . '/../data/valid-config.json' );
+		return $configBuilder->buildEntityStore();
 	}
 }
