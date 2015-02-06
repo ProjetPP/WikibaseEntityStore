@@ -11,6 +11,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
+use Wikibase\EntityStore\Config\EntityStoreFromConfigurationBuilder;
 use Wikibase\EntityStore\Internal\EntitySerializationFactory;
 use Wikibase\EntityStore\Internal\JsonDumpReader;
 use Wikibase\EntityStore\MongoDB\MongoDBEntityStore;
@@ -25,26 +26,13 @@ class MongoDbImportJsonDumpCommand extends Command {
 		$this->setName( 'mongodb:import-json-dump' )
 			->setDescription( 'Import JSON dump in a MongoDb entity store' )
 			->addArgument( 'file', InputArgument::REQUIRED, 'JSON dump file' )
-			->addOption( 'server', 's', InputOption::VALUE_OPTIONAL,
-				'MongoDb server name', '' )
-			->addOption( 'database', 'db', InputOption::VALUE_OPTIONAL,
-				'Name of the database that should store entities', 'wikibase' )
-			->addOption( 'collection', 'c', InputOption::VALUE_OPTIONAL,
-				'Name of the collection that should store entities', 'entity' );
+			->addArgument( 'configuration', InputArgument::REQUIRED, 'Configuration file' );
 	}
 
 	protected function execute( InputInterface $input, OutputInterface $output ) {
-		$connection = new Connection( $input->getOption( 'server' ) );
-		if( !$connection->connect() ) {
-			throw new RuntimeException( 'Fail to connect to the database' );
-		}
+		$configurationBuilder = new EntityStoreFromConfigurationBuilder();
+		$store = $configurationBuilder->buildEntityStore( $input->getArgument( 'configuration' ) );
 
-		$collection = $connection
-			->selectDatabase( $input->getOption( 'database' ) )
-			->selectCollection( $input->getOption( 'collection' ) );
-		$this->setupEntityCollection( $collection );
-
-		$store = new MongoDBEntityStore( $collection );
 		$entitySaver = $store->getEntityDocumentSaver();
 		$serialization = new EntitySerializationFactory();
 
@@ -62,8 +50,6 @@ class MongoDbImportJsonDumpCommand extends Command {
 				$output->write( '.' );
 			}
 		}
-
-		$connection->close();
 
 		$output->writeln( 'Importation done' );
 	}

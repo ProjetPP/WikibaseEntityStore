@@ -7,24 +7,17 @@ use Mediawiki\Api\MediawikiApi;
 use RuntimeException;
 use Symfony\Component\Config\Definition\Processor;
 use Wikibase\EntityStore\Api\ApiEntityStore;
+use Wikibase\EntityStore\EntityStore;
 use Wikibase\EntityStore\MongoDB\MongoDBEntityStore;
 
 class EntityStoreFromConfigurationBuilder {
 
 	/**
-	 * @var string
-	 */
-	private $configurationFileName;
-
-	/**
 	 * @param string $configurationFileName
+	 * @return EntityStore
 	 */
-	public function __construct( $configurationFileName ) {
-		$this->configurationFileName = $configurationFileName;
-	}
-
-	public function buildEntityStore() {
-		$config = $this->parseConfiguration();
+	public function buildEntityStore( $configurationFileName ) {
+		$config = $this->parseConfiguration( $configurationFileName );
 
 		switch( $config['backend'] ) {
 			case 'api':
@@ -47,8 +40,8 @@ class EntityStoreFromConfigurationBuilder {
 			->selectCollection( 'entity' );
 	}
 
-	private function parseConfiguration() {
-		$configValues = json_decode( file_get_contents( $this->configurationFileName ), true );
+	private function parseConfiguration( $configurationFileName ) {
+		$configValues = json_decode( file_get_contents( $configurationFileName ), true );
 
 		$processor = new Processor();
 		$configuration = new EntityStoreConfiguration();
