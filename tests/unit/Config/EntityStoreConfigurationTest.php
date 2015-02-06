@@ -56,6 +56,62 @@ class EntityStoreConfigurationTest extends \PHPUnit_Framework_TestCase {
 					)
 				)
 			),
+			array(
+				array(
+					'backend' => 'api',
+					'api' => array(
+						'url' => 'http://www.wikidata.org/w/api.php'
+					),
+					'cache' => array(
+						'memcached' => true,
+						'array' => true
+					)
+				),
+				array(
+					'backend' => 'api',
+					'api' => array(
+						'url' => 'http://www.wikidata.org/w/api.php'
+					),
+					'cache' => array(
+						'memcached' => array(
+							'enabled' => true,
+							'host' => 'localhost',
+							'port' => 11211
+						),
+						'array' => array(
+							'enabled' => true
+						)
+					)
+				)
+			),
+			array(
+				array(
+					'backend' => 'api',
+					'api' => array(
+						'url' => 'http://www.wikidata.org/w/api.php'
+					),
+					'cache' => array(
+						'memcached' => false,
+						'array' => false
+					)
+				),
+				array(
+					'backend' => 'api',
+					'api' => array(
+						'url' => 'http://www.wikidata.org/w/api.php'
+					),
+					'cache' => array(
+						'memcached' => array(
+							'enabled' => false,
+							'host' => 'localhost',
+							'port' => 11211
+						),
+						'array' => array(
+							'enabled' => false
+						)
+					)
+				)
+			),
 		);
 	}
 
@@ -98,6 +154,54 @@ class EntityStoreConfigurationTest extends \PHPUnit_Framework_TestCase {
 				array(
 					'backend' => 'mongodb',
 					'mongodb' => array()
+				)
+			),
+			array(
+				array(
+					'backend' => 'api',
+					'api' => array(
+						'url' => 'http://www.wikidata.org/w/api.php'
+					),
+					'cache' => array(
+						'memcached' => 'toto'
+					)
+				)
+			),
+			array(
+				array(
+					'backend' => 'api',
+					'api' => array(
+						'url' => 'http://www.wikidata.org/w/api.php'
+					),
+					'cache' => array(
+						'array' => 'tata'
+					)
+				)
+			),
+			array(
+				array(
+					'backend' => 'api',
+					'api' => array(
+						'url' => 'http://www.wikidata.org/w/api.php'
+					),
+					'cache' => array(
+						'memcached' => array(
+							'host' => array()
+						)
+					)
+				)
+			),
+			array(
+				array(
+					'backend' => 'api',
+					'api' => array(
+						'url' => 'http://www.wikidata.org/w/api.php'
+					),
+					'cache' => array(
+						'memcached' => array(
+							'port' => 'foo'
+						)
+					)
 				)
 			)
 		);

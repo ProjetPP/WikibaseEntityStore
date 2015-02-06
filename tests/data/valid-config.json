@@ -1,8 +1,10 @@
 {
-
-    "backend": "mongodb",
-    "mongodb": {
-      "server": "",
-      "database": "wikibase"
-    }
+  "backend": "mongodb",
+  "mongodb": {
+    "server": "",
+    "database": "wikibase"
+  },
+  "cache": {
+    "array": true
+  }
 }
