@@ -3,6 +3,7 @@
 namespace Wikibase\EntityStore\Config;
 
 use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\ChainCache;
 use InvalidArgumentException;
 use Mediawiki\Api\MediawikiApi;
@@ -22,10 +23,10 @@ class EntityStoreFromConfigurationBuilder {
 	public function buildEntityStore( $configurationFileName ) {
 		$config = $this->parseConfiguration( $configurationFileName );
 
-		$store = $this->buildStore( $config );
+		$store = $this->buildEntityStoreFromConfig( $config );
 
 		if( array_key_exists( 'cache', $config ) ) {
-			$cache = $this->buildCache( $config['cache'] );
+			$cache = $this->buildCacheFromConfig( $config['cache'] );
 
 			if( $cache !== null ) {
 				return new CachedEntityStore( $store, $cache );
@@ -35,7 +36,20 @@ class EntityStoreFromConfigurationBuilder {
 		return $store;
 	}
 
-	private function buildStore( $config ) {
+	/**
+	 * @param string $configurationFileName
+	 * @return Cache
+	 */
+	public function buildCache( $configurationFileName ) {
+		$config = $this->parseConfiguration( $configurationFileName );
+
+		if( !array_key_exists( 'cache', $config ) ) {
+			throw new InvalidArgumentException( 'No cache key in configuration' );
+		}
+		return $this->buildCacheFromConfig( $config['cache'] );
+	}
+
+	private function buildEntityStoreFromConfig( $config ) {
 		switch( $config['backend'] ) {
 			case 'api':
 				return new ApiEntityStore( new MediawikiApi( $config['api']['url'] ) );
@@ -57,7 +71,7 @@ class EntityStoreFromConfigurationBuilder {
 			->selectCollection( 'entity' );
 	}
 
-	private function buildCache( $config ) {
+	private function buildCacheFromConfig( $config ) {
 		$caches = array();
 
 		if( $config['array']['enabled'] ) {
