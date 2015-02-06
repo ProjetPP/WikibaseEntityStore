@@ -38,7 +38,8 @@ The entity storage system is based on the abstract class EntityStore that provid
 These services are:
 
 ```php
-    $store = MY_ENTITY_STORE;
+    $storeBuilder = new EntityStoreFromConfigurationBuilder();
+    $store = $storeBuilder->buildEntityStore( 'MY_CONFIG_FILE.json' ); //See backend section for examples of configuration file
 
     //Retrieves the item Q1
     try {
@@ -76,22 +77,50 @@ These services are:
 ### API Backend
 The API backend is the most easy to use one. It uses the API of a Wikibase instance.
 
-Example:
+The configuration file looks like:
+
+```json
+{
+    "backend": "api",
+    "api": {
+        "url": "http://www.wikidata.org/w/api.php"
+    }
+}
+```
+
+Replace `http://www.wikidata.org/w/api.php` with the URL of your WediaWiki API if you want to use your store with an other Wikibase instance than Wikidata.
+
+Without configuration file:
 
 ```php
     $store = new Wikibase\EntityStore\Api\ApiEntityStore(
         new \Mediawiki\Api\MediawikiApi('http://www.wikidata.org/w/api.php' )
     );
-```
+ ```
+
 
 ### MongoDB Backend
-The MongoDB backend uses a MonboDB database
+The MongoDB backend uses a MongoDB database.
 
-Example:
+The configuration file looks like:
+
+```json
+{
+    "backend": "mongodb",
+    "mongodb": {
+        "server": SERVER,
+        "database": DATABASE
+    }
+}
+```
+
+`server` should be a [MongoDB server connection string](http://docs.mongodb.org/manual/reference/connection-string/) and `database` the name of the database to use.
+
+Without configuration file:
 
 ```php
     //Connect to MongoDB
-    $connection = new Connection( MY_DATABASE );
+    $connection = new Connection( MY_CONNECTION_STRING );
     if( !$connection->connect() ) {
         throw new RuntimeException( 'Fail to connect to the database' );
     }
@@ -106,14 +135,14 @@ Example:
 
 You can fill the MongoDB database from Wikidata JSON dumps using this script:
 
-     php entitystore mongodb:import-json-dump MY_JSON_DUMP
+     php entitystore mongodb:import-json-dump MY_JSON_DUMP MY_CONFIGURATION_FILE
 
 Options to configure on which database the script act are available. See
 
      php entitystore mongodb:import-json-dump --help
 
 ### InMemory backend
-Backend based on an array of EntityDocuments. Useful for tests
+Backend based on an array of EntityDocuments. Useful for tests.
 
 ```php
     $store = new Wikibase\EntityStore\InMemory\InMemoryEntityStore( array(
@@ -125,6 +154,22 @@ Backend based on an array of EntityDocuments. Useful for tests
 
 IIt is possible, in order to get far better performances, to add a cache layer on top of EntityStore:
 
+Adds to the configuration file a `cache` section.
+
+Example with a two layers cache. The first one is a PHP array and the second one a Memcached instance on `localhost:11211`.
+
+```json
+{
+    "cache": {
+        "array": true,
+        "memcached": {
+            "host": "localhost",
+            "port": 11211
+        }
+    }
+```
+
+Without configuration file:
 ```php
 
     $store = MY_ENTITY_STORE;
