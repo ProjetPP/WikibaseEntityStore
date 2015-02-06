@@ -22,11 +22,13 @@ Use one of the below methods:
 
 2 - Create a composer.json file that just defines a dependency on version 1.0 of this package, and run 'composer install' in the directory:
 
-    {
-        "require": {
-            "ppp/wikibase-entity-store": "~1.0"
-        }
+```json
+{
+    "require": {
+        "ppp/wikibase-entity-store": "~1.0"
     }
+}
+```
 
 
 ## Usage
@@ -38,38 +40,38 @@ The entity storage system is based on the abstract class EntityStore that provid
 These services are:
 
 ```php
-    $storeBuilder = new EntityStoreFromConfigurationBuilder();
-    $store = $storeBuilder->buildEntityStore( 'MY_CONFIG_FILE.json' ); //See backend section for examples of configuration file
+$storeBuilder = new EntityStoreFromConfigurationBuilder();
+$store = $storeBuilder->buildEntityStore( 'MY_CONFIG_FILE.json' ); //See backend section for examples of configuration file
 
-    //Retrieves the item Q1
-    try {
-        $item = $store->getItemLookup()->getItemForId( new ItemId( 'Q1' ) );
-    } catch( ItemNotFoundException $e ) {
-        //Item not found
-    }
+//Retrieves the item Q1
+try {
+    $item = $store->getItemLookup()->getItemForId( new ItemId( 'Q1' ) );
+} catch( ItemNotFoundException $e ) {
+    //Item not found
+}
 
-    //Retrieves the property P1
-    try {
-        $item = $store->getPropertyLookup()->getPropertyForId( new PropertyId( 'P1' ) );
-    } catch( PropertyNotFoundException $e ) {
-        //Property not found
-    }
+//Retrieves the property P1
+try {
+    $item = $store->getPropertyLookup()->getPropertyForId( new PropertyId( 'P1' ) );
+} catch( PropertyNotFoundException $e ) {
+    //Property not found
+}
 
-    //Retrieves the item Q1 as EntityDocument
-    try {
-        $item = $store->getEntityLookup()->getEntityDocumentForId( new ItemId( 'Q1' ) );
-    } catch( EntityNotFoundException $e ) {
-        //Property not found
-    }
+//Retrieves the item Q1 as EntityDocument
+try {
+    $item = $store->getEntityLookup()->getEntityDocumentForId( new ItemId( 'Q1' ) );
+} catch( EntityNotFoundException $e ) {
+    //Property not found
+}
 
-    //Retrieves the item Q1 and the property P1 as EntityDocuments
-    $entities = $store->getEntityLookup()->getEntityDocumentsForIds( array( new ItemId( 'Q1' ), new PropertyId( 'P1' ) ) );
+//Retrieves the item Q1 and the property P1 as EntityDocuments
+$entities = $store->getEntityLookup()->getEntityDocumentsForIds( array( new ItemId( 'Q1' ), new PropertyId( 'P1' ) ) );
 
-    //Retrieves the ids of the items that have as label or alias the term "Nyan Cat" in English (with a case insensitive compare)
-    $itemIds = $store->getItemIdForTermLookup()->getItemIdsForTerm( new Term( 'en', 'Nyan Cat' ) );
+//Retrieves the ids of the items that have as label or alias the term "Nyan Cat" in English (with a case insensitive compare)
+$itemIds = $store->getItemIdForTermLookup()->getItemIdsForTerm( new Term( 'en', 'Nyan Cat' ) );
 
-    //Retrieves the ids of the properties that have as label or alias the term "foo" in French (with a case insensitive compare)
-    $propertyIds = $store->getPropertyIdForTermLookup()->getPropertyIdsForTerm( new Term( 'fr', 'Foo' ) );
+//Retrieves the ids of the properties that have as label or alias the term "foo" in French (with a case insensitive compare)
+$propertyIds = $store->getPropertyIdForTermLookup()->getPropertyIdsForTerm( new Term( 'fr', 'Foo' ) );
 ```
 
 ### Backends
@@ -93,14 +95,14 @@ Replace `http://www.wikidata.org/w/api.php` with the URL of your WediaWiki API i
 Without configuration file:
 
 ```php
-    $store = new Wikibase\EntityStore\Api\ApiEntityStore(
-        new \Mediawiki\Api\MediawikiApi('http://www.wikidata.org/w/api.php' )
-    );
+$store = new Wikibase\EntityStore\Api\ApiEntityStore(
+    new \Mediawiki\Api\MediawikiApi('http://www.wikidata.org/w/api.php' )
+);
  ```
 
 
 ### MongoDB Backend
-The MongoDB backend uses a MongoDB database.
+The MongoDB backend uses a MongoDB database. Requires [doctrine/mongodb](https://packagist.org/packages/doctrine/mongodb).
 
 The configuration file looks like:
 
@@ -119,18 +121,18 @@ The configuration file looks like:
 Without configuration file:
 
 ```php
-    //Connect to MongoDB
-    $connection = new Connection( MY_CONNECTION_STRING );
-    if( !$connection->connect() ) {
-        throw new RuntimeException( 'Fail to connect to the database' );
-    }
+//Connect to MongoDB
+$connection = new \Doctrine\MongoDB\Connection( MY_CONNECTION_STRING );
+if( !$connection->connect() ) {
+    throw new RuntimeException( 'Fail to connect to the database' );
+}
 
-    //Gets the collection where entities are stored
-    $collection = $connection
-        ->selectDatabase( 'wikibase' )
-        ->selectCollection( 'entity' );
+//Gets the collection where entities are stored
+$collection = $connection
+    ->selectDatabase( 'wikibase' )
+    ->selectCollection( 'entity' );
 
-    $store = new Wikibase\EntityStore\MongoDB\MongDBEntityStore( $collection );
+$store = new Wikibase\EntityStore\MongoDB\MongDBEntityStore( $collection );
 ```
 
 You can fill the MongoDB database from Wikidata JSON dumps using this script:
@@ -145,9 +147,9 @@ Options to configure on which database the script act are available. See
 Backend based on an array of EntityDocuments. Useful for tests.
 
 ```php
-    $store = new Wikibase\EntityStore\InMemory\InMemoryEntityStore( array(
-        new Item( new ItemId( 'Q42' ) )
-    ) );
+$store = new Wikibase\EntityStore\InMemory\InMemoryEntityStore( array(
+    new Item( new ItemId( 'Q42' ) )
+) );
 ```
 
 ### Cache support
@@ -167,15 +169,16 @@ Example with a two layers cache. The first one is a PHP array and the second one
             "port": 11211
         }
     }
+}
 ```
 
 Without configuration file:
+
 ```php
+$store = MY_ENTITY_STORE;
 
-    $store = MY_ENTITY_STORE;
+$cache = new ArrayCache(); //A very simple cache
+$cacheLifeTime = 100000; //Life time of cache in seconds
 
-    $cache = new ArrayCache(); //A very simple cache
-    $cacheLifeTime = 100000; //Life time of cache in seconds
-
-    $cachedStore = new \Wikibase\EntityStore\Cache\CachedEntityStore( $store, $cache, $cacheLifeTime );
+$cachedStore = new \Wikibase\EntityStore\Cache\CachedEntityStore( $store, $cache, $cacheLifeTime );
 ```
