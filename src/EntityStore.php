@@ -52,4 +52,12 @@ abstract class EntityStore {
 	public function getEntityDocumentSaver() {
 		throw new FeatureNotSupportedException( 'EntityDocumentSaver not supported.' );
 	}
+
+	/**
+	 * Setup the EntityStore if it has not been done yet (create database tables, query indexes...).
+	 *
+	 * It should not drop data if the store is already setup.
+	 */
+	public function setupStore() {
+	}
 }

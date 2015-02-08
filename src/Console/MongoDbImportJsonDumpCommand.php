@@ -33,6 +33,8 @@ class MongoDbImportJsonDumpCommand extends Command {
 		$configurationBuilder = new EntityStoreFromConfigurationBuilder();
 		$store = $configurationBuilder->buildEntityStore( $input->getArgument( 'configuration' ) );
 
+		$store->setupStore();
+
 		$entitySaver = $store->getEntityDocumentSaver();
 		$serialization = new EntitySerializationFactory();
 
@@ -52,10 +54,5 @@ class MongoDbImportJsonDumpCommand extends Command {
 		}
 
 		$output->writeln( 'Importation done' );
-	}
-
-	protected function setupEntityCollection( Collection $collection ) {
-		$collection->ensureIndex( array( 'id' => 1 ), array( 'unique' => true ) );
-		$collection->ensureIndex( array( 'searchterms' => 1, 'type' => 1 ) );
 	}
 }

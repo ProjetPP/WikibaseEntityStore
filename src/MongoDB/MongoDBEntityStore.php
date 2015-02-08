@@ -17,6 +17,11 @@ use Wikibase\EntityStore\Internal\EntitySerializationFactory;
 class MongoDBEntityStore extends EntityStore {
 
 	/**
+	 * @var Collection
+	 */
+	private $collection;
+
+	/**
 	 * @var EntityLookup
 	 */
 	private $entityLookup;
@@ -35,6 +40,8 @@ class MongoDBEntityStore extends EntityStore {
 	 * @param Collection $collection
 	 */
 	public function __construct( Collection $collection ) {
+		$this->collection = $collection;
+
 		$entityCollection = $this->newEntityCollection( $collection );
 		$this->entityLookup = new EntityLookup( $entityCollection );
 		$this->entityForTermLookup = new DispatchingEntityIdForTermLookup( $this->newEntityForTermLookup( $collection ) );
@@ -98,5 +105,15 @@ class MongoDBEntityStore extends EntityStore {
 	 */
 	public function getPropertyIdForTermLookup() {
 		return $this->entityForTermLookup;
+	}
+
+	/**
+	 * @see EntityStore::setupStore
+	 */
+	public function setupStore() {
+
+		//Create query indexes
+		$this->collection->ensureIndex( array( 'id' => 1 ), array( 'unique' => true ) );
+		$this->collection->ensureIndex( array( 'searchterms' => 1, 'type' => 1 ) );
 	}
 }
