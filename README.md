@@ -137,11 +137,7 @@ $store = new Wikibase\EntityStore\MongoDB\MongDBEntityStore( $collection );
 
 You can fill the MongoDB database from Wikidata JSON dumps using this script:
 
-     php entitystore mongodb:import-json-dump MY_JSON_DUMP MY_CONFIGURATION_FILE
-
-Options to configure on which database the script act are available. See
-
-     php entitystore mongodb:import-json-dump --help
+     php entitystore import-json-dump MY_JSON_DUMP MY_CONFIGURATION_FILE
 
 ### InMemory backend
 Backend based on an array of EntityDocuments. Useful for tests.

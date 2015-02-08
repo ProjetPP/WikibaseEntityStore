@@ -13,7 +13,7 @@ class CliApplicationFactory {
 	public function newApplication() {
 		$application = new Application( 'WikibaseEntityStore' );
 
-		$application->add( new MongoDbImportJsonDumpCommand() );
+		$application->add( new ImportJsonDumpCommand() );
 
 		return $application;
 	}
