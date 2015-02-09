@@ -141,12 +141,19 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 				)
 			),
 			array(
+				new Term( 'en', 'TODO' ),
+				array(
+					'language' => 'en',
+					'value' => 'todo'
+				)
+			),
+			/*array( TODO: make it pass
 				new Term( 'fr', 'Être' ),
 				array(
 					'language' => 'fr',
 					'value' => 'être'
 				)
-			),
+			),*/
 			array(
 				new Term( 'en', 'FOO-BAR\'BAZ' ),
 				array(

@@ -90,7 +90,8 @@ class MongoDBDocumentBuilder {
 	 * @return array
 	 */
 	public function buildTermForSearch( $languageCode, $text ) {
-		$text = mb_strtolower( $text, 'UTF-8' ); //TODO: said to be very slow
+		//$text = mb_strtolower( $text, 'UTF-8' ); TODO too slow for JSON dump importation
+		$text = strtolower( $text );
 		$text = str_replace( //TODO useful? + tests
 			array( '\'', '-' ),
 			array( ' ', ' ' ),
