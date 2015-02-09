@@ -38,7 +38,22 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 		$entitySerializerMock->expects( $this->once() )
 			->method( 'serialize' )
 			->with( $this->equalTo( $item ) )
-			->willReturn( array( 'id' => 'Q1' ) );
+			->willReturn( array(
+				'type' => 'item',
+				'id' => 'Q1',
+				'labels' => array(
+					'en' => array( 'language' => 'en', 'value' => 'foo' ),
+				),
+				'descriptions' => array(
+					'en' => array( 'language' => 'en', 'value' => 'bar' ),
+				),
+				'aliases' => array(
+					'fr' => array(
+						array( 'language' => 'fr', 'value' => 'baz' ),
+						array( 'language' => 'fr', 'value' => 'bat' )
+					)
+				)
+			) );
 
 		$entityDeserializerMock = $this->getMock( 'Deserializers\Deserializer' );
 
@@ -53,11 +68,24 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 			array(
 				'_id' => 'Q1',
 				'_type' => 0,
+				'type' => 'item',
 				'id' => 'Q1',
+				'labels' => array(
+					'en' => array( 'language' => 'en', 'value' => 'foo' ),
+				),
+				'descriptions' => array(
+					'en' => array( 'language' => 'en', 'value' => 'bar' ),
+				),
+				'aliases' => array(
+					'fr' => array(
+						array( 'language' => 'fr', 'value' => 'baz' ),
+						array( 'language' => 'fr', 'value' => 'bat' )
+					)
+				),
 				'sterms' => array(
 					'en' => array( new MongoBinData( 'foo', MongoBinData::GENERIC ) ),
 					'fr' => array(
-						new MongoBinData( 'bêz', MongoBinData::GENERIC ),
+						new MongoBinData( 'baz', MongoBinData::GENERIC ),
 						new MongoBinData( 'bat', MongoBinData::GENERIC )
 					)
 				)
@@ -83,7 +111,24 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 		$entitySerializerMock->expects( $this->once() )
 			->method( 'serialize' )
 			->with( $this->equalTo( $item ) )
-			->willReturn( array( 'id' => 'Q1' ) );
+			->willReturn( array(
+				'type' => 'item',
+				'id' => 'Q1',
+				'labels' => array(
+					'en' => array( 'language' => 'en', 'value' => 'foo' ),
+					'de' => array( 'language' => 'en', 'value' => 'bar' ),
+				),
+				'descriptions' => array(
+					'en' => array( 'language' => 'en', 'value' => 'bar' ),
+				),
+				'aliases' => array(
+					'fr' => array(
+						array( 'language' => 'fr', 'value' => 'baz' ),
+						array( 'language' => 'fr', 'value' => 'bat' )
+					),
+					'it' => array( array( 'language' => 'it', 'value' => 'goo' ) )
+				)
+			) );
 
 		$entityDeserializerMock = $this->getMock( 'Deserializers\Deserializer' );
 
@@ -99,6 +144,19 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 				'_id' => 'Q1',
 				'_type' => 0,
 				'id' => 'Q1',
+				'type' => 'item',
+				'labels' => array(
+					'en' => array( 'language' => 'en', 'value' => 'foo' ),
+				),
+				'descriptions' => array(
+					'en' => array( 'language' => 'en', 'value' => 'bar' ),
+				),
+				'aliases' => array(
+					'fr' => array(
+						array( 'language' => 'fr', 'value' => 'baz' ),
+						array( 'language' => 'fr', 'value' => 'bat' )
+					)
+				),
 				'sterms' => array(
 					'en' => array( new MongoBinData( 'foo', MongoBinData::GENERIC ) ),
 					'fr' => array(

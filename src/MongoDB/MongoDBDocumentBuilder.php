@@ -13,10 +13,6 @@ use Wikibase\DataModel\Entity\EntityIdParser;
 use Wikibase\DataModel\Entity\EntityIdParsingException;
 use Wikibase\DataModel\Entity\Item;
 use Wikibase\DataModel\Entity\Property;
-use Wikibase\DataModel\Term\AliasGroup;
-use Wikibase\DataModel\Term\Fingerprint;
-use Wikibase\DataModel\Term\FingerprintProvider;
-use Wikibase\DataModel\Term\Term;
 use Wikibase\EntityStore\EntityStore;
 use Wikibase\EntityStore\EntityStoreOptions;
 
@@ -79,37 +75,35 @@ class MongoDBDocumentBuilder {
 	 * @return array
 	 */
 	public function buildDocumentForEntity( EntityDocument $entityDocument ) {
-		$entityDocument = $this->filterLanguages( $entityDocument );
-
 		return $this->addIndexedDataToSerialization(
-			$entityDocument,
-			$this->entitySerializer->serialize( $entityDocument )
+			$this->filterLanguages( $this->entitySerializer->serialize( $entityDocument ) )
 		);
 	}
 
-	private function filterLanguages( EntityDocument $entityDocument ) {
+	private function addIndexedDataToSerialization( array $serialization ) {
+		$serialization['_id'] = $serialization['id'];
+		$serialization['_type'] = $this->buildIntegerForType( $serialization['type'] );
+		$serialization['sterms'] = $this->buildSearchTermsForEntity( $serialization );
+
+		return $serialization;
+	}
+
+	private function filterLanguages( array $serialization ) {
 		$languagesOption = $this->options->getOption( EntityStore::OPTION_LANGUAGES );
 
 		if( $languagesOption === null ) {
-			return $entityDocument;
+			return $serialization;
 		}
 
-		if( $entityDocument instanceof FingerprintProvider ) {
-			$fingerprint = $entityDocument->getFingerprint();
-			$fingerprint->setLabels( $fingerprint->getLabels()->getWithLanguages( $languagesOption ) );
-			$fingerprint->setDescriptions( $fingerprint->getDescriptions()->getWithLanguages( $languagesOption ) );
-			$fingerprint->setAliasGroups( $fingerprint->getAliasGroups()->getWithLanguages( $languagesOption ) );
+		$languages = array_flip( $languagesOption );
+		if( array_key_exists( 'labels', $serialization ) ) {
+			$serialization['labels'] =  array_intersect_key( $serialization['labels'], $languages );
 		}
-
-		return $entityDocument;
-	}
-
-	private function addIndexedDataToSerialization( EntityDocument $entityDocument, $serialization ) {
-		$serialization['_id'] = $entityDocument->getId()->getSerialization();
-		$serialization['_type'] = $this->buildIntegerForType( $entityDocument->getType() );
-
-		if( $entityDocument instanceof FingerprintProvider ) {
-			$serialization['sterms'] = $this->buildSearchTermsForFingerprint( $entityDocument->getFingerprint() );
+		if( array_key_exists( 'descriptions', $serialization ) ) {
+			$serialization['descriptions'] =  array_intersect_key( $serialization['descriptions'], $languages );
+		}
+		if( array_key_exists( 'aliases', $serialization ) ) {
+			$serialization['aliases'] =  array_intersect_key( $serialization['aliases'], $languages );
 		}
 
 		return $serialization;
@@ -123,18 +117,20 @@ class MongoDBDocumentBuilder {
 		return self::$INTEGER_FOR_TYPES[$type];
 	}
 
-	private function buildSearchTermsForFingerprint( Fingerprint $fingerprint ) {
+	private function buildSearchTermsForEntity( array $serialization ) {
 		$searchTerms = array();
 
-		/** @var Term $label */
-		foreach( $fingerprint->getLabels() as $label ) {
-			$searchTerms[$label->getLanguageCode()][] = $this->cleanTextForSearch( $label->getText() );
+		if( array_key_exists( 'labels', $serialization ) ) {
+			foreach( $serialization['labels'] as $label ) {
+				$searchTerms[$label['language']][] = $this->cleanTextForSearch( $label['value'] );
+			}
 		}
 
-		/** @var AliasGroup $aliasGroup */
-		foreach( $fingerprint->getAliasGroups() as $aliasGroup ) {
-			foreach( $aliasGroup->getAliases() as $alias ) {
-				$searchTerms[$aliasGroup->getLanguageCode()][] = $this->cleanTextForSearch( $alias );
+		if( array_key_exists( 'aliases', $serialization ) ) {
+			foreach( $serialization['aliases'] as $aliasGroup ) {
+				foreach( $aliasGroup as $alias ) {
+					$searchTerms[$alias['language']][] = $this->cleanTextForSearch( $alias['value'] );
+				}
 			}
 		}
 
@@ -142,6 +138,7 @@ class MongoDBDocumentBuilder {
 	}
 
 	/**
+<<<<<<< HEAD
 	 * @param string $text
 	 * @return string
 	 */
