@@ -58,31 +58,30 @@ class MongoDBDocumentBuilder {
 	 */
 	public function buildDocumentForEntity( EntityDocument $entityDocument ) {
 		return $this->addIndexedDataToSerialization(
-			$entityDocument,
 			$this->entitySerializer->serialize( $entityDocument )
 		);
 	}
 
-	private function addIndexedDataToSerialization( EntityDocument $entityDocument, $serialization ) {
-		if( $entityDocument instanceof FingerprintProvider ) {
-			$serialization['searchterms'] = $this->buildSearchTermsForFingerprint( $entityDocument->getFingerprint() );
-		}
+	private function addIndexedDataToSerialization( array $serialization ) {
+		$serialization['searchterms'] = $this->buildSearchTermsForEntity( $serialization );
 
 		return $serialization;
 	}
 
-	private function buildSearchTermsForFingerprint( Fingerprint $fingerprint ) {
+	private function buildSearchTermsForEntity( array $serialization ) {
 		$searchTerms = array();
 
-		/** @var Term $label */
-		foreach( $fingerprint->getLabels() as $label ) {
-			$searchTerms[] = $this->buildTermForSearch( $label );
+		if( array_key_exists( 'labels', $serialization ) ) {
+			foreach( $serialization['labels'] as $label ) {
+				$searchTerms[] = $this->buildTermForSearch( $label['language'], $label['value'] );
+			}
 		}
 
-		/** @var AliasGroup $aliasGroup */
-		foreach( $fingerprint->getAliasGroups() as $aliasGroup ) {
-			foreach( $aliasGroup->getAliases() as $alias ) {
-				$searchTerms[] = $this->buildTermForSearch( new Term( $aliasGroup->getLanguageCode(), $alias ) );
+		if( array_key_exists( 'aliases', $serialization ) ) {
+			foreach( $serialization['aliases'] as $aliasGroup ) {
+				foreach( $aliasGroup as $alias ) {
+					$searchTerms[] = $this->buildTermForSearch( $alias['language'], $alias['value'] );
+				}
 			}
 		}
 
@@ -90,11 +89,12 @@ class MongoDBDocumentBuilder {
 	}
 
 	/**
-	 * @param Term $term
+	 * @param string $languageCode
+	 * @param string $text
 	 * @return array
 	 */
-	public function buildTermForSearch( Term $term ) {
-		$text = mb_strtolower( $term->getText(), 'UTF-8' ); //TODO: said to be very slow
+	public function buildTermForSearch( $languageCode, $text ) {
+		$text = mb_strtolower( $text, 'UTF-8' ); //TODO: said to be very slow
 		$text = str_replace( //TODO useful? + tests
 			array( '\'', '-' ),
 			array( ' ', ' ' ),
@@ -102,7 +102,7 @@ class MongoDBDocumentBuilder {
 		);
 
 		return array(
-			'language' => $term->getLanguageCode(),
+			'language' => $languageCode,
 			'value' => trim( $text )
 		);
 	}

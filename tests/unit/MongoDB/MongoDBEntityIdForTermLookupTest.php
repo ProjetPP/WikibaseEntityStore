@@ -37,7 +37,7 @@ class MongoDBEntityIdForTermLookupTest extends \PHPUnit_Framework_TestCase {
 			->willReturn( new ItemId( 'Q1' ) );
 		$documentBuilderMock->expects( $this->once() )
 			->method( 'buildTermForSearch' )
-			->with( $this->equalTo( new Term( 'en', 'foo' ) ) )
+			->with( $this->equalTo( 'en' ), $this->equalTo( 'foo' ) )
 			->willReturn( array( 'language' => 'en', 'value' => 'foo' ) );
 
 		$lookup = new MongoDBEntityIdForTermLookup( $collectionMock, $documentBuilderMock );
@@ -72,7 +72,7 @@ class MongoDBEntityIdForTermLookupTest extends \PHPUnit_Framework_TestCase {
 			->willReturn( new ItemId( 'Q1' ) );
 		$documentBuilderMock->expects( $this->once() )
 			->method( 'buildTermForSearch' )
-			->with( $this->equalTo( new Term( 'en', 'foo' ) ) )
+			->with( $this->equalTo( 'en' ), $this->equalTo( 'foo' ) )
 			->willReturn( array( 'language' => 'en', 'value' => 'foo' ) );
 
 		$lookup = new MongoDBEntityIdForTermLookup( $collectionMock, $documentBuilderMock );
