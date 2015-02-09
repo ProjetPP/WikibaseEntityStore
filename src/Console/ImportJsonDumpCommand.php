@@ -7,8 +7,10 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
+use Wikibase\DataModel\Deserializers\EntityIdDeserializer;
+use Wikibase\DataModel\Entity\BasicEntityIdParser;
 use Wikibase\EntityStore\Config\EntityStoreFromConfigurationBuilder;
-use Wikibase\EntityStore\Internal\EntitySerializationFactory;
+use Wikibase\EntityStore\DataModel\Deserializers\SerializedEntityDeserializer;
 use Wikibase\EntityStore\Internal\JsonDumpReader;
 
 /**
@@ -34,11 +36,10 @@ class ImportJsonDumpCommand extends Command {
 
 		$output->writeln( 'Import data.' );
 		$entitySaver = $store->getEntityDocumentSaver();
-		$serialization = new EntitySerializationFactory();
 
 		$dumpReader = new JsonDumpReader(
 			$input->getArgument( 'file' ),
-			$serialization->newEntityDeserializer(),
+			new SerializedEntityDeserializer( new EntityIdDeserializer( new BasicEntityIdParser() ) ),
 			new ConsoleLogger( $output )
 		);
 		$count = 0;

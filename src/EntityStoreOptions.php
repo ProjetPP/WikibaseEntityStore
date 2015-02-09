@@ -3,7 +3,6 @@
 namespace Wikibase\EntityStore;
 
 use InvalidArgumentException;
-use RuntimeException;
 
 /**
  * @licence GPLv2+
