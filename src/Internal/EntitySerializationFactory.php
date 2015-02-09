@@ -5,10 +5,12 @@ namespace Wikibase\EntityStore\Internal;
 use DataValues\Deserializers\DataValueDeserializer;
 use DataValues\Serializers\DataValueSerializer;
 use Deserializers\Deserializer;
+use Serializers\DispatchingSerializer;
 use Serializers\Serializer;
 use Wikibase\DataModel\DeserializerFactory;
 use Wikibase\DataModel\Entity\BasicEntityIdParser;
 use Wikibase\DataModel\SerializerFactory;
+use Wikibase\EntityStore\DataModel\Serializers\SerializedEntitySerializer;
 
 /**
  * Internal class
@@ -23,7 +25,10 @@ class EntitySerializationFactory {
 	 */
 	public function newEntitySerializer() {
 		$factory = new SerializerFactory( new DataValueSerializer() );
-		return $factory->newEntitySerializer();
+		return new DispatchingSerializer( array(
+			new SerializedEntitySerializer(),
+			$factory->newEntitySerializer(),
+		) );
 	}
 
 	/**
