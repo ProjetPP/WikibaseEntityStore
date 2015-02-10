@@ -34,22 +34,7 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 		$entitySerializerMock->expects( $this->once() )
 			->method( 'serialize' )
 			->with( $this->equalTo( $item ) )
-			->willReturn( array(
-				'type' => 'item',
-				'id' => 'Q1',
-				'labels' => array(
-					'en' => array( 'language' => 'en', 'value' => 'foo' ),
-				),
-				'descriptions' => array(
-					'en' => array( 'language' => 'en', 'value' => 'bar' ),
-				),
-				'aliases' => array(
-					'fr' => array(
-						array( 'language' => 'fr', 'value' => 'baz' ),
-						array( 'language' => 'fr', 'value' => 'bat' )
-					)
-				)
-			) );
+			->willReturn( array( 'id' => 'Q1' ) );
 
 		$entityDeserializerMock = $this->getMock( 'Deserializers\Deserializer' );
 
@@ -57,20 +42,7 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 
 		$this->assertEquals(
 			array(
-				'type' => 'item',
 				'id' => 'Q1',
-				'labels' => array(
-					'en' => array( 'language' => 'en', 'value' => 'foo' ),
-				),
-				'descriptions' => array(
-					'en' => array( 'language' => 'en', 'value' => 'bar' ),
-				),
-				'aliases' => array(
-					'fr' => array(
-						array( 'language' => 'fr', 'value' => 'baz' ),
-						array( 'language' => 'fr', 'value' => 'bat' )
-					)
-				),
 				'searchterms' => array(
 					array( 'language' => 'en', 'value' => 'foo' ),
 					array( 'language' => 'fr', 'value' => 'baz' ),
@@ -127,7 +99,7 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 
 		$this->assertEquals(
 			$serialization,
-			$documentBuilder->buildTermForSearch( $term->getLanguageCode(), $term->getText() )
+			$documentBuilder->buildTermForSearch( $term )
 		);
 	}
 
