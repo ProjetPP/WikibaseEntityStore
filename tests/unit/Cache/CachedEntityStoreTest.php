@@ -85,6 +85,30 @@ class CachedEntityStoreTest extends EntityStoreTest {
 		$this->assertInstanceOf( 'Wikibase\EntityStore\PropertyIdForTermLookup', $store->getPropertyIdForTermLookup() );
 	}
 
+	public function testGetItemIdForQueryLookup() {
+		$storeMock = $this->getMockBuilder( 'Wikibase\EntityStore\EntityStore' )
+			->disableOriginalConstructor()
+			->getMock();
+		$storeMock->expects( $this->once() )
+			->method( 'getItemIdForQueryLookup' )
+			->willReturn( $this->getMock( 'Wikibase\EntityStore\ItemIdForQueryLookup' ) );
+		$store = new CachedEntityStore( $storeMock, new ArrayCache() );
+
+		$this->assertInstanceOf( 'Wikibase\EntityStore\ItemIdForQueryLookup', $store->getItemIdForQueryLookup() );
+	}
+
+	public function testGetPropertyIdForQueryLookup() {
+		$storeMock = $this->getMockBuilder( 'Wikibase\EntityStore\EntityStore' )
+			->disableOriginalConstructor()
+			->getMock();
+		$storeMock->expects( $this->once() )
+			->method( 'getPropertyIdForQueryLookup' )
+			->willReturn( $this->getMock( 'Wikibase\EntityStore\PropertyIdForQueryLookup' ) );
+		$store = new CachedEntityStore( $storeMock, new ArrayCache() );
+
+		$this->assertInstanceOf( 'Wikibase\EntityStore\PropertyIdForQueryLookup', $store->getPropertyIdForQueryLookup() );
+	}
+
 	public function testSetupStore() {
 		$storeMock = $this->getMockBuilder( 'Wikibase\EntityStore\EntityStore' )
 			->disableOriginalConstructor()

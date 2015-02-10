@@ -29,7 +29,9 @@
 		"addwiki/wikibase-api": "~0.4",
 		"doctrine/cache": "~1.4",
 		"psr/log": "~1.0",
-		"symfony/config": "~2.6"
+		"symfony/config": "~2.6",
+		"ask/ask": "~1.0",
+		"ask/serialization": "~1.0"
 	},
 	"require-dev": {
 		"squizlabs/php_codesniffer": "~2.1",

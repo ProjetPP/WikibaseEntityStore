@@ -80,6 +80,20 @@ class CachedEntityStore extends EntityStore {
 	}
 
 	/**
+	 * @see EntityStore::getItemIdForQueryLookup
+	 */
+	public function getItemIdForQueryLookup() {
+		return $this->entityStore->getItemIdForQueryLookup();
+	}
+
+	/**
+	 * @see EntityStore::getPropertyIdForQueryLookup
+	 */
+	public function getPropertyIdForQueryLookup() {
+		return $this->entityStore->getPropertyIdForQueryLookup();
+	}
+
+	/**
 	 * @see EntityStore::setupStore
 	 */
 	public function setupStore() {

@@ -7,6 +7,7 @@ use Wikibase\DataModel\Entity\BasicEntityIdParser;
 use Wikibase\EntityStore\EntityDocumentSaver;
 use Wikibase\EntityStore\EntityStore;
 use Wikibase\EntityStore\EntityStoreOptions;
+use Wikibase\EntityStore\Internal\DispatchingEntityIdForQueryLookup;
 use Wikibase\EntityStore\Internal\DispatchingEntityIdForTermLookup;
 use Wikibase\EntityStore\Internal\EntityLookup;
 use Wikibase\EntityStore\Internal\EntitySerializationFactory;
@@ -35,6 +36,11 @@ class MongoDBEntityStore extends EntityStore {
 	private $entityForTermLookup;
 
 	/**
+	 * @var DispatchingEntityIdForQueryLookup
+	 */
+	private $entityForQueryLookup;
+
+	/**
 	 * @var EntityDocumentSaver
 	 */
 	private $entitySaver;
@@ -49,7 +55,8 @@ class MongoDBEntityStore extends EntityStore {
 
 		$entityCollection = $this->newEntityCollection( $collection );
 		$this->entityLookup = new EntityLookup( $entityCollection );
-		$this->entityForTermLookup = new DispatchingEntityIdForTermLookup( $this->newEntityForTermLookup( $collection ) );
+		$this->entityForTermLookup = new DispatchingEntityIdForTermLookup( $this->newEntityIdForTermLookup( $collection ) );
+		$this->entityForQueryLookup = new DispatchingEntityIdForQueryLookup( $this->newEntityIdForQueryLookup( $collection ) );
 		$this->entitySaver = $entityCollection;
 	}
 
@@ -57,8 +64,12 @@ class MongoDBEntityStore extends EntityStore {
 		return new MongoDBEntityCollection( $collection, $this->newDocumentBuilder() );
 	}
 
-	private function newEntityForTermLookup( Collection $collection ) {
+	private function newEntityIdForTermLookup( Collection $collection ) {
 		return new MongoDBEntityIdForTermLookup( $collection, $this->newDocumentBuilder() );
+	}
+
+	private function newEntityIdForQueryLookup( Collection $collection ) {
+		return new MongoDBEntityIdForQueryLookup( $collection, $this->newDocumentBuilder() );
 	}
 
 	private function newDocumentBuilder() {
@@ -111,6 +122,20 @@ class MongoDBEntityStore extends EntityStore {
 	 */
 	public function getPropertyIdForTermLookup() {
 		return $this->entityForTermLookup;
+	}
+
+	/**
+	 * @see EntityStore::getItemIdForQueryLookup
+	 */
+	public function getItemIdForQueryLookup() {
+		return $this->entityForQueryLookup;
+	}
+
+	/**
+	 * @see EntityStore::getPropertyIdForQueryLookup
+	 */
+	public function getPropertyIdForQueryLookup() {
+		return $this->entityForQueryLookup;
 	}
 
 	/**

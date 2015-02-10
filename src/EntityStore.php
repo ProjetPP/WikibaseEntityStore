@@ -76,6 +76,20 @@ abstract class EntityStore {
 	}
 
 	/**
+	 * @return ItemIdForQueryLookup
+	 */
+	public function getItemIdForQueryLookup() {
+		throw new FeatureNotSupportedException( 'ItemIdForQueryLookup not supported.' );
+	}
+
+	/**
+	 * @return PropertyIdForQueryLookup
+	 */
+	public function getPropertyIdForQueryLookup() {
+		throw new FeatureNotSupportedException( 'PropertyIdForQueryLookup not supported.' );
+	}
+
+	/**
 	 * @return EntityDocumentSaver
 	 */
 	public function getEntityDocumentSaver() {
