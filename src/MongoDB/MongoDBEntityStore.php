@@ -6,6 +6,7 @@ use Doctrine\MongoDB\Collection;
 use Wikibase\DataModel\Entity\BasicEntityIdParser;
 use Wikibase\EntityStore\EntityDocumentSaver;
 use Wikibase\EntityStore\EntityStore;
+use Wikibase\EntityStore\EntityStoreOptions;
 use Wikibase\EntityStore\Internal\DispatchingEntityIdForTermLookup;
 use Wikibase\EntityStore\Internal\EntityLookup;
 use Wikibase\EntityStore\Internal\EntitySerializationFactory;
@@ -38,14 +39,17 @@ class MongoDBEntityStore extends EntityStore {
 
 	/**
 	 * @param Collection $collection
+	 * @param EntityStoreOptions $options
 	 */
-	public function __construct( Collection $collection ) {
+	public function __construct( Collection $collection, EntityStoreOptions $options = null ) {
 		$this->collection = $collection;
 
 		$entityCollection = $this->newEntityCollection( $collection );
 		$this->entityLookup = new EntityLookup( $entityCollection );
 		$this->entityForTermLookup = new DispatchingEntityIdForTermLookup( $this->newEntityForTermLookup( $collection ) );
 		$this->entitySaver = $entityCollection;
+
+		parent::__construct( $options );
 	}
 
 	private function newEntityCollection( Collection $collection ) {

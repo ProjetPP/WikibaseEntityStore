@@ -6,6 +6,7 @@ use Mediawiki\Api\MediawikiApi;
 use Wikibase\Api\WikibaseFactory;
 use Wikibase\DataModel\Entity\BasicEntityIdParser;
 use Wikibase\EntityStore\EntityStore;
+use Wikibase\EntityStore\EntityStoreOptions;
 use Wikibase\EntityStore\Internal\DispatchingEntityIdForTermLookup;
 use Wikibase\EntityStore\Internal\EntityLookup;
 
@@ -27,10 +28,13 @@ class ApiEntityStore extends EntityStore {
 
 	/**
 	 * @param MediawikiApi $api
+	 * @param EntityStoreOptions $options
 	 */
-	public function __construct( MediawikiApi $api ) {
+	public function __construct( MediawikiApi $api, EntityStoreOptions $options = null ) {
 		$this->entityLookup = $this->newEntityLookup( $api );
 		$this->entityIdsForTermLookup = $this->newEntityForTermLookup( $api );
+
+		parent::__construct( $options );
 	}
 
 	private function newEntityLookup( MediawikiApi $api ) {
