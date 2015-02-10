@@ -2,7 +2,6 @@
 
 namespace Wikibase\EntityStore\MongoDB;
 
-use Doctrine\MongoDB\Query\Builder;
 use Wikibase\DataModel\Entity\ItemId;
 use Wikibase\DataModel\Term\Term;
 
@@ -23,14 +22,14 @@ class MongoDBEntityIdForTermLookupTest extends \PHPUnit_Framework_TestCase {
 			->with( $this->equalTo( array(
 				'searchterms' => array( 'language' => 'en', 'value' => 'foo' )
 			) ) )
-			->willReturn( array( array( 'id' => 'Q1' ) ) );
+			->willReturn( array( array( '_id' => 'Q1' ) ) );
 
 		$documentBuilderMock = $this->getMockBuilder( 'Wikibase\EntityStore\MongoDB\MongoDBDocumentBuilder' )
 			->disableOriginalConstructor()
 			->getMock();
 		$documentBuilderMock->expects( $this->once() )
 			->method( 'buildEntityIdForDocument' )
-			->with( $this->equalTo( array( 'id' => 'Q1' ) ) )
+			->with( $this->equalTo( array( '_id' => 'Q1' ) ) )
 			->willReturn( new ItemId( 'Q1' ) );
 		$documentBuilderMock->expects( $this->once() )
 			->method( 'buildTermForSearch' )
@@ -55,14 +54,14 @@ class MongoDBEntityIdForTermLookupTest extends \PHPUnit_Framework_TestCase {
 				'searchterms' => array( 'language' => 'en', 'value' => 'foo' ),
 				'type' => 'item'
 			) ) )
-			->willReturn( array( array( 'id' => 'Q1' ) ) );
+			->willReturn( array( array( '_id' => 'Q1' ) ) );
 
 		$documentBuilderMock = $this->getMockBuilder( 'Wikibase\EntityStore\MongoDB\MongoDBDocumentBuilder' )
 			->disableOriginalConstructor()
 			->getMock();
 		$documentBuilderMock->expects( $this->once() )
 			->method( 'buildEntityIdForDocument' )
-			->with( $this->equalTo( array( 'id' => 'Q1' ) ) )
+			->with( $this->equalTo( array( '_id' => 'Q1' ) ) )
 			->willReturn( new ItemId( 'Q1' ) );
 		$documentBuilderMock->expects( $this->once() )
 			->method( 'buildTermForSearch' )

@@ -11,7 +11,6 @@ use Wikibase\DataModel\Term\AliasGroupList;
 use Wikibase\DataModel\Term\Fingerprint;
 use Wikibase\DataModel\Term\Term;
 use Wikibase\DataModel\Term\TermList;
-use Wikibase\EntityStore\Internal\EntitySerializationFactory;
 
 /**
  * @covers Wikibase\EntityStore\MongoDB\MongoDBDocumentBuilder
@@ -43,6 +42,7 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 
 		$this->assertEquals(
 			array(
+				'_id' => 'Q1',
 				'id' => 'Q1',
 				'searchterms' => array(
 					array( 'language' => 'en', 'value' => 'foo' ),
@@ -142,5 +142,25 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 				)
 			),
 		);
+	}
+
+	public function testBuildEntityIdForDocument() {
+		$entitySerializerMock = $this->getMock( 'Serializers\Serializer' );
+		$entityDeserializerMock = $this->getMock( 'Deserializers\Deserializer' );
+		$documentBuilder = new MongoDBDocumentBuilder( $entitySerializerMock, $entityDeserializerMock, new BasicEntityIdParser() );
+
+		$this->assertEquals(
+			new ItemId( 'Q42' ),
+			$documentBuilder->buildEntityIdForDocument( array( '_id' => 'Q42' ) )
+		);
+	}
+
+	public function testBuildEntityIdForDocumentWithException() {
+		$entitySerializerMock = $this->getMock( 'Serializers\Serializer' );
+		$entityDeserializerMock = $this->getMock( 'Deserializers\Deserializer' );
+		$documentBuilder = new MongoDBDocumentBuilder( $entitySerializerMock, $entityDeserializerMock, new BasicEntityIdParser() );
+
+		$this->setExpectedException( 'Wikibase\DataModel\Entity\EntityIdParsingException' );
+		$documentBuilder->buildEntityIdForDocument( array() );
 	}
 }

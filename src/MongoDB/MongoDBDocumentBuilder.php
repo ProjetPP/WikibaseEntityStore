@@ -64,6 +64,8 @@ class MongoDBDocumentBuilder {
 	}
 
 	private function addIndexedDataToSerialization( EntityDocument $entityDocument, $serialization ) {
+		$serialization['_id'] = $entityDocument->getId()->getSerialization();
+
 		if( $entityDocument instanceof FingerprintProvider ) {
 			$serialization['searchterms'] = $this->buildSearchTermsForFingerprint( $entityDocument->getFingerprint() );
 		}
@@ -125,10 +127,10 @@ class MongoDBDocumentBuilder {
 	 * @throws EntityIdParsingException
 	 */
 	public function buildEntityIdForDocument( array $document ) {
-		if( !array_key_exists( 'id', $document ) ) {
+		if( !array_key_exists( '_id', $document ) ) {
 			throw new EntityIdParsingException();
 		}
 
-		return $this->entityIdParser->parse( $document['id'] );
+		return $this->entityIdParser->parse( $document['_id'] );
 	}
 }

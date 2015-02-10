@@ -77,12 +77,12 @@ class MongoDBEntityCollection implements EntityDocumentLookup, EntityDocumentSav
 
 	private function buildGetEntityForIdQuery( EntityId $entityId ) {
 		$expr = new Expr();
-		return $expr->field( 'id' )->equals( $entityId->getSerialization() )->getQuery();
+		return $expr->field( '_id' )->equals( $entityId->getSerialization() )->getQuery();
 	}
 
 	private function buildGetEntitiesForIdsQuery( array $entityIds ) {
 		$expr = new Expr();
-		return $expr->field( 'id' )->in( $this->serializeEntityIds( $entityIds ) )->getQuery();
+		return $expr->field( '_id' )->in( $this->serializeEntityIds( $entityIds ) )->getQuery();
 	}
 
 	private function serializeEntityIds( array $entityIds ) {

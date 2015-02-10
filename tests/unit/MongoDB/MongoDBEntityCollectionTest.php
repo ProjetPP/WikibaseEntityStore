@@ -2,7 +2,6 @@
 
 namespace Wikibase\EntityStore\MongoDB;
 
-use Doctrine\MongoDB\Query\Builder;
 use Wikibase\DataModel\Entity\Item;
 use Wikibase\DataModel\Entity\ItemId;
 
@@ -22,7 +21,7 @@ class MongoDBEntityCollectionTest extends \PHPUnit_Framework_TestCase {
 			->getMock();
 		$collectionMock->expects( $this->once() )
 			->method( 'findOne' )
-			->with( $this->equalTo( array( 'id' => 'Q1' ) ) )
+			->with( $this->equalTo( array( '_id' => 'Q1' ) ) )
 			->willReturn( array( 'id' => 'Q1' ) );
 
 		$documentBuilderMock = $this->getMockBuilder( 'Wikibase\EntityStore\MongoDB\MongoDBDocumentBuilder' )
@@ -47,7 +46,7 @@ class MongoDBEntityCollectionTest extends \PHPUnit_Framework_TestCase {
 			->getMock();
 		$collectionMock->expects( $this->once() )
 			->method( 'findOne' )
-			->with( $this->equalTo( array( 'id' => 'Q1' ) ) )
+			->with( $this->equalTo( array( '_id' => 'Q1' ) ) )
 			->willReturn( null );
 
 		$documentBuilderMock = $this->getMockBuilder( 'Wikibase\EntityStore\MongoDB\MongoDBDocumentBuilder' )
@@ -68,7 +67,7 @@ class MongoDBEntityCollectionTest extends \PHPUnit_Framework_TestCase {
 			->getMock();
 		$collectionMock->expects( $this->once() )
 			->method( 'find' )
-			->with( $this->equalTo( array( 'id' => array( '$in' => array( 'Q1', 'Q2' ) ) ) ) )
+			->with( $this->equalTo( array( '_id' => array( '$in' => array( 'Q1', 'Q2' ) ) ) ) )
 			->willReturn( array(
 				array( 'id' => 'Q1' )
 			) );
@@ -97,7 +96,10 @@ class MongoDBEntityCollectionTest extends \PHPUnit_Framework_TestCase {
 			->getMock();
 		$collectionMock->expects( $this->once() )
 			->method( 'upsert' )
-			->with( $this->equalTo( array( 'id' => 'Q1' ) ) );
+			->with(
+				$this->equalTo( array( '_id' => 'Q1' ) ),
+				$this->equalTo( array( 'id' => 'Q1' ) )
+			);
 
 		$documentBuilderMock = $this->getMockBuilder( 'Wikibase\EntityStore\MongoDB\MongoDBDocumentBuilder' )
 			->disableOriginalConstructor()

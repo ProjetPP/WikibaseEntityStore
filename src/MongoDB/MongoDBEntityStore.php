@@ -113,7 +113,6 @@ class MongoDBEntityStore extends EntityStore {
 	public function setupStore() {
 
 		//Create query indexes
-		$this->collection->ensureIndex( array( 'id' => 1 ), array( 'unique' => true ) );
 		$this->collection->ensureIndex( array( 'searchterms' => 1, 'type' => 1 ) );
 	}
 }
