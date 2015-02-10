@@ -3,6 +3,7 @@
 namespace Wikibase\EntityStore\MongoDB;
 
 use Doctrine\MongoDB\Collection;
+use Doctrine\MongoDB\Query\Expr;
 use Wikibase\DataModel\Entity\EntityDocument;
 use Wikibase\DataModel\Entity\EntityId;
 use Wikibase\EntityStore\EntityDocumentLookup;
@@ -75,15 +76,13 @@ class MongoDBEntityCollection implements EntityDocumentLookup, EntityDocumentSav
 	}
 
 	private function buildGetEntityForIdQuery( EntityId $entityId ) {
-		return $this->collection->createQueryBuilder()
-			->field( 'id' )->equals( $entityId->getSerialization() )
-			->getQueryArray();
+		$expr = new Expr();
+		return $expr->field( 'id' )->equals( $entityId->getSerialization() )->getQuery();
 	}
 
 	private function buildGetEntitiesForIdsQuery( array $entityIds ) {
-		return $this->collection->createQueryBuilder()
-			->field( 'id' )->in( $this->serializeEntityIds( $entityIds ) )
-			->getQueryArray();
+		$expr = new Expr();
+		return $expr->field( 'id' )->in( $this->serializeEntityIds( $entityIds ) )->getQuery();
 	}
 
 	private function serializeEntityIds( array $entityIds ) {

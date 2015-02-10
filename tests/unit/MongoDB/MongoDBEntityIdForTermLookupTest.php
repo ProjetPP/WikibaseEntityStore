@@ -24,9 +24,6 @@ class MongoDBEntityIdForTermLookupTest extends \PHPUnit_Framework_TestCase {
 				'searchterms' => array( 'language' => 'en', 'value' => 'foo' )
 			) ) )
 			->willReturn( array( array( 'id' => 'Q1' ) ) );
-		$collectionMock->expects( $this->once() )
-			->method( 'createQueryBuilder' )
-			->willReturn( new Builder( $collectionMock ) );
 
 		$documentBuilderMock = $this->getMockBuilder( 'Wikibase\EntityStore\MongoDB\MongoDBDocumentBuilder' )
 			->disableOriginalConstructor()
@@ -59,9 +56,6 @@ class MongoDBEntityIdForTermLookupTest extends \PHPUnit_Framework_TestCase {
 				'type' => 'item'
 			) ) )
 			->willReturn( array( array( 'id' => 'Q1' ) ) );
-		$collectionMock->expects( $this->once() )
-			->method( 'createQueryBuilder' )
-			->willReturn( new Builder( $collectionMock ) );
 
 		$documentBuilderMock = $this->getMockBuilder( 'Wikibase\EntityStore\MongoDB\MongoDBDocumentBuilder' )
 			->disableOriginalConstructor()

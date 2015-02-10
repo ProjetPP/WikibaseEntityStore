@@ -3,6 +3,7 @@
 namespace Wikibase\EntityStore\MongoDB;
 
 use Doctrine\MongoDB\Collection;
+use Doctrine\MongoDB\Query\Expr;
 use Wikibase\DataModel\Term\Term;
 use Wikibase\EntityStore\EntityIdForTermLookup;
 
@@ -52,15 +53,15 @@ class MongoDBEntityIdForTermLookup implements EntityIdForTermLookup {
 	}
 
 	private function buildGetEntityIdForTermQuery( Term $term, $entityType = null ) {
-		$query = $this->collection->createQueryBuilder()
-			->field( 'searchterms' )->equals(
-				$this->documentBuilder->buildTermForSearch( $term->getLanguageCode(), $term->getText() )
-			);
+		$expr = new Expr();
+		$expr->field( 'searchterms' )->equals(
+			$this->documentBuilder->buildTermForSearch( $term->getLanguageCode(), $term->getText() )
+		);
 
 		if( $entityType !== null ) {
-			$query->field( 'type' )->equals( $entityType );
+			$expr->field( 'type' )->equals( $entityType );
 		}
 
-		return $query->getQueryArray();
+		return $expr->getQuery();
 	}
 }

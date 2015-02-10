@@ -24,9 +24,6 @@ class MongoDBEntityCollectionTest extends \PHPUnit_Framework_TestCase {
 			->method( 'findOne' )
 			->with( $this->equalTo( array( 'id' => 'Q1' ) ) )
 			->willReturn( array( 'id' => 'Q1' ) );
-		$collectionMock->expects( $this->once() )
-			->method( 'createQueryBuilder' )
-			->willReturn( new Builder( $collectionMock ) );
 
 		$documentBuilderMock = $this->getMockBuilder( 'Wikibase\EntityStore\MongoDB\MongoDBDocumentBuilder' )
 			->disableOriginalConstructor()
@@ -52,9 +49,6 @@ class MongoDBEntityCollectionTest extends \PHPUnit_Framework_TestCase {
 			->method( 'findOne' )
 			->with( $this->equalTo( array( 'id' => 'Q1' ) ) )
 			->willReturn( null );
-		$collectionMock->expects( $this->once() )
-			->method( 'createQueryBuilder' )
-			->willReturn( new Builder( $collectionMock ) );
 
 		$documentBuilderMock = $this->getMockBuilder( 'Wikibase\EntityStore\MongoDB\MongoDBDocumentBuilder' )
 			->disableOriginalConstructor()
@@ -78,9 +72,6 @@ class MongoDBEntityCollectionTest extends \PHPUnit_Framework_TestCase {
 			->willReturn( array(
 				array( 'id' => 'Q1' )
 			) );
-		$collectionMock->expects( $this->once() )
-			->method( 'createQueryBuilder' )
-			->willReturn( new Builder( $collectionMock ) );
 
 		$documentBuilderMock = $this->getMockBuilder( 'Wikibase\EntityStore\MongoDB\MongoDBDocumentBuilder' )
 			->disableOriginalConstructor()
@@ -107,9 +98,6 @@ class MongoDBEntityCollectionTest extends \PHPUnit_Framework_TestCase {
 		$collectionMock->expects( $this->once() )
 			->method( 'upsert' )
 			->with( $this->equalTo( array( 'id' => 'Q1' ) ) );
-		$collectionMock->expects( $this->once() )
-			->method( 'createQueryBuilder' )
-			->willReturn( new Builder( $collectionMock ) );
 
 		$documentBuilderMock = $this->getMockBuilder( 'Wikibase\EntityStore\MongoDB\MongoDBDocumentBuilder' )
 			->disableOriginalConstructor()

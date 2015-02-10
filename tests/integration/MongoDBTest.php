@@ -25,6 +25,10 @@ class MongoDBTest extends \PHPUnit_Framework_TestCase {
 			$store->getItemLookup()->getItemForId( new ItemId( 'Q1' ) )->getId()
 		);
 
+		$results = $store->getEntityDocumentLookup()->getEntityDocumentsForIds( array( new ItemId( 'Q1' ), new ItemId( 'Q1000' ) ) );
+		$this->assertEquals( 1, count( $results ) );
+		$this->assertEquals( new ItemId( 'Q1' ), $results[0]->getId() );
+
 		$this->assertEquals(
 			array( new ItemId( 'Q1' ) ),
 			$store->getItemIdForTermLookup()->getItemIdsForTerm( new Term( 'en', 'universe' ) )
