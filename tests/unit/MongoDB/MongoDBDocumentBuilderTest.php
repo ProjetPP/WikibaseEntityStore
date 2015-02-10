@@ -11,6 +11,7 @@ use Wikibase\DataModel\Term\AliasGroupList;
 use Wikibase\DataModel\Term\Fingerprint;
 use Wikibase\DataModel\Term\Term;
 use Wikibase\DataModel\Term\TermList;
+use Wikibase\EntityStore\Internal\EntitySerializationFactory;
 
 /**
  * @covers Wikibase\EntityStore\MongoDB\MongoDBDocumentBuilder
