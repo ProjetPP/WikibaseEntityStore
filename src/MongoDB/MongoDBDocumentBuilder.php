@@ -97,13 +97,13 @@ class MongoDBDocumentBuilder {
 
 		$languages = array_flip( $languagesOption );
 		if( array_key_exists( 'labels', $serialization ) ) {
-			$serialization['labels'] =  array_intersect_key( $serialization['labels'], $languages );
+			$serialization['labels'] = array_intersect_key( $serialization['labels'], $languages );
 		}
 		if( array_key_exists( 'descriptions', $serialization ) ) {
-			$serialization['descriptions'] =  array_intersect_key( $serialization['descriptions'], $languages );
+			$serialization['descriptions'] = array_intersect_key( $serialization['descriptions'], $languages );
 		}
 		if( array_key_exists( 'aliases', $serialization ) ) {
-			$serialization['aliases'] =  array_intersect_key( $serialization['aliases'], $languages );
+			$serialization['aliases'] = array_intersect_key( $serialization['aliases'], $languages );
 		}
 
 		return $serialization;
