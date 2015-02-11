@@ -78,4 +78,18 @@ class CachedEntityStore extends EntityStore {
 	public function getPropertyIdForTermLookup() {
 		return new CachedPropertyIdForTermLookup( $this->entityStore->getPropertyIdForTermLookup(), $this->entityIdForTermCache );
 	}
+
+	/**
+	 * @see EntityStore::setupStore
+	 */
+	public function setupStore() {
+		$this->entityStore->setupStore();
+	}
+
+	/**
+	 * @see EntityStore::setupIndexes
+	 */
+	public function setupIndexes() {
+		$this->entityStore->setupIndexes();
+	}
 }

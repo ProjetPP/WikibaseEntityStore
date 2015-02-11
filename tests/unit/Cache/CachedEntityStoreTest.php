@@ -84,4 +84,26 @@ class CachedEntityStoreTest extends EntityStoreTest {
 
 		$this->assertInstanceOf( 'Wikibase\EntityStore\PropertyIdForTermLookup', $store->getPropertyIdForTermLookup() );
 	}
+
+	public function testSetupStore() {
+		$storeMock = $this->getMockBuilder( 'Wikibase\EntityStore\EntityStore' )
+			->disableOriginalConstructor()
+			->getMock();
+		$storeMock->expects( $this->once() )
+			->method( 'setupStore' );
+		$store = new CachedEntityStore( $storeMock, new ArrayCache() );
+
+		$store->setupStore();
+	}
+
+	public function testSetupIndexes() {
+		$storeMock = $this->getMockBuilder( 'Wikibase\EntityStore\EntityStore' )
+			->disableOriginalConstructor()
+			->getMock();
+		$storeMock->expects( $this->once() )
+			->method( 'setupIndexes' );
+		$store = new CachedEntityStore( $storeMock, new ArrayCache() );
+
+		$store->setupIndexes();
+	}
 }
