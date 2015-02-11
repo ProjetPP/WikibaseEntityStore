@@ -20,7 +20,7 @@ class MongoDBEntityIdForTermLookupTest extends \PHPUnit_Framework_TestCase {
 		$collectionMock->expects( $this->once() )
 			->method( 'find' )
 			->with( $this->equalTo( array(
-				'searchterms' => array( 'language' => 'en', 'value' => 'foo' )
+				'sterms.en' => 'foo'
 			) ) )
 			->willReturn( array( array( '_id' => 'Q1' ) ) );
 
@@ -32,15 +32,15 @@ class MongoDBEntityIdForTermLookupTest extends \PHPUnit_Framework_TestCase {
 			->with( $this->equalTo( array( '_id' => 'Q1' ) ) )
 			->willReturn( new ItemId( 'Q1' ) );
 		$documentBuilderMock->expects( $this->once() )
-			->method( 'buildTermForSearch' )
-			->with( $this->equalTo( new Term( 'en', 'foo' ) ) )
-			->willReturn( array( 'language' => 'en', 'value' => 'foo' ) );
+			->method( 'cleanTextForSearch' )
+			->with( $this->equalTo( 'Foo' ) )
+			->willReturn( 'foo' );
 
 		$lookup = new MongoDBEntityIdForTermLookup( $collectionMock, $documentBuilderMock );
 
 		$this->assertEquals(
 			array( new ItemId( 'Q1' ) ),
-			$lookup->getEntityIdsForTerm( new Term( 'en', 'foo' ) )
+			$lookup->getEntityIdsForTerm( new Term( 'en', 'Foo' ) )
 		);
 	}
 
@@ -51,7 +51,7 @@ class MongoDBEntityIdForTermLookupTest extends \PHPUnit_Framework_TestCase {
 		$collectionMock->expects( $this->once() )
 			->method( 'find' )
 			->with( $this->equalTo( array(
-				'searchterms' => array( 'language' => 'en', 'value' => 'foo' ),
+				'sterms.en' => 'foo',
 				'type' => 'item'
 			) ) )
 			->willReturn( array( array( '_id' => 'Q1' ) ) );
@@ -64,15 +64,15 @@ class MongoDBEntityIdForTermLookupTest extends \PHPUnit_Framework_TestCase {
 			->with( $this->equalTo( array( '_id' => 'Q1' ) ) )
 			->willReturn( new ItemId( 'Q1' ) );
 		$documentBuilderMock->expects( $this->once() )
-			->method( 'buildTermForSearch' )
-			->with( $this->equalTo( new Term( 'en', 'foo' ) ) )
-			->willReturn( array( 'language' => 'en', 'value' => 'foo' ) );
+			->method( 'cleanTextForSearch' )
+			->with( $this->equalTo( 'Foo' ) )
+			->willReturn( 'foo' );
 
 		$lookup = new MongoDBEntityIdForTermLookup( $collectionMock, $documentBuilderMock );
 
 		$this->assertEquals(
 			array( new ItemId( 'Q1' ) ),
-			$lookup->getEntityIdsForTerm( new Term( 'en', 'foo' ), 'item' )
+			$lookup->getEntityIdsForTerm( new Term( 'en', 'Foo' ), 'item' )
 		);
 	}
 }

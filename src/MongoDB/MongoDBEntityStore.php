@@ -14,6 +14,8 @@ use Wikibase\EntityStore\Internal\EntitySerializationFactory;
 /**
  * @licence GPLv2+
  * @author Thomas Pellissier Tanon
+ *
+ * @todo add indexes if all languages are supported
  */
 class MongoDBEntityStore extends EntityStore {
 
@@ -115,8 +117,19 @@ class MongoDBEntityStore extends EntityStore {
 	 * @see EntityStore::setupStore
 	 */
 	public function setupStore() {
+		$this->setupTermIndexes();
+	}
 
-		//Create query indexes
-		$this->collection->ensureIndex( array( 'searchterms' => 1, 'type' => 1 ) );
+	private function setupTermIndexes() {
+		$languagesOption = $this->getOption( EntityStore::OPTION_LANGUAGES );
+
+		if( $languagesOption === null ) {
+			return;
+		}
+
+		foreach( $languagesOption as $language ) {
+			$key = 'sterms.' . $language;
+			$this->collection->ensureIndex( array( $key => 1, 'type' => 1 ) );
+		}
 	}
 }

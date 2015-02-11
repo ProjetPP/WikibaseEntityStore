@@ -28,7 +28,7 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 			new Fingerprint(
 				new TermList( array( new Term( 'en', 'foo' ) ) ),
 				new TermList( array( new Term( 'en', 'bar' ) ) ),
-				new AliasGroupList( array( new AliasGroup( 'fr', array( 'baz', 'bat' ) ) ) )
+				new AliasGroupList( array( new AliasGroup( 'fr', array( 'bÊz', 'bat' ) ) ) )
 			)
 		);
 
@@ -51,10 +51,9 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 			array(
 				'_id' => 'Q1',
 				'id' => 'Q1',
-				'searchterms' => array(
-					array( 'language' => 'en', 'value' => 'foo' ),
-					array( 'language' => 'fr', 'value' => 'baz' ),
-					array( 'language' => 'fr', 'value' => 'bat' )
+				'sterms' => array(
+					'en' => array( 'foo' ),
+					'fr' => array( 'bêz', 'bat' )
 				)
 			),
 			$documentBuilder->buildDocumentForEntity( $item )
@@ -93,10 +92,9 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 			array(
 				'_id' => 'Q1',
 				'id' => 'Q1',
-				'searchterms' => array(
-					array( 'language' => 'en', 'value' => 'foo' ),
-					array( 'language' => 'fr', 'value' => 'baz' ),
-					array( 'language' => 'fr', 'value' => 'bat' )
+				'sterms' => array(
+					'en' => array( 'foo' ),
+					'fr' => array( 'baz', 'bat' )
 				)
 			),
 			$documentBuilder->buildDocumentForEntity( $item )
@@ -150,9 +148,9 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @dataProvider buildTermForSearchProvider
+	 * @dataProvider cleanTextForSearchProvider
 	 */
-	public function testBuildTermForSearch( Term $term, $serialization ) {
+	public function testBuildTermForSearch( $text, $cleaned ) {
 		$entitySerializerMock = $this->getMock( 'Serializers\Serializer' );
 		$entityDeserializerMock = $this->getMock( 'Deserializers\Deserializer' );
 		$documentBuilder = new MongoDBDocumentBuilder(
@@ -163,47 +161,32 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 		);
 
 		$this->assertEquals(
-			$serialization,
-			$documentBuilder->buildTermForSearch( $term )
+			$cleaned,
+			$documentBuilder->cleanTextForSearch( $text )
 		);
 	}
 
-	public function buildTermForSearchProvider() {
+	public function cleanTextForSearchProvider() {
 		return array(
 			array(
-				new Term( 'en', 'test' ),
-				array(
-					'language' => 'en',
-					'value' => 'test'
-				)
+				'test',
+				'test'
 			),
 			array(
-				new Term( 'en', 'TODO' ),
-				array(
-					'language' => 'en',
-					'value' => 'todo'
-				)
+				'TODO',
+				'todo'
 			),
 			array(
-				new Term( 'fr', 'Être' ),
-				array(
-					'language' => 'fr',
-					'value' => 'être'
-				)
+				'Être',
+				'être'
 			),
 			array(
-				new Term( 'en', 'FOO-BAR\'BAZ' ),
-				array(
-					'language' => 'en',
-					'value' => 'foo bar baz'
-				)
+				'FOO-BAR\'BAZ',
+				'foo bar baz'
 			),
 			array(
-				new Term( 'en', '\'test-' ),
-				array(
-					'language' => 'en',
-					'value' => 'test'
-				)
+				'\'test-',
+				'test'
 			),
 		);
 	}

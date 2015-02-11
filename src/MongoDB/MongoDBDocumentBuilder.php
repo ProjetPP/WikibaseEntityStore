@@ -96,7 +96,7 @@ class MongoDBDocumentBuilder {
 		$serialization['_id'] = $entityDocument->getId()->getSerialization();
 
 		if( $entityDocument instanceof FingerprintProvider ) {
-			$serialization['searchterms'] = $this->buildSearchTermsForFingerprint( $entityDocument->getFingerprint() );
+			$serialization['sterms'] = $this->buildSearchTermsForFingerprint( $entityDocument->getFingerprint() );
 		}
 
 		return $serialization;
@@ -107,13 +107,13 @@ class MongoDBDocumentBuilder {
 
 		/** @var Term $label */
 		foreach( $fingerprint->getLabels() as $label ) {
-			$searchTerms[] = $this->buildTermForSearch( $label );
+			$searchTerms[$label->getLanguageCode()][] = $this->cleanTextForSearch( $label->getText() );
 		}
 
 		/** @var AliasGroup $aliasGroup */
 		foreach( $fingerprint->getAliasGroups() as $aliasGroup ) {
 			foreach( $aliasGroup->getAliases() as $alias ) {
-				$searchTerms[] = $this->buildTermForSearch( new Term( $aliasGroup->getLanguageCode(), $alias ) );
+				$searchTerms[$aliasGroup->getLanguageCode()][] = $this->cleanTextForSearch( $alias );
 			}
 		}
 
@@ -121,21 +121,18 @@ class MongoDBDocumentBuilder {
 	}
 
 	/**
-	 * @param Term $term
-	 * @return array
+	 * @param string $text
+	 * @return string
 	 */
-	public function buildTermForSearch( Term $term ) {
-		$text = mb_strtolower( $term->getText(), 'UTF-8' ); //TODO: said to be very slow
+	public function cleanTextForSearch( $text ) {
+		$text = mb_strtolower( $text, 'UTF-8' ); //TODO: said to be very slow
 		$text = str_replace( //TODO useful? + tests
 			array( '\'', '-' ),
 			array( ' ', ' ' ),
 			$text
 		);
 
-		return array(
-			'language' => $term->getLanguageCode(),
-			'value' => trim( $text )
-		);
+		return trim( $text );
 	}
 
 	/**
