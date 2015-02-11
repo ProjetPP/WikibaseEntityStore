@@ -69,6 +69,10 @@ class EntityStoreConfiguration implements ConfigurationInterface {
 							->end()
 						->end()
 					->end()
+					->variableNode( 'options' )
+						->info( 'EntityStore options configuration' )
+						->defaultValue( array() )
+					->end()
 				->end();
 
 		return $treeBuilder;

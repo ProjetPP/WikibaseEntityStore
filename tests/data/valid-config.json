@@ -6,5 +6,8 @@
   },
   "cache": {
     "array": true
+  },
+  "options": {
+    "languages": ["en", "fr"]
   }
 }

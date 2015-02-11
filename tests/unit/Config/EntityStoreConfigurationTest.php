@@ -38,7 +38,8 @@ class EntityStoreConfigurationTest extends \PHPUnit_Framework_TestCase {
 					'backend' => 'api',
 					'api' => array(
 						'url' => 'http://www.wikidata.org/w/api.php'
-					)
+					),
+					'options' => array()
 				)
 			),
 			array(
@@ -53,7 +54,8 @@ class EntityStoreConfigurationTest extends \PHPUnit_Framework_TestCase {
 					'mongodb' => array(
 						'server' => '',
 						'database' => 'wikibase'
-					)
+					),
+					'options' => array()
 				)
 			),
 			array(
@@ -81,7 +83,8 @@ class EntityStoreConfigurationTest extends \PHPUnit_Framework_TestCase {
 						'array' => array(
 							'enabled' => true
 						)
-					)
+					),
+					'options' => array()
 				)
 			),
 			array(
@@ -109,6 +112,27 @@ class EntityStoreConfigurationTest extends \PHPUnit_Framework_TestCase {
 						'array' => array(
 							'enabled' => false
 						)
+					),
+					'options' => array()
+				)
+			),
+			array(
+				array(
+					'backend' => 'api',
+					'api' => array(
+						'url' => 'http://www.wikidata.org/w/api.php'
+					),
+					'options' => array(
+						'languages' => array( 'en', 'fr' )
+					)
+				),
+				array(
+					'backend' => 'api',
+					'api' => array(
+						'url' => 'http://www.wikidata.org/w/api.php'
+					),
+					'options' => array(
+						'languages' => array( 'en', 'fr' )
 					)
 				)
 			),
@@ -203,7 +227,7 @@ class EntityStoreConfigurationTest extends \PHPUnit_Framework_TestCase {
 						)
 					)
 				)
-			)
+			),
 		);
 	}
 }

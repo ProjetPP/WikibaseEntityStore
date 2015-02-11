@@ -12,6 +12,7 @@ use Symfony\Component\Config\Definition\Processor;
 use Wikibase\EntityStore\Api\ApiEntityStore;
 use Wikibase\EntityStore\Cache\CachedEntityStore;
 use Wikibase\EntityStore\EntityStore;
+use Wikibase\EntityStore\EntityStoreOptions;
 use Wikibase\EntityStore\MongoDB\MongoDBEntityStore;
 
 class EntityStoreFromConfigurationBuilder {
@@ -50,11 +51,13 @@ class EntityStoreFromConfigurationBuilder {
 	}
 
 	private function buildEntityStoreFromConfig( $config ) {
+		$options = new EntityStoreOptions( $config['options'] );
+
 		switch( $config['backend'] ) {
 			case 'api':
-				return new ApiEntityStore( new MediawikiApi( $config['api']['url'] ) );
+				return new ApiEntityStore( new MediawikiApi( $config['api']['url'] ), $options );
 			case 'mongodb':
-				return new MongoDBEntityStore( $this->getMongoDbCollection( $config['mongodb'] ) );
+				return new MongoDBEntityStore( $this->getMongoDbCollection( $config['mongodb'] ), $options );
 			default:
 				throw new InvalidArgumentException( 'Unknown backend: ' . $config['backend'] );
 		}

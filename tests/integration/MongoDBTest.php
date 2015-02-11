@@ -35,6 +35,11 @@ class MongoDBTest extends \PHPUnit_Framework_TestCase {
 			array( new ItemId( 'Q1' ) ),
 			$store->getItemIdForTermLookup()->getItemIdsForTerm( new Term( 'en', 'universe' ) )
 		);
+
+		$this->assertEquals(
+			array(),
+			$store->getItemIdForTermLookup()->getItemIdsForTerm( new Term( 'pl', 'Kosmos' ) )
+		);
 	}
 
 	private function setupMongoDB() {
