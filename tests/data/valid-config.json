@@ -5,7 +5,8 @@
     "database": "wikibase"
   },
   "cache": {
-    "array": true
+    "array": true,
+    "memcached": true
   },
   "options": {
     "languages": ["en", "fr"]
