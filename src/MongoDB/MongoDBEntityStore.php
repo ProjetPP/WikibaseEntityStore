@@ -114,6 +114,17 @@ class MongoDBEntityStore extends EntityStore {
 	}
 
 	/**
+	 * @see EntityStore::setupStore
+	 */
+	public function setupStore() {
+		$this->collection->getDatabase()->command( array(
+			'collMod' => $this->collection->getName(),
+			'usePowerOf2Sizes' => true
+		) );
+	}
+
+
+	/**
 	 * @see EntityStore::setupIndexes
 	 */
 	public function setupIndexes() {
