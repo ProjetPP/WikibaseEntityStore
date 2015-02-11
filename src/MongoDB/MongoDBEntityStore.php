@@ -123,7 +123,6 @@ class MongoDBEntityStore extends EntityStore {
 		) );
 	}
 
-
 	/**
 	 * @see EntityStore::setupIndexes
 	 */
@@ -140,7 +139,10 @@ class MongoDBEntityStore extends EntityStore {
 
 		foreach( $languagesOption as $language ) {
 			$key = 'sterms.' . $language;
-			$this->collection->ensureIndex( array( $key => 1, '_type' => 1 ), array( 'sparse' => true ) );
+			$this->collection->ensureIndex(
+				array( $key => 1, '_type' => 1 ),
+				array( 'sparse' => true, 'socketTimeoutMS' => -1 )
+			);
 		}
 	}
 }

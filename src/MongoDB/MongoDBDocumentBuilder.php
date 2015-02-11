@@ -138,7 +138,6 @@ class MongoDBDocumentBuilder {
 	}
 
 	/**
-<<<<<<< HEAD
 	 * @param string $text
 	 * @return string
 	 */
