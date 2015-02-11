@@ -114,9 +114,9 @@ class MongoDBEntityStore extends EntityStore {
 	}
 
 	/**
-	 * @see EntityStore::setupStore
+	 * @see EntityStore::setupIndexes
 	 */
-	public function setupStore() {
+	public function setupIndexes() {
 		$this->setupTermIndexes();
 	}
 

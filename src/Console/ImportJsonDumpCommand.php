@@ -28,8 +28,11 @@ class ImportJsonDumpCommand extends Command {
 		$configurationBuilder = new EntityStoreFromConfigurationBuilder();
 		$store = $configurationBuilder->buildEntityStore( $input->getArgument( 'configuration' ) );
 
+		$output->writeln( 'Setup store.' );
 		$store->setupStore();
+		$output->writeln( 'Setup store done.' );
 
+		$output->writeln( 'Import data.' );
 		$entitySaver = $store->getEntityDocumentSaver();
 		$serialization = new EntitySerializationFactory();
 
@@ -47,7 +50,10 @@ class ImportJsonDumpCommand extends Command {
 				$output->write( '.' );
 			}
 		}
+		$output->writeln( 'Importation done.' );
 
-		$output->writeln( 'Importation done' );
+		$output->writeln( 'Setup indexes.' );
+		$store->setupIndexes();
+		$output->writeln( 'Setup indexes done.' );
 	}
 }

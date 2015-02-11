@@ -83,11 +83,19 @@ abstract class EntityStore {
 	}
 
 	/**
-	 * Setup the EntityStore if it has not been done yet (create database tables, query indexes...).
+	 * Setup the EntityStore if it has not been done yet (create database tables...).
 	 *
 	 * It should not drop data if the store is already setup.
 	 */
 	public function setupStore() {
+	}
+
+	/**
+	 * Setup the indexes if it has not been done yet.
+	 *
+	 * Often called after big importations to create again indexes.
+	 */
+	public function setupIndexes() {
 	}
 
 	/**
