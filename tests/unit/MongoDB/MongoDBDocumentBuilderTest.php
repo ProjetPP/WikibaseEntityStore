@@ -211,8 +211,14 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 			new EntityStoreOptions(array( EntityStore::OPTION_LANGUAGES => null ) )
 		);
 
-		$this->assertEquals( MongoDBDocumentBuilder::ITEM_TYPE_INTEGER, $documentBuilder->buildIntegerForType( Item::ENTITY_TYPE ) );
-		$this->assertEquals( MongoDBDocumentBuilder::PROPERTY_TYPE_INTEGER, $documentBuilder->buildIntegerForType( Property::ENTITY_TYPE ) );
+		$this->assertEquals(
+			MongoDBDocumentBuilder::ITEM_TYPE_INTEGER,
+			$documentBuilder->buildIntegerForType( Item::ENTITY_TYPE )
+		);
+		$this->assertEquals(
+			MongoDBDocumentBuilder::PROPERTY_TYPE_INTEGER,
+			$documentBuilder->buildIntegerForType( Property::ENTITY_TYPE )
+		);
 
 		$this->setExpectedException( 'InvalidArgumentException' );
 		$documentBuilder->buildIntegerForType( 'foo' );
