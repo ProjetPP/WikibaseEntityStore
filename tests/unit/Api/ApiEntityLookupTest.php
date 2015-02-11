@@ -2,11 +2,14 @@
 
 namespace Wikibase\EntityStore\Api;
 
-use Mediawiki\DataModel\Revision;
-use Mediawiki\DataModel\Revisions;
+use Mediawiki\Api\SimpleRequest;
 use Wikibase\DataModel\Entity\Item;
 use Wikibase\DataModel\Entity\ItemId;
-use Wikibase\DataModel\ItemContent;
+use Wikibase\DataModel\Entity\Property;
+use Wikibase\DataModel\Entity\PropertyId;
+use Wikibase\EntityStore\EntityStore;
+use Wikibase\EntityStore\EntityStoreOptions;
+use Wikibase\EntityStore\Internal\EntitySerializationFactory;
 
 /**
  * @covers Wikibase\EntityStore\Api\ApiEntityLookup
@@ -17,60 +20,136 @@ use Wikibase\DataModel\ItemContent;
 class ApiEntityLookupTest extends \PHPUnit_Framework_TestCase {
 
 	public function testGetEntityDocumentsForIds() {
-		$item = new Item( new ItemId( 'Q42' ) );
-
-		$revisionGetterMock = $this->getMockBuilder( 'Wikibase\Api\Service\RevisionsGetter' )
+		$mediawikiApiMock = $this->getMockBuilder( 'Mediawiki\Api\MediawikiApi' )
 			->disableOriginalConstructor()
 			->getMock();
-		$revisionGetterMock->expects( $this->once() )
-			->method( 'getRevisions' )
-			->with( $this->equalTo( array( new ItemId( 'Q42' ), new ItemId( 'Q43' ) ) ) )
-			->will( $this->returnValue( new Revisions( array( new Revision( new ItemContent( $item ) ) ) ) ) );
+		$mediawikiApiMock->expects( $this->once() )
+			->method( 'getRequest' )
+			->with( $this->equalTo(
+				new SimpleRequest(
+					'wbgetentities',
+					array(
+						'ids' => 'Q42|P42'
+					)
+				)
+			) )
+			->will( $this->returnValue( array(
+				'entities' => array(
+					array(
+						'id' => 'Q42',
+						'type' => 'item'
+					),
+					array(
+						'id' => 'P42',
+						'type' => 'property',
+						'datatype' => 'string'
+					)
+				)
+			) ) );
 
-		$lookup = new ApiEntityLookup( $revisionGetterMock );
+		$serializationFactory = new EntitySerializationFactory();
+		$lookup = new ApiEntityLookup(
+			$mediawikiApiMock,
+			$serializationFactory->newEntityDeserializer(),
+			new EntityStoreOptions( array(
+				EntityStore::OPTION_LANGUAGES => null,
+				EntityStore::OPTION_LANGUAGE_FALLBACK => false
+			) )
+		);
 
 		$this->assertEquals(
-			array( $item ),
-			$lookup->getEntityDocumentsForIds( array( new ItemId( 'Q42' ), new ItemId( 'Q43' ) ) )
+			array(
+				new Item( new ItemId( 'Q42' ) ),
+				new Property( new PropertyId( 'P42' ), null, 'string' )
+			),
+			$lookup->getEntityDocumentsForIds( array( new ItemId( 'Q42' ), new PropertyId( 'P42' ) ) )
 		);
 	}
 
 	public function testGetEntityDocumentsForIdsWithEmptyInput() {
-		$revisionGetterMock = $this->getMockBuilder( 'Wikibase\Api\Service\RevisionsGetter' )
+		$mediawikiApiMock = $this->getMockBuilder( 'Mediawiki\Api\MediawikiApi' )
 			->disableOriginalConstructor()
 			->getMock();
 
-		$lookup = new ApiEntityLookup( $revisionGetterMock );
+		$serializationFactory = new EntitySerializationFactory();
+		$lookup = new ApiEntityLookup(
+			$mediawikiApiMock,
+			$serializationFactory->newEntityDeserializer(),
+			new EntityStoreOptions( array(
+				EntityStore::OPTION_LANGUAGES => null,
+				EntityStore::OPTION_LANGUAGE_FALLBACK => false
+			) )
+		);
 
 		$this->assertEquals( array(), $lookup->getEntityDocumentsForIds( array() ) );
 	}
 
 	public function testGetEntityDocumentForId() {
-		$item = new Item( new ItemId( 'Q42' ) );
-
-		$revisionGetterMock = $this->getMockBuilder( 'Wikibase\Api\Service\RevisionsGetter' )
+		$mediawikiApiMock = $this->getMockBuilder( 'Mediawiki\Api\MediawikiApi' )
 			->disableOriginalConstructor()
 			->getMock();
-		$revisionGetterMock->expects( $this->once() )
-			->method( 'getRevisions' )
-			->with( $this->equalTo( array( new ItemId( 'Q42' ) ) ) )
-			->will( $this->returnValue( new Revisions( array( new Revision( new ItemContent( $item ) ) ) ) ) );
+		$mediawikiApiMock->expects( $this->once() )
+			->method( 'getRequest' )
+			->with( $this->equalTo(
+				new SimpleRequest(
+					'wbgetentities',
+					array(
+						'ids' => 'Q42',
+						'languages' => 'en|fr',
+						'languagefallback' => true
+					)
+				)
+			) )
+			->will( $this->returnValue( array(
+				'entities' => array(
+					array(
+						'id' => 'Q42',
+						'type' => 'item'
+					)
+				)
+			) ) );
 
-		$lookup = new ApiEntityLookup( $revisionGetterMock );
+		$serializationFactory = new EntitySerializationFactory();
+		$lookup = new ApiEntityLookup(
+			$mediawikiApiMock,
+			$serializationFactory->newEntityDeserializer(),
+			new EntityStoreOptions( array(
+				EntityStore::OPTION_LANGUAGES => array( 'en', 'fr' ),
+				EntityStore::OPTION_LANGUAGE_FALLBACK => true
+			) )
+		);
 
-		$this->assertEquals( $item, $lookup->getEntityDocumentForId( new ItemId( 'Q42' ) ) );
+		$this->assertEquals(
+			new Item( new ItemId( 'Q42' ) ),
+			$lookup->getEntityDocumentForId( new ItemId( 'Q42' ) )
+		);
 	}
 
 	public function testGetEntityDocumentWithException() {
-		$revisionGetterMock = $this->getMockBuilder( 'Wikibase\Api\Service\RevisionsGetter' )
+		$mediawikiApiMock = $this->getMockBuilder( 'Mediawiki\Api\MediawikiApi' )
 			->disableOriginalConstructor()
 			->getMock();
-		$revisionGetterMock->expects( $this->once() )
-			->method( 'getRevisions' )
-			->with( $this->equalTo( array( new ItemId( 'Q42' ) ) ) )
-			->will( $this->returnValue( new Revisions( array() ) ) );
+		$mediawikiApiMock->expects( $this->once() )
+			->method( 'getRequest' )
+			->with( $this->equalTo(
+				new SimpleRequest(
+					'wbgetentities',
+					array(
+						'ids' => 'Q42',
+						'languages' => 'en|fr'
+					)
+				)
+			) )
+			->will( $this->returnValue( array( 'entities' => array() ) ) );
 
-		$lookup = new ApiEntityLookup( $revisionGetterMock );
+		$serializationFactory = new EntitySerializationFactory();
+		$lookup = new ApiEntityLookup(
+			$mediawikiApiMock,
+			$serializationFactory->newEntityDeserializer(),
+			new EntityStoreOptions( array(
+				EntityStore::OPTION_LANGUAGES => array( 'en', 'fr' ),
+				EntityStore::OPTION_LANGUAGE_FALLBACK => false
+			) ) );
 
 		$this->setExpectedException( 'Wikibase\EntityStore\EntityNotFoundException');
 		$lookup->getEntityDocumentForId( new ItemId( 'Q42' ) );

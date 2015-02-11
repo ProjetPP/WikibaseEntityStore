@@ -2,29 +2,48 @@
 
 namespace Wikibase\EntityStore\Api;
 
-use Wikibase\Api\Service\RevisionsGetter;
+use Deserializers\Deserializer;
+use Mediawiki\Api\MediawikiApi;
+use Mediawiki\Api\SimpleRequest;
 use Wikibase\DataModel\Entity\EntityId;
 use Wikibase\EntityStore\EntityDocumentLookup;
 use Wikibase\EntityStore\EntityNotFoundException;
+use Wikibase\EntityStore\EntityStore;
+use Wikibase\EntityStore\EntityStoreOptions;
 
 /**
  * Internal class
  *
  * @licence GPLv2+
  * @author Thomas Pellissier Tanon
+ *
+ * TODO: allow to retrieve more than 50 entities
  */
 class ApiEntityLookup implements EntityDocumentLookup {
 
 	/**
-	 * @var RevisionsGetter
+	 * @var MediawikiApi
 	 */
-	private $revisionsGetter;
+	private $api;
 
 	/**
-	 * @param RevisionsGetter $revisionGetter
+	 * @var Deserializer
 	 */
-	public function __construct( RevisionsGetter $revisionGetter ) {
-		$this->revisionsGetter = $revisionGetter;
+	private $deserializer;
+
+	/**
+	 * @var EntityStoreOptions
+	 */
+	private $options;
+	/**
+	 * @param MediawikiApi $api
+	 * @param Deserializer $deserializer
+	 * @param EntityStoreOptions $options
+	 */
+	public function __construct( MediawikiApi $api, Deserializer $deserializer, EntityStoreOptions $options ) {
+		$this->api = $api;
+		$this->deserializer = $deserializer;
+		$this->options = $options;
 	}
 
 	/**
@@ -48,12 +67,42 @@ class ApiEntityLookup implements EntityDocumentLookup {
 			return array();
 		}
 
-		$revisions = $this->revisionsGetter->getRevisions( $entityIds );
+		return $this->parseResponse( $this->api->getRequest( $this->buildRequest( $entityIds ) ) );
+	}
 
+	private function buildRequest( array $entityIds ) {
+		$params = array(
+			'ids' => implode( '|', $this->serializeEntityIds( $entityIds ) )
+		);
+
+		if( $this->options->getOption( EntityStore::OPTION_LANGUAGE_FALLBACK ) ) {
+			$params['languagefallback'] = true;
+		}
+
+		$languagesOption = $this->options->getOption( EntityStore::OPTION_LANGUAGES );
+		if( $languagesOption !== null ) {
+			$params['languages'] = implode( '|', $languagesOption );
+		}
+
+		return new SimpleRequest( 'wbgetentities', $params );
+	}
+
+	private function serializeEntityIds( array $entityIds ) {
+		$serialization = array();
+
+		/** @var EntityId $entityId */
+		foreach( $entityIds as $entityId ) {
+			$serialization[] = $entityId->getSerialization();
+		}
+
+		return $serialization;
+	}
+
+	private function parseResponse( array $response ) {
 		$entities = array();
 
-		foreach( $revisions->toArray() as $revision ) {
-			$entities[] = $revision->getContent()->getNativeData();
+		foreach( $response['entities'] as $serializedEntity ) {
+			$entities[] = $this->deserializer->deserialize( $serializedEntity );
 		}
 
 		return $entities;

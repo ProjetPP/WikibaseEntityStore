@@ -3,7 +3,6 @@
 namespace Wikibase\EntityStore\Api;
 
 use Mediawiki\Api\MediawikiApi;
-use Wikibase\Api\WikibaseFactory;
 use Wikibase\DataModel\Entity\BasicEntityIdParser;
 use Wikibase\EntityStore\EntityStore;
 use Wikibase\EntityStore\EntityStoreOptions;
@@ -12,6 +11,7 @@ use Wikibase\EntityStore\Internal\DispatchingEntityIdForTermLookup;
 use Wikibase\EntityStore\Internal\EntityLookup;
 use WikidataQueryApi\WikidataQueryApi;
 use WikidataQueryApi\WikidataQueryFactory;
+use Wikibase\EntityStore\Internal\EntitySerializationFactory;
 
 /**
  * @licence GPLv2+
@@ -44,16 +44,18 @@ class ApiEntityStore extends EntityStore {
 		WikidataQueryApi $wikidataQueryApi = null,
 		EntityStoreOptions $options = null
 	) {
+		parent::__construct( $options );
+
 		$this->entityLookup = $this->newEntityLookup( $api );
 		$this->entityIdsForTermLookup = $this->newEntityForTermLookup( $api );
 		$this->wikidataQueryApi = $wikidataQueryApi;
-
-		parent::__construct( $options );
 	}
 
 	private function newEntityLookup( MediawikiApi $api ) {
-		$factory = new WikibaseFactory( $api );
-		return new EntityLookup( new ApiEntityLookup( $factory->newRevisionsGetter() ) );
+		$serializationFactory = new EntitySerializationFactory();
+		return new EntityLookup(
+			new ApiEntityLookup( $api, $serializationFactory->newEntityDeserializer(), $this->getOptions() )
+		);
 	}
 
 	private function newEntityForTermLookup( MediawikiApi $api ) {
