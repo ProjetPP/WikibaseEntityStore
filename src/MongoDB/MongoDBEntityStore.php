@@ -43,13 +43,12 @@ class MongoDBEntityStore extends EntityStore {
 	 */
 	public function __construct( Collection $collection, EntityStoreOptions $options = null ) {
 		$this->collection = $collection;
+		parent::__construct( $options );
 
 		$entityCollection = $this->newEntityCollection( $collection );
 		$this->entityLookup = new EntityLookup( $entityCollection );
 		$this->entityForTermLookup = new DispatchingEntityIdForTermLookup( $this->newEntityForTermLookup( $collection ) );
 		$this->entitySaver = $entityCollection;
-
-		parent::__construct( $options );
 	}
 
 	private function newEntityCollection( Collection $collection ) {
@@ -65,7 +64,8 @@ class MongoDBEntityStore extends EntityStore {
 		return new MongoDBDocumentBuilder(
 			$serialization->newEntitySerializer(),
 			$serialization->newEntityDeserializer(),
-			new BasicEntityIdParser()
+			new BasicEntityIdParser(),
+			$this->getOptions()
 		);
 	}
 

@@ -13,6 +13,8 @@ use Wikibase\DataModel\Term\AliasGroup;
 use Wikibase\DataModel\Term\Fingerprint;
 use Wikibase\DataModel\Term\FingerprintProvider;
 use Wikibase\DataModel\Term\Term;
+use Wikibase\EntityStore\EntityStore;
+use Wikibase\EntityStore\EntityStoreOptions;
 
 /**
  * Internal class
@@ -38,18 +40,26 @@ class MongoDBDocumentBuilder {
 	private $entityIdParser;
 
 	/**
+	 * @var EntityStoreOptions
+	 */
+	private $options;
+
+	/**
 	 * @param Serializer $entitySerializer
 	 * @param Deserializer $entityDeserializer
 	 * @param EntityIdParser $entityIdParser
+	 * @param EntityStoreOptions $options
 	 */
 	public function __construct(
 		Serializer $entitySerializer,
 		Deserializer $entityDeserializer,
-		EntityIdParser $entityIdParser
+		EntityIdParser $entityIdParser,
+		EntityStoreOptions $options
 	) {
 		$this->entitySerializer = $entitySerializer;
 		$this->entityDeserializer = $entityDeserializer;
 		$this->entityIdParser = $entityIdParser;
+		$this->options = $options;
 	}
 
 	/**
@@ -57,10 +67,29 @@ class MongoDBDocumentBuilder {
 	 * @return array
 	 */
 	public function buildDocumentForEntity( EntityDocument $entityDocument ) {
+		$entityDocument = $this->filterLanguages( $entityDocument );
+
 		return $this->addIndexedDataToSerialization(
 			$entityDocument,
 			$this->entitySerializer->serialize( $entityDocument )
 		);
+	}
+
+	private function filterLanguages( EntityDocument $entityDocument ) {
+		$languagesOption = $this->options->getOption( EntityStore::OPTION_LANGUAGES );
+
+		if( $languagesOption === null ) {
+			return $entityDocument;
+		}
+
+		if( $entityDocument instanceof FingerprintProvider ) {
+			$fingerprint = $entityDocument->getFingerprint();
+			$fingerprint->setLabels( $fingerprint->getLabels()->getWithLanguages( $languagesOption ) );
+			$fingerprint->setDescriptions( $fingerprint->getDescriptions()->getWithLanguages( $languagesOption ) );
+			$fingerprint->setAliasGroups( $fingerprint->getAliasGroups()->getWithLanguages( $languagesOption ) );
+		}
+
+		return $entityDocument;
 	}
 
 	private function addIndexedDataToSerialization( EntityDocument $entityDocument, $serialization ) {
