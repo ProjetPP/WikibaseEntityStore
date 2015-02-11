@@ -7,6 +7,7 @@ use MongoBinData;
 use Wikibase\DataModel\Entity\BasicEntityIdParser;
 use Wikibase\DataModel\Entity\Item;
 use Wikibase\DataModel\Entity\ItemId;
+use Wikibase\DataModel\Entity\Property;
 use Wikibase\DataModel\Term\AliasGroup;
 use Wikibase\DataModel\Term\AliasGroupList;
 use Wikibase\DataModel\Term\Fingerprint;
@@ -51,6 +52,7 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals(
 			array(
 				'_id' => 'Q1',
+				'_type' => 0,
 				'id' => 'Q1',
 				'sterms' => array(
 					'en' => array( new MongoBinData( 'foo', MongoBinData::GENERIC ) ),
@@ -95,6 +97,7 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals(
 			array(
 				'_id' => 'Q1',
+				'_type' => 0,
 				'id' => 'Q1',
 				'sterms' => array(
 					'en' => array( new MongoBinData( 'foo', MongoBinData::GENERIC ) ),
@@ -196,6 +199,23 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 				new MongoBinData( 'test', MongoBinData::GENERIC )
 			),
 		);
+	}
+
+	public function testBuildItegerForType( ) {
+		$entitySerializerMock = $this->getMock( 'Serializers\Serializer' );
+		$entityDeserializerMock = $this->getMock( 'Deserializers\Deserializer' );
+		$documentBuilder = new MongoDBDocumentBuilder(
+			$entitySerializerMock,
+			$entityDeserializerMock,
+			new BasicEntityIdParser(),
+			new EntityStoreOptions(array( EntityStore::OPTION_LANGUAGES => null ) )
+		);
+
+		$this->assertEquals( MongoDBDocumentBuilder::ITEM_TYPE_INTEGER, $documentBuilder->buildIntegerForType( Item::ENTITY_TYPE ) );
+		$this->assertEquals( MongoDBDocumentBuilder::PROPERTY_TYPE_INTEGER, $documentBuilder->buildIntegerForType( Property::ENTITY_TYPE ) );
+
+		$this->setExpectedException( 'InvalidArgumentException' );
+		$documentBuilder->buildIntegerForType( 'foo' );
 	}
 
 	public function testBuildEntityIdForDocument() {

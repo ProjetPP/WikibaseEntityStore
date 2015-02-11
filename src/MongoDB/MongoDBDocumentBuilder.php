@@ -4,12 +4,15 @@ namespace Wikibase\EntityStore\MongoDB;
 
 use Deserializers\Deserializer;
 use Deserializers\Exceptions\DeserializationException;
+use InvalidArgumentException;
 use MongoBinData;
 use Serializers\Serializer;
 use Wikibase\DataModel\Entity\EntityDocument;
 use Wikibase\DataModel\Entity\EntityId;
 use Wikibase\DataModel\Entity\EntityIdParser;
 use Wikibase\DataModel\Entity\EntityIdParsingException;
+use Wikibase\DataModel\Entity\Item;
+use Wikibase\DataModel\Entity\Property;
 use Wikibase\DataModel\Term\AliasGroup;
 use Wikibase\DataModel\Term\Fingerprint;
 use Wikibase\DataModel\Term\FingerprintProvider;
@@ -24,6 +27,14 @@ use Wikibase\EntityStore\EntityStoreOptions;
  * @author Thomas Pellissier Tanon
  */
 class MongoDBDocumentBuilder {
+
+	const ITEM_TYPE_INTEGER = 0;
+	const PROPERTY_TYPE_INTEGER = 1;
+
+	private static $INTEGER_FOR_TYPES = array(
+		Item::ENTITY_TYPE => self::ITEM_TYPE_INTEGER,
+		Property::ENTITY_TYPE => self::PROPERTY_TYPE_INTEGER
+	);
 
 	/**
 	 * @var Serializer
@@ -95,12 +106,21 @@ class MongoDBDocumentBuilder {
 
 	private function addIndexedDataToSerialization( EntityDocument $entityDocument, $serialization ) {
 		$serialization['_id'] = $entityDocument->getId()->getSerialization();
+		$serialization['_type'] = $this->buildIntegerForType( $entityDocument->getType() );
 
 		if( $entityDocument instanceof FingerprintProvider ) {
 			$serialization['sterms'] = $this->buildSearchTermsForFingerprint( $entityDocument->getFingerprint() );
 		}
 
 		return $serialization;
+	}
+
+	public function buildIntegerForType( $type ) {
+		if( !array_key_exists( $type, self::$INTEGER_FOR_TYPES) ) {
+			throw new InvalidArgumentException( 'Unknown entity type: ' . $type );
+		}
+
+		return self::$INTEGER_FOR_TYPES[$type];
 	}
 
 	private function buildSearchTermsForFingerprint( Fingerprint $fingerprint ) {

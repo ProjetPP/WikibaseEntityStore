@@ -2,6 +2,8 @@
 
 namespace Wikibase\EntityStore\Internal;
 
+use Wikibase\DataModel\Entity\Item;
+use Wikibase\DataModel\Entity\Property;
 use Wikibase\DataModel\Term\Term;
 use Wikibase\EntityStore\EntityIdForTermLookup;
 use Wikibase\EntityStore\ItemIdForTermLookup;
@@ -38,13 +40,13 @@ class DispatchingEntityIdForTermLookup implements ItemIdForTermLookup, PropertyI
 	 * @see ItemForTermLookup::getItemForTerm
 	 */
 	public function getItemIdsForTerm( Term $term ) {
-		return $this->entityIdForTermLookup->getEntityIdsForTerm( $term, 'item' );
+		return $this->entityIdForTermLookup->getEntityIdsForTerm( $term, Item::ENTITY_TYPE );
 	}
 
 	/**
 	 * @see PropertyForTermLookup::getPropertyForTerm
 	 */
 	public function getPropertyIdsForTerm( Term $term ) {
-		return $this->entityIdForTermLookup->getEntityIdsForTerm( $term, 'property' );
+		return $this->entityIdForTermLookup->getEntityIdsForTerm( $term, Property::ENTITY_TYPE );
 	}
 }

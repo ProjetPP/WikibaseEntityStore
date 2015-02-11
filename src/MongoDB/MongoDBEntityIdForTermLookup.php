@@ -59,7 +59,7 @@ class MongoDBEntityIdForTermLookup implements EntityIdForTermLookup {
 		);
 
 		if( $entityType !== null ) {
-			$expr->field( 'type' )->equals( $entityType );
+			$expr->field( '_type' )->equals( $this->documentBuilder->buildIntegerForType( $entityType ) );
 		}
 
 		return $expr->getQuery();
