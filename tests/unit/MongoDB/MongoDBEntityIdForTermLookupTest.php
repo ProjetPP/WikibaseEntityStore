@@ -14,14 +14,6 @@ use Wikibase\DataModel\Term\Term;
 class MongoDBEntityIdForTermLookupTest extends \PHPUnit_Framework_TestCase {
 
 	public function testGetEntityIdsForTermWithoutType() {
-		$cursorMock = $this->getMockBuilder( 'Doctrine\MongoDB\Cursor' )
-			->disableOriginalConstructor()
-			->getMock();
-		$cursorMock->expects( $this->once() )
-			->method( 'sort' )
-			->with( $this->equalTo( array( '_id' => 1 ) ) )
-			->willReturn( array( array( '_id' => 'Q1' ) ) );
-
 		$collectionMock = $this->getMockBuilder( 'Doctrine\MongoDB\Collection' )
 			->disableOriginalConstructor()
 			->getMock();
@@ -30,7 +22,7 @@ class MongoDBEntityIdForTermLookupTest extends \PHPUnit_Framework_TestCase {
 			->with( $this->equalTo( array(
 				'sterms.en' => 'foo'
 			) ) )
-			->willReturn( $cursorMock );
+			->willReturn( array( array( '_id' => 'Q1' ) ) );
 
 		$documentBuilderMock = $this->getMockBuilder( 'Wikibase\EntityStore\MongoDB\MongoDBDocumentBuilder' )
 			->disableOriginalConstructor()
@@ -53,14 +45,6 @@ class MongoDBEntityIdForTermLookupTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function testGetEntityIdsForTermWithType() {
-		$cursorMock = $this->getMockBuilder( 'Doctrine\MongoDB\Cursor' )
-			->disableOriginalConstructor()
-			->getMock();
-		$cursorMock->expects( $this->once() )
-			->method( 'sort' )
-			->with( $this->equalTo( array( '_id' => 1 ) ) )
-			->willReturn( array( array( '_id' => 'Q1' ) ) );
-
 		$collectionMock = $this->getMockBuilder( 'Doctrine\MongoDB\Collection' )
 			->disableOriginalConstructor()
 			->getMock();
@@ -70,7 +54,7 @@ class MongoDBEntityIdForTermLookupTest extends \PHPUnit_Framework_TestCase {
 				'sterms.en' => 'foo',
 				'_type' => 0
 			) ) )
-			->willReturn( $cursorMock );
+			->willReturn( array( array( '_id' => 'Q1' ) ) );
 
 		$documentBuilderMock = $this->getMockBuilder( 'Wikibase\EntityStore\MongoDB\MongoDBDocumentBuilder' )
 			->disableOriginalConstructor()
