@@ -41,7 +41,7 @@ class MongoDBEntityIdForTermLookup implements EntityIdForTermLookup {
 		$documents = $this->collection->find(
 			$this->buildGetEntityIdForTermQuery( $term, $entityType ),
 			array( '_id' => 1 )
-		);
+		)->sort( array( '_id' => 1 ) );
 
 		$entities = array();
 
