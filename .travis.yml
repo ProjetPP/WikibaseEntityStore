@@ -8,6 +8,7 @@ sudo: false
 
 services:
   - mongodb
+  - memcached
 
 install:
   - echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
