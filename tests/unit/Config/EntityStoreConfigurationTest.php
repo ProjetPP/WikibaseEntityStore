@@ -75,6 +75,7 @@ class EntityStoreConfigurationTest extends \PHPUnit_Framework_TestCase {
 						'url' => 'http://www.wikidata.org/w/api.php'
 					),
 					'cache' => array(
+						'lifetime' => 0,
 						'memcached' => array(
 							'enabled' => true,
 							'host' => 'localhost',
@@ -94,6 +95,7 @@ class EntityStoreConfigurationTest extends \PHPUnit_Framework_TestCase {
 						'url' => 'http://www.wikidata.org/w/api.php'
 					),
 					'cache' => array(
+						'lifetime' => 30000,
 						'memcached' => false,
 						'array' => false
 					)
@@ -104,6 +106,7 @@ class EntityStoreConfigurationTest extends \PHPUnit_Framework_TestCase {
 						'url' => 'http://www.wikidata.org/w/api.php'
 					),
 					'cache' => array(
+						'lifetime' => 30000,
 						'memcached' => array(
 							'enabled' => false,
 							'host' => 'localhost',
@@ -188,6 +191,17 @@ class EntityStoreConfigurationTest extends \PHPUnit_Framework_TestCase {
 					),
 					'cache' => array(
 						'memcached' => 'toto'
+					)
+				)
+			),
+			array(
+				array(
+					'backend' => 'api',
+					'api' => array(
+						'url' => 'http://www.wikidata.org/w/api.php'
+					),
+					'cache' => array(
+						'lifetime' => 'tata'
 					)
 				)
 			),

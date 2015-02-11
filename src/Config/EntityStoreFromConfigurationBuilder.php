@@ -5,10 +5,8 @@ namespace Wikibase\EntityStore\Config;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\ChainCache;
-use Doctrine\Common\Cache\MemcachedCache;
 use InvalidArgumentException;
 use Mediawiki\Api\MediawikiApi;
-use Memcached;
 use RuntimeException;
 use Symfony\Component\Config\Definition\Processor;
 use Wikibase\EntityStore\Api\ApiEntityStore;
@@ -32,7 +30,7 @@ class EntityStoreFromConfigurationBuilder {
 			$cache = $this->buildCacheFromConfig( $config['cache'] );
 
 			if( $cache !== null ) {
-				return new CachedEntityStore( $store, $cache );
+				return new CachedEntityStore( $store, $cache, $config['cache']['lifetime'] );
 			}
 		}
 
@@ -84,13 +82,13 @@ class EntityStoreFromConfigurationBuilder {
 		}
 
 		if( $config['memcached']['enabled'] ) {
-			$memcached = new Memcached();
+			$memcached = new \Memcached();
 
 			if( !$memcached->addServer( $config['memcached']['host'], $config['memcached']['port'] ) ) {
 				throw new RuntimeException( 'Fail to connect to Memcached' );
 			}
 
-			$memcachedCache = new MemcachedCache();
+			$memcachedCache = new \Doctrine\Common\Cache\MemcachedCache();
 			$memcachedCache->setMemcached($memcached);
 			$caches[] = $memcachedCache;
 		}
