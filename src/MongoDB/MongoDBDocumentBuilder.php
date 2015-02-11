@@ -4,6 +4,7 @@ namespace Wikibase\EntityStore\MongoDB;
 
 use Deserializers\Deserializer;
 use Deserializers\Exceptions\DeserializationException;
+use MongoBinData;
 use Serializers\Serializer;
 use Wikibase\DataModel\Entity\EntityDocument;
 use Wikibase\DataModel\Entity\EntityId;
@@ -131,8 +132,9 @@ class MongoDBDocumentBuilder {
 			array( ' ', ' ' ),
 			$text
 		);
+		$text = trim( $text );
 
-		return trim( $text );
+		return new MongoBinData( $text, MongoBinData::GENERIC );
 	}
 
 	/**

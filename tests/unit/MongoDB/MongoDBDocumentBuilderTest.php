@@ -3,6 +3,7 @@
 namespace Wikibase\EntityStore\MongoDB;
 
 use Deserializers\Exceptions\DeserializationException;
+use MongoBinData;
 use Wikibase\DataModel\Entity\BasicEntityIdParser;
 use Wikibase\DataModel\Entity\Item;
 use Wikibase\DataModel\Entity\ItemId;
@@ -52,8 +53,11 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 				'_id' => 'Q1',
 				'id' => 'Q1',
 				'sterms' => array(
-					'en' => array( 'foo' ),
-					'fr' => array( 'bêz', 'bat' )
+					'en' => array( new MongoBinData( 'foo', MongoBinData::GENERIC ) ),
+					'fr' => array(
+						new MongoBinData( 'bêz', MongoBinData::GENERIC ),
+						new MongoBinData( 'bat', MongoBinData::GENERIC )
+					)
 				)
 			),
 			$documentBuilder->buildDocumentForEntity( $item )
@@ -93,8 +97,11 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 				'_id' => 'Q1',
 				'id' => 'Q1',
 				'sterms' => array(
-					'en' => array( 'foo' ),
-					'fr' => array( 'baz', 'bat' )
+					'en' => array( new MongoBinData( 'foo', MongoBinData::GENERIC ) ),
+					'fr' => array(
+						new MongoBinData( 'baz', MongoBinData::GENERIC ),
+						new MongoBinData( 'bat', MongoBinData::GENERIC )
+					)
 				)
 			),
 			$documentBuilder->buildDocumentForEntity( $item )
@@ -170,23 +177,23 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 		return array(
 			array(
 				'test',
-				'test'
+				new MongoBinData( 'test', MongoBinData::GENERIC )
 			),
 			array(
 				'TODO',
-				'todo'
+				new MongoBinData( 'todo', MongoBinData::GENERIC )
 			),
 			array(
 				'Être',
-				'être'
+				new MongoBinData( 'être', MongoBinData::GENERIC )
 			),
 			array(
 				'FOO-BAR\'BAZ',
-				'foo bar baz'
+				new MongoBinData( 'foo bar baz', MongoBinData::GENERIC )
 			),
 			array(
 				'\'test-',
-				'test'
+				new MongoBinData( 'test', MongoBinData::GENERIC )
 			),
 		);
 	}
