@@ -31,7 +31,8 @@
 		"psr/log": "~1.0",
 		"symfony/config": "~2.6",
 		"ask/ask": "~1.0",
-		"ask/serialization": "~1.0"
+		"ask/serialization": "~1.0",
+		"ppp/wikidataquery-api": "~1.1"
 	},
 	"require-dev": {
 		"squizlabs/php_codesniffer": "~2.1",

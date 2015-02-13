@@ -56,4 +56,26 @@ class ApiEntityStoreTest extends EntityStoreTest {
 
 		$this->assertInstanceOf( 'Wikibase\EntityStore\PropertyIdForTermLookup', $store->getPropertyIdForTermLookup() );
 	}
+
+	public function testGetItemForQueryLookup() {
+		$mediawikiApiMock = $this->getMockBuilder( 'Mediawiki\Api\MediawikiApi' )
+			->disableOriginalConstructor()
+			->getMock();
+		$wikidataQueryApiMock = $this->getMockBuilder( 'WikidataQueryApi\WikidataQueryApi' )
+			->disableOriginalConstructor()
+			->getMock();
+		$store = new ApiEntityStore( $mediawikiApiMock, $wikidataQueryApiMock );
+
+		$this->assertInstanceOf( 'Wikibase\EntityStore\ItemIdForQueryLookup', $store->getItemIdForQueryLookup() );
+	}
+
+	public function testGetItemForQueryLookupWithException() {
+		$mediawikiApiMock = $this->getMockBuilder( 'Mediawiki\Api\MediawikiApi' )
+			->disableOriginalConstructor()
+			->getMock();
+		$store = new ApiEntityStore( $mediawikiApiMock );
+
+		$this->setExpectedException( 'Wikibase\EntityStore\FeatureNotSupportedException');
+		$this->assertInstanceOf( 'Wikibase\EntityStore\ItemIdForQueryLookup', $store->getItemIdForQueryLookup() );
+	}
 }

@@ -55,7 +55,7 @@ class EntityStoreFromConfigurationBuilder {
 
 		switch( $config['backend'] ) {
 			case 'api':
-				return new ApiEntityStore( new MediawikiApi( $config['api']['url'] ), $options );
+				return new ApiEntityStore( new MediawikiApi( $config['api']['url'] ), null, $options );
 			case 'mongodb':
 				return new MongoDBEntityStore( $this->getMongoDbCollection( $config['mongodb'] ), $options );
 			default:

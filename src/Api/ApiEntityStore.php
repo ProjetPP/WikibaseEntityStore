@@ -7,8 +7,11 @@ use Wikibase\Api\WikibaseFactory;
 use Wikibase\DataModel\Entity\BasicEntityIdParser;
 use Wikibase\EntityStore\EntityStore;
 use Wikibase\EntityStore\EntityStoreOptions;
+use Wikibase\EntityStore\FeatureNotSupportedException;
 use Wikibase\EntityStore\Internal\DispatchingEntityIdForTermLookup;
 use Wikibase\EntityStore\Internal\EntityLookup;
+use WikidataQueryApi\WikidataQueryApi;
+use WikidataQueryApi\WikidataQueryFactory;
 
 /**
  * @licence GPLv2+
@@ -27,12 +30,23 @@ class ApiEntityStore extends EntityStore {
 	private $entityIdsForTermLookup;
 
 	/**
-	 * @param MediawikiApi $api
-	 * @param EntityStoreOptions $options
+	 * @var WikidataQueryApi|null
 	 */
-	public function __construct( MediawikiApi $api, EntityStoreOptions $options = null ) {
+	private $wikidataQueryApi;
+
+	/**
+	 * @param MediawikiApi $api
+	 * @param WikidataQueryApi|null $wikidataQueryApi
+	 * @param EntityStoreOptions|null $options
+	 */
+	public function __construct(
+		MediawikiApi $api,
+		WikidataQueryApi $wikidataQueryApi = null,
+		EntityStoreOptions $options = null
+	) {
 		$this->entityLookup = $this->newEntityLookup( $api );
 		$this->entityIdsForTermLookup = $this->newEntityForTermLookup( $api );
+		$this->wikidataQueryApi = $wikidataQueryApi;
 
 		parent::__construct( $options );
 	}
@@ -79,5 +93,19 @@ class ApiEntityStore extends EntityStore {
 	 */
 	public function getPropertyIdForTermLookup() {
 		return $this->entityIdsForTermLookup;
+	}
+
+	/**
+	 * @see EntityStore::getItemIdForQueryLookup
+	 */
+	public function getItemIdForQueryLookup() {
+		if( $this->wikidataQueryApi === null ) {
+			throw new FeatureNotSupportedException(
+				'ItemIdForQueryLookup not supported: you should configure it to support WikidataQuery'
+			);
+		}
+
+		$factory = new WikidataQueryFactory( $this->wikidataQueryApi );
+		return new WikidataQueryItemIdForQueryLookup( $factory->newSimpleQueryService() );
 	}
 }
