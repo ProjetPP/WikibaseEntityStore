@@ -11,7 +11,6 @@ use Ask\Language\Description\ValueDescription;
 use Ask\Language\Query;
 use DataValues\StringValue;
 use DataValues\TimeValue;
-use InvalidArgumentException;
 use Wikibase\DataModel\Entity\EntityIdValue;
 use Wikibase\DataModel\Entity\ItemId;
 use Wikibase\DataModel\Entity\PropertyId;
@@ -53,7 +52,7 @@ class WikidataQueryItemIdForQueryLookup implements ItemIdForQueryLookup {
 
 	private function buildQueryForDescription( Description $description, PropertyId $propertyId = null ) {
 		if( $description instanceof AnyValue ) {
-			return new ClaimQuery( $propertyId );
+			return $this->buildQueryForAnyValue( $propertyId );
 		} elseif( $description instanceof Conjunction ) {
 			return $this->buildQueryForConjunction( $description, $propertyId );
 		} elseif( $description instanceof Disjunction ) {
@@ -63,8 +62,16 @@ class WikidataQueryItemIdForQueryLookup implements ItemIdForQueryLookup {
 		} elseif( $description instanceof ValueDescription ) {
 			return $this->buildQueryForValueDescription( $description, $propertyId );
 		} else {
-			throw new InvalidArgumentException( 'Unknown description type: ' . $description->getType() );
+			throw new FeatureNotSupportedException( 'Unknown description type: ' . $description->getType() );
 		}
+	}
+
+	private function buildQueryForAnyValue( PropertyId $propertyId = null ) {
+		if( $propertyId === null ) {
+			throw new FeatureNotSupportedException( 'Search for all items is not supported' );
+		}
+
+		return new ClaimQuery( $propertyId );
 	}
 
 	private function buildQueryForConjunction( Conjunction $conjunction, PropertyId $propertyId = null ) {
@@ -86,11 +93,11 @@ class WikidataQueryItemIdForQueryLookup implements ItemIdForQueryLookup {
 	private function buildQueryForSomeProperty( SomeProperty $someProperty ) {
 		$propertyIdValue = $someProperty->getPropertyId();
 		if( !( $propertyIdValue instanceof EntityIdValue ) ) {
-			throw new InvalidArgumentException( 'PropertyId should be an EntityIdValue' );
+			throw new FeatureNotSupportedException( 'PropertyId should be an EntityIdValue' );
 		}
 		$propertyId = $propertyIdValue->getEntityId();
 		if( !( $propertyId instanceof PropertyId ) ) {
-			throw new InvalidArgumentException( 'PropertyId should contain a PropertyId' );
+			throw new FeatureNotSupportedException( 'PropertyId should contain a PropertyId' );
 		}
 
 		if( $someProperty->isSubProperty() ) {
@@ -100,7 +107,11 @@ class WikidataQueryItemIdForQueryLookup implements ItemIdForQueryLookup {
 		}
 	}
 
-	private function buildQueryForValueDescription( ValueDescription $valueDescription, PropertyId $propertyId ) {
+	private function buildQueryForValueDescription( ValueDescription $valueDescription, PropertyId $propertyId = null ) {
+		if( $propertyId === null ) {
+			throw new FeatureNotSupportedException( 'Search of value on any properties is not supported' );
+		}
+
 		if( !in_array(
 			$valueDescription->getComparator(),
 			array( ValueDescription::COMP_EQUAL, ValueDescription::COMP_LIKE )

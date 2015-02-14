@@ -9,6 +9,7 @@ use Ask\Language\Description\SomeProperty;
 use Ask\Language\Description\ValueDescription;
 use Ask\Language\Option\QueryOptions;
 use Ask\Language\Query;
+use DataValues\MonolingualTextValue;
 use DataValues\StringValue;
 use DataValues\TimeValue;
 use Wikibase\DataModel\Entity\EntityIdValue;
@@ -44,7 +45,7 @@ class WikidataQueryItemIdForQueryLookupTest extends \PHPUnit_Framework_TestCase 
 
 		$this->assertEquals(
 			array( new ItemId( 'Q1' ) ),
-			$lookup->getItemIdsForQuery( $query, 'item' )
+			$lookup->getItemIdsForQuery( $query )
 		);
 	}
 
@@ -150,6 +151,102 @@ class WikidataQueryItemIdForQueryLookupTest extends \PHPUnit_Framework_TestCase 
 					new PropertyId( 'P42' ),
 					new TimeValue( '+00000001952-03-11T00:00:00Z', 0, 0, 0, TimeValue::PRECISION_DAY, '' ),
 					new TimeValue( '+00000001952-03-11T00:00:00Z', 0, 0, 0, TimeValue::PRECISION_DAY, '' )
+				)
+			),
+		);
+	}
+
+
+	/**
+	 * @dataProvider getEntityIdsForQueryWithFeatureNotSupportedExceptionProvider
+	 */
+	public function testGetEntityIdsForQueryWithFeatureNotSupportedException( Query $query ) {
+		$queryServiceMock = $this->getMockBuilder( 'WikidataQueryApi\Services\SimpleQueryService' )
+			->disableOriginalConstructor()
+			->getMock();
+		$lookup = new WikidataQueryItemIdForQueryLookup( $queryServiceMock );
+
+		$this->setExpectedException( 'Wikibase\EntityStore\FeatureNotSupportedException');
+		$lookup->getItemIdsForQuery( $query );
+	}
+
+	public function getEntityIdsForQueryWithFeatureNotSupportedExceptionProvider() {
+		return array(
+			array(
+				new Query(
+					new AnyValue(),
+					array(),
+					new QueryOptions( 20, 10 )
+				)
+			),
+			array(
+				new Query(
+					$this->getMockForAbstractClass( 'Ask\Language\Description\Description' ),
+					array(),
+					new QueryOptions( 20, 10 )
+				)
+			),
+			array(
+				new Query(
+					new ValueDescription( new EntityIdValue( new ItemId( 'Q1' ) ) ),
+					array(),
+					new QueryOptions( 20, 10 )
+				)
+			),
+			array(
+				new Query(
+					new SomeProperty(
+						new StringValue( 'foo' ),
+						new ValueDescription( new EntityIdValue( new ItemId( 'Q1' ) ) )
+					),
+					array(),
+					new QueryOptions( 20, 10 )
+				)
+			),
+			array(
+				new Query(
+					new SomeProperty(
+						new EntityIdValue( new PropertyId( 'P42' ) ),
+						new SomeProperty(
+							new EntityIdValue( new PropertyId( 'P42' ) ),
+							new ValueDescription( new EntityIdValue( new ItemId( 'Q1' ) ) ),
+							true
+						)
+					),
+					array(),
+					new QueryOptions( 20, 10 )
+				)
+			),
+			array(
+				new Query(
+					new SomeProperty(
+						new EntityIdValue( new PropertyId( 'P42' ) ),
+						new ValueDescription( new EntityIdValue( new ItemId( 'Q1' ) ), ValueDescription::COMP_GREATER )
+					),
+					array(),
+					new QueryOptions( 20, 10 )
+				)
+			),
+			array(
+				new Query(
+					new SomeProperty(
+						new EntityIdValue( new PropertyId( 'P42' ) ),
+						new ValueDescription( new MonolingualTextValue( 'en', 'Foo' ) )
+					),
+					array(),
+					new QueryOptions( 20, 10 )
+				)
+			),
+			array(
+				new Query(
+					new SomeProperty(
+						new EntityIdValue( new PropertyId( 'P42' ) ),
+						new ValueDescription( new EntityIdValue(
+							$this->getMockForAbstractClass( 'Wikibase\DataModel\Entity\EntityId' )
+						) )
+					),
+					array(),
+					new QueryOptions( 20, 10 )
 				)
 			),
 		);
