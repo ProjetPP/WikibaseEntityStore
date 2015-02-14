@@ -12,6 +12,8 @@ use Ask\Language\Option\QueryOptions;
 use Ask\Language\Query;
 use DataValues\MonolingualTextValue;
 use DataValues\StringValue;
+use DataValues\TimeValue;
+use MongoRegex;
 use Wikibase\DataModel\Entity\EntityIdValue;
 use Wikibase\DataModel\Entity\Item;
 use Wikibase\DataModel\Entity\ItemId;
@@ -202,6 +204,54 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 								array(),
 								array( 'mainsnak.datavalue.value.numeric-id' => 42 )
 							)
+						)
+					),
+					'_type' => 0
+				),
+				0,
+				10,
+				array( array( '_id' => 'Q1' ) )
+			),
+			array(
+				new Query(
+					new SomeProperty(
+						new EntityIdValue( new PropertyId( 'P42' ) ),
+						new ValueDescription(
+							new TimeValue( '+00000001952-03-11T00:00:00Z', 0, 0, 0, TimeValue::PRECISION_DAY, '' )
+						)
+					),
+					array(),
+					new QueryOptions( 10, 0 )
+				),
+				Item::ENTITY_TYPE,
+				array(
+					'claims.P42' => array(
+						'$elemMatch' => array(
+							'mainsnak.datavalue.value.time' => new MongoRegex( '/^\+00000001952\-03\-11/' )
+						)
+					),
+					'_type' => 0
+				),
+				0,
+				10,
+				array( array( '_id' => 'Q1' ) )
+			),
+			array(
+				new Query(
+					new SomeProperty(
+						new EntityIdValue( new PropertyId( 'P42' ) ),
+						new ValueDescription(
+							new TimeValue( '+00000001952-00-00T00:00:00Z', 0, 0, 0, TimeValue::PRECISION_YEAR, '' )
+						)
+					),
+					array(),
+					new QueryOptions( 10, 0 )
+				),
+				Item::ENTITY_TYPE,
+				array(
+					'claims.P42' => array(
+						'$elemMatch' => array(
+							'mainsnak.datavalue.value.time' => new MongoRegex( '/^\+00000001952/' )
 						)
 					),
 					'_type' => 0

@@ -10,6 +10,7 @@ use Ask\Language\Description\SomeProperty;
 use Ask\Language\Description\ValueDescription;
 use Ask\Language\Query;
 use DataValues\StringValue;
+use DataValues\TimeValue;
 use InvalidArgumentException;
 use Wikibase\DataModel\Entity\EntityIdValue;
 use Wikibase\DataModel\Entity\ItemId;
@@ -17,6 +18,7 @@ use Wikibase\DataModel\Entity\PropertyId;
 use Wikibase\EntityStore\FeatureNotSupportedException;
 use Wikibase\EntityStore\ItemIdForQueryLookup;
 use WikidataQueryApi\Query\AndQuery;
+use WikidataQueryApi\Query\BetweenQuery;
 use WikidataQueryApi\Query\ClaimQuery;
 use WikidataQueryApi\Query\OrQuery;
 use WikidataQueryApi\Query\StringQuery;
@@ -111,6 +113,8 @@ class WikidataQueryItemIdForQueryLookup implements ItemIdForQueryLookup {
 			return $this->buildEntityIdValueForSearch( $dataValue, $propertyId );
 		} elseif( $dataValue instanceof StringValue ) {
 			return new StringQuery( $propertyId, $dataValue );
+		} elseif( $dataValue instanceof TimeValue ) {
+			return new BetweenQuery( $propertyId, $dataValue, $dataValue );
 		} else {
 			throw new FeatureNotSupportedException( 'Not supported DataValue type: ' . $dataValue->getType() );
 		}

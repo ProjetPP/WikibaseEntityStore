@@ -12,10 +12,12 @@ use Ask\Language\Option\QueryOptions;
 use Ask\Language\Query;
 use DataValues\DataValue;
 use DataValues\StringValue;
+use DataValues\TimeValue;
 use Doctrine\MongoDB\Cursor;
 use Doctrine\MongoDB\Collection;
 use Doctrine\MongoDB\Query\Expr;
 use Iterator;
+use MongoRegex;
 use Wikibase\DataModel\Entity\EntityIdValue;
 use Wikibase\DataModel\Entity\ItemId;
 use Wikibase\DataModel\Entity\PropertyId;
@@ -141,6 +143,8 @@ class MongoDBEntityIdForQueryLookup implements EntityIdForQueryLookup {
 			return $this->buildEntityIdValueForSearch( $dataValue );
 		} elseif( $dataValue instanceof StringValue ) {
 			return $this->buildStringValueForSearch( $dataValue );
+		} elseif( $dataValue instanceof TimeValue ) {
+			return $this->buildTimeValueForSearch( $dataValue );
 		} else {
 			throw new FeatureNotSupportedException( 'Not supported DataValue type: ' . $dataValue->getType() );
 		}
@@ -160,6 +164,14 @@ class MongoDBEntityIdForQueryLookup implements EntityIdForQueryLookup {
 	private function buildStringValueForSearch( StringValue $stringValue ) {
 		return array(
 			'value' => $stringValue->getValue()
+		);
+	}
+
+	private function buildTimeValueForSearch( TimeValue $timeValue ) {
+		$significantTimePart = preg_replace( '/(-00)*T00:00:00Z$/', '', $timeValue->getTime() );
+
+		return array(
+			'value.time' => new MongoRegex( '/^' . preg_quote( $significantTimePart, '/' ) . '/' )
 		);
 	}
 

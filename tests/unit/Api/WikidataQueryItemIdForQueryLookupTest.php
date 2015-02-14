@@ -10,11 +10,13 @@ use Ask\Language\Description\ValueDescription;
 use Ask\Language\Option\QueryOptions;
 use Ask\Language\Query;
 use DataValues\StringValue;
+use DataValues\TimeValue;
 use Wikibase\DataModel\Entity\EntityIdValue;
 use Wikibase\DataModel\Entity\ItemId;
 use Wikibase\DataModel\Entity\PropertyId;
 use WikidataQueryApi\Query\AbstractQuery;
 use WikidataQueryApi\Query\AndQuery;
+use WikidataQueryApi\Query\BetweenQuery;
 use WikidataQueryApi\Query\ClaimQuery;
 use WikidataQueryApi\Query\OrQuery;
 use WikidataQueryApi\Query\StringQuery;
@@ -132,6 +134,23 @@ class WikidataQueryItemIdForQueryLookupTest extends \PHPUnit_Framework_TestCase 
 					new ClaimQuery( new PropertyId( 'P42' ) ),
 					new ClaimQuery( new PropertyId( 'P42' ), new ItemId( 'Q42' ) )
 				) )
+			),
+			array(
+				new Query(
+					new SomeProperty(
+						new EntityIdValue( new PropertyId( 'P42' ) ),
+						new ValueDescription(
+							new TimeValue( '+00000001952-03-11T00:00:00Z', 0, 0, 0, TimeValue::PRECISION_DAY, '' )
+						)
+					),
+					array(),
+					new QueryOptions( 10, 0 )
+				),
+				new BetweenQuery(
+					new PropertyId( 'P42' ),
+					new TimeValue( '+00000001952-03-11T00:00:00Z', 0, 0, 0, TimeValue::PRECISION_DAY, '' ),
+					new TimeValue( '+00000001952-03-11T00:00:00Z', 0, 0, 0, TimeValue::PRECISION_DAY, '' )
+				)
 			),
 		);
 	}
