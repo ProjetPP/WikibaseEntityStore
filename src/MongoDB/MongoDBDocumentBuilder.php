@@ -15,6 +15,7 @@ use Wikibase\DataModel\Entity\Item;
 use Wikibase\DataModel\Entity\Property;
 use Wikibase\EntityStore\EntityStore;
 use Wikibase\EntityStore\EntityStoreOptions;
+use Wikibase\EntityStore\FeatureNotSupportedException;
 
 /**
  * Internal class
@@ -111,7 +112,7 @@ class MongoDBDocumentBuilder {
 
 	public function buildIntegerForType( $type ) {
 		if( !array_key_exists( $type, self::$INTEGER_FOR_TYPES) ) {
-			throw new InvalidArgumentException( 'Unknown entity type: ' . $type );
+			throw new FeatureNotSupportedException( 'Unknown entity type: ' . $type );
 		}
 
 		return self::$INTEGER_FOR_TYPES[$type];

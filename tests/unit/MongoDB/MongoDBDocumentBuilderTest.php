@@ -278,7 +278,7 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 			$documentBuilder->buildIntegerForType( Property::ENTITY_TYPE )
 		);
 
-		$this->setExpectedException( 'InvalidArgumentException' );
+		$this->setExpectedException( 'Wikibase\EntityStore\FeatureNotSupportedException' );
 		$documentBuilder->buildIntegerForType( 'foo' );
 	}
 

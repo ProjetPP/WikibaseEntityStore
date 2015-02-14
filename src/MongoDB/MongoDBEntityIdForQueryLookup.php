@@ -13,7 +13,6 @@ use Ask\Language\Query;
 use DataValues\DataValue;
 use DataValues\StringValue;
 use Doctrine\MongoDB\Cursor;
-use InvalidArgumentException;
 use Doctrine\MongoDB\Collection;
 use Doctrine\MongoDB\Query\Expr;
 use Iterator;
@@ -88,7 +87,7 @@ class MongoDBEntityIdForQueryLookup implements EntityIdForQueryLookup {
 		} elseif( $description instanceof ValueDescription ) {
 			return $this->buildQueryForValueDescription( $description, $expr );
 		} else {
-			throw new InvalidArgumentException( 'Unknown description type: ' . $description->getType() );
+			throw new FeatureNotSupportedException( 'Unknown description type: ' . $description->getType() );
 		}
 	}
 
@@ -109,7 +108,7 @@ class MongoDBEntityIdForQueryLookup implements EntityIdForQueryLookup {
 	private function buildQueryForSomeProperty( SomeProperty $someProperty, Expr $expr ) {
 		$propertyIdValue = $someProperty->getPropertyId();
 		if( !( $propertyIdValue instanceof EntityIdValue ) ) {
-			throw new InvalidArgumentException( 'PropertyId should be an EntityIdValue' );
+			throw new FeatureNotSupportedException( 'PropertyId should be an EntityIdValue' );
 		}
 
 		$subQuery = $this->buildCoreQueryForDescription( $someProperty->getSubDescription(), new Expr() );
