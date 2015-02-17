@@ -1,6 +1,6 @@
 <?php
 
-namespace Wikibase\EntityStore;
+namespace Wikibase\EntityStore\Internal;
 
 use Ask\Language\Query;
 use Wikibase\DataModel\Entity\EntityId;

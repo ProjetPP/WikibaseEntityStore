@@ -5,7 +5,7 @@ namespace Wikibase\EntityStore\Api;
 use Mediawiki\Api\MediawikiApi;
 use Wikibase\DataModel\Entity\EntityIdParser;
 use Wikibase\DataModel\Term\Term;
-use Wikibase\EntityStore\EntityIdForTermLookup;
+use Wikibase\EntityStore\Internal\EntityIdForTermLookup;
 
 /**
  * Internal class

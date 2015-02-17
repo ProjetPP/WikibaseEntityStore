@@ -5,7 +5,7 @@ namespace Wikibase\EntityStore\MongoDB;
 use Doctrine\MongoDB\Database;
 use Doctrine\MongoDB\Query\Expr;
 use Wikibase\DataModel\Term\Term;
-use Wikibase\EntityStore\EntityIdForTermLookup;
+use Wikibase\EntityStore\Internal\EntityIdForTermLookup;
 
 /**
  * Internal class

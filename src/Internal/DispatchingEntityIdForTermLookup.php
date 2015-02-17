@@ -5,7 +5,6 @@ namespace Wikibase\EntityStore\Internal;
 use Wikibase\DataModel\Entity\Item;
 use Wikibase\DataModel\Entity\Property;
 use Wikibase\DataModel\Term\Term;
-use Wikibase\EntityStore\EntityIdForTermLookup;
 use Wikibase\EntityStore\ItemIdForTermLookup;
 use Wikibase\EntityStore\PropertyIdForTermLookup;
 

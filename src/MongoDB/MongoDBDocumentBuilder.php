@@ -4,7 +4,6 @@ namespace Wikibase\EntityStore\MongoDB;
 
 use Deserializers\Deserializer;
 use Deserializers\Exceptions\DeserializationException;
-use InvalidArgumentException;
 use MongoBinData;
 use Serializers\Serializer;
 use Wikibase\DataModel\Entity\EntityDocument;

@@ -5,7 +5,6 @@ namespace Wikibase\EntityStore\Internal;
 use Ask\Language\Query;
 use Wikibase\DataModel\Entity\Item;
 use Wikibase\DataModel\Entity\Property;
-use Wikibase\EntityStore\EntityIdForQueryLookup;
 use Wikibase\EntityStore\ItemIdForQueryLookup;
 use Wikibase\EntityStore\PropertyIdForQueryLookup;
 

@@ -21,8 +21,8 @@ use MongoRegex;
 use Wikibase\DataModel\Entity\EntityIdValue;
 use Wikibase\DataModel\Entity\ItemId;
 use Wikibase\DataModel\Entity\PropertyId;
-use Wikibase\EntityStore\EntityIdForQueryLookup;
 use Wikibase\EntityStore\FeatureNotSupportedException;
+use Wikibase\EntityStore\Internal\EntityIdForQueryLookup;
 
 /**
  * Internal class

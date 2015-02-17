@@ -4,7 +4,6 @@ namespace Wikibase\EntityStore\Api;
 
 use Wikibase\DataModel\Entity\BasicEntityIdParser;
 use Wikibase\DataModel\Entity\ItemId;
-use Wikibase\DataModel\Entity\PropertyId;
 use Wikibase\DataModel\Term\Term;
 
 /**
