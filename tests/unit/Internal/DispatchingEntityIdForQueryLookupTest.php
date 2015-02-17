@@ -17,7 +17,7 @@ use Wikibase\DataModel\Entity\PropertyId;
 class DispatchingEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 
 	public function testGetEntityIdsForQuery() {
-		$entityIdForQueryLookupMock = $this->getMockBuilder( 'Wikibase\EntityStore\EntityIdForQueryLookup' )
+		$entityIdForQueryLookupMock = $this->getMockBuilder( 'Wikibase\EntityStore\Internal\EntityIdForQueryLookup' )
 			->disableOriginalConstructor()
 			->getMock();
 		$entityIdForQueryLookupMock->expects( $this->once() )
@@ -33,7 +33,7 @@ class DispatchingEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase 
 	}
 
 	public function testGetItemsForQuery() {
-		$entityIdForQueryLookupMock = $this->getMockBuilder( 'Wikibase\EntityStore\EntityIdForQueryLookup' )
+		$entityIdForQueryLookupMock = $this->getMockBuilder( 'Wikibase\EntityStore\Internal\EntityIdForQueryLookup' )
 			->disableOriginalConstructor()
 			->getMock();
 		$entityIdForQueryLookupMock->expects( $this->once() )
@@ -49,7 +49,7 @@ class DispatchingEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase 
 	}
 
 	public function testGetPropertiesForQuery() {
-		$entityIdForQueryLookupMock = $this->getMockBuilder( 'Wikibase\EntityStore\EntityIdForQueryLookup' )
+		$entityIdForQueryLookupMock = $this->getMockBuilder( 'Wikibase\EntityStore\Internal\EntityIdForQueryLookup' )
 			->disableOriginalConstructor()
 			->getMock();
 		$entityIdForQueryLookupMock->expects( $this->once() )

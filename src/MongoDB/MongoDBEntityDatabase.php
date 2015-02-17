@@ -80,7 +80,9 @@ class MongoDBEntityDatabase implements EntityDocumentLookup, EntityDocumentSaver
 	}
 
 	private function getEntitiesInCollection( array $entityIds, $collectionName ) {
-		$documents = $this->database->selectCollection( $collectionName )->find( $this->buildGetEntitiesForIdsQuery( $entityIds ) );
+		$documents = $this->database
+			->selectCollection( $collectionName )
+			->find( $this->buildGetEntitiesForIdsQuery( $entityIds ) );
 
 
 		$entities = array();

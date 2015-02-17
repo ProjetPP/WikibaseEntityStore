@@ -15,7 +15,7 @@ use Wikibase\DataModel\Term\Term;
 class DispatchingEntityIdForTermLookupTest extends \PHPUnit_Framework_TestCase {
 
 	public function testGetEntityIdsForTerm() {
-		$entityIdForTermLookupMock = $this->getMockBuilder( 'Wikibase\EntityStore\EntityIdForTermLookup' )
+		$entityIdForTermLookupMock = $this->getMockBuilder( 'Wikibase\EntityStore\Internal\EntityIdForTermLookup' )
 			->disableOriginalConstructor()
 			->getMock();
 		$entityIdForTermLookupMock->expects( $this->once() )
@@ -31,7 +31,7 @@ class DispatchingEntityIdForTermLookupTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function testGetItemsForTerm() {
-		$entityIdForTermLookupMock = $this->getMockBuilder( 'Wikibase\EntityStore\EntityIdForTermLookup' )
+		$entityIdForTermLookupMock = $this->getMockBuilder( 'Wikibase\EntityStore\Internal\EntityIdForTermLookup' )
 			->disableOriginalConstructor()
 			->getMock();
 		$entityIdForTermLookupMock->expects( $this->once() )
@@ -47,7 +47,7 @@ class DispatchingEntityIdForTermLookupTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function testGetPropertiesForTerm() {
-		$entityIdForTermLookupMock = $this->getMockBuilder( 'Wikibase\EntityStore\EntityIdForTermLookup' )
+		$entityIdForTermLookupMock = $this->getMockBuilder( 'Wikibase\EntityStore\Internal\EntityIdForTermLookup' )
 			->disableOriginalConstructor()
 			->getMock();
 		$entityIdForTermLookupMock->expects( $this->once() )

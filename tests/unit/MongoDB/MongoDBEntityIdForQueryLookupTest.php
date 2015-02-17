@@ -268,7 +268,7 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 	/**
 	 * @dataProvider getEntityIdsForQueryWithFeatureNotSupportedExceptionProvider
 	 */
-	public function testGetEntityIdsForQueryWithFeatureNotSupportedException( Query $query, $type = null ) {
+	public function testGetEntityIdsForQueryWithFeatureNotSupportedException( Query $query ) {
 		$collectionMock = $this->getMockBuilder( 'Doctrine\MongoDB\Collection' )
 			->disableOriginalConstructor()
 			->getMock();
@@ -291,19 +291,11 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 		$lookup = new MongoDBEntityIdForQueryLookup( $databaseMock, $documentBuilderMock );
 
 		$this->setExpectedException( 'Wikibase\EntityStore\FeatureNotSupportedException');
-		$lookup->getEntityIdsForQuery( $query, $type );
+		$lookup->getEntityIdsForQuery( $query, 'item' );
 	}
 
 	public function getEntityIdsForQueryWithFeatureNotSupportedExceptionProvider() {
 		return array(
-			array(
-				new Query(
-					new AnyValue(),
-					array(),
-					new QueryOptions( 20, 10 )
-				),
-				'foo'
-			),
 			array(
 				new Query(
 					$this->getMockForAbstractClass( 'Ask\Language\Description\Description' ),
