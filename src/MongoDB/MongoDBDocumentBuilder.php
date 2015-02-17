@@ -123,9 +123,9 @@ class MongoDBDocumentBuilder {
 	 */
 	public function cleanTextForSearch( $text ) {
 		$text = mb_strtolower( $text, 'UTF-8' ); //TODO: said to be very slow
-		$text = str_replace( //TODO useful? + tests
+		$text = str_replace(
 			array( '\'', '-' ),
-			array( ' ', ' ' ),
+			array( '', '' ),
 			$text
 		);
 		$text = trim( $text );
