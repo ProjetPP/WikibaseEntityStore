@@ -127,12 +127,11 @@ if( !$connection->connect() ) {
     throw new RuntimeException( 'Fail to connect to the database' );
 }
 
-//Gets the collection where entities are stored
-$collection = $connection
-    ->selectDatabase( 'wikibase' )
-    ->selectCollection( 'entity' );
+//Gets the database where entities are stored
+$database = $connection
+    ->selectDatabase( 'wikibase' );
 
-$store = new Wikibase\EntityStore\MongoDB\MongDBEntityStore( $collection );
+$store = new Wikibase\EntityStore\MongoDB\MongDBEntityStore( $database );
 ```
 
 You can fill the MongoDB database from Wikidata JSON dumps using this script:
