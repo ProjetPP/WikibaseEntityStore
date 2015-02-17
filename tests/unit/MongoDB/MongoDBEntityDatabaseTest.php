@@ -11,7 +11,7 @@ use Wikibase\DataModel\Entity\ItemId;
  * @licence GPLv2+
  * @author Thomas Pellissier Tanon
  */
-class MongoDBEntityCollectionTest extends \PHPUnit_Framework_TestCase {
+class MongoDBEntityDatabaseTest extends \PHPUnit_Framework_TestCase {
 
 	public function testGetEntityDocumentForId() {
 		$item = new Item( new ItemId( 'Q1' ) );
@@ -24,6 +24,14 @@ class MongoDBEntityCollectionTest extends \PHPUnit_Framework_TestCase {
 			->with( $this->equalTo( array( '_id' => 'Q1' ) ) )
 			->willReturn( array( 'id' => 'Q1' ) );
 
+		$databaseMock = $this->getMockBuilder( 'Doctrine\MongoDB\Database' )
+			->disableOriginalConstructor()
+			->getMock();
+		$databaseMock->expects( $this->once() )
+			->method( 'selectCollection' )
+			->with( $this->equalTo( 'item' ) )
+			->willReturn( $collectionMock );
+
 		$documentBuilderMock = $this->getMockBuilder( 'Wikibase\EntityStore\MongoDB\MongoDBDocumentBuilder' )
 			->disableOriginalConstructor()
 			->getMock();
@@ -32,7 +40,7 @@ class MongoDBEntityCollectionTest extends \PHPUnit_Framework_TestCase {
 			->with( $this->equalTo( array( 'id' => 'Q1' ) ) )
 			->willReturn( $item );
 
-		$entityStore = new MongoDBEntityCollection( $collectionMock, $documentBuilderMock );
+		$entityStore = new MongoDBEntityDatabase( $databaseMock, $documentBuilderMock );
 
 		$this->assertEquals(
 			$item,
@@ -49,11 +57,19 @@ class MongoDBEntityCollectionTest extends \PHPUnit_Framework_TestCase {
 			->with( $this->equalTo( array( '_id' => 'Q1' ) ) )
 			->willReturn( null );
 
+		$databaseMock = $this->getMockBuilder( 'Doctrine\MongoDB\Database' )
+			->disableOriginalConstructor()
+			->getMock();
+		$databaseMock->expects( $this->once() )
+			->method( 'selectCollection' )
+			->with( $this->equalTo( 'item' ) )
+			->willReturn( $collectionMock );
+
 		$documentBuilderMock = $this->getMockBuilder( 'Wikibase\EntityStore\MongoDB\MongoDBDocumentBuilder' )
 			->disableOriginalConstructor()
 			->getMock();
 
-		$entityStore = new MongoDBEntityCollection( $collectionMock, $documentBuilderMock );
+		$entityStore = new MongoDBEntityDatabase( $databaseMock, $documentBuilderMock );
 
 		$this->setExpectedException( 'Wikibase\EntityStore\EntityNotFoundException' );
 		$entityStore->getEntityDocumentForId( new ItemId( 'Q1' ) );
@@ -72,6 +88,14 @@ class MongoDBEntityCollectionTest extends \PHPUnit_Framework_TestCase {
 				array( 'id' => 'Q1' )
 			) );
 
+		$databaseMock = $this->getMockBuilder( 'Doctrine\MongoDB\Database' )
+			->disableOriginalConstructor()
+			->getMock();
+		$databaseMock->expects( $this->once() )
+			->method( 'selectCollection' )
+			->with( $this->equalTo( 'item' ) )
+			->willReturn( $collectionMock );
+
 		$documentBuilderMock = $this->getMockBuilder( 'Wikibase\EntityStore\MongoDB\MongoDBDocumentBuilder' )
 			->disableOriginalConstructor()
 			->getMock();
@@ -80,7 +104,7 @@ class MongoDBEntityCollectionTest extends \PHPUnit_Framework_TestCase {
 			->with( $this->equalTo( array( 'id' => 'Q1' ) ) )
 			->willReturn( $item );
 
-		$entityStore = new MongoDBEntityCollection( $collectionMock, $documentBuilderMock );
+		$entityStore = new MongoDBEntityDatabase( $databaseMock, $documentBuilderMock );
 
 		$this->assertEquals(
 			array( $item ),
@@ -101,6 +125,14 @@ class MongoDBEntityCollectionTest extends \PHPUnit_Framework_TestCase {
 				$this->equalTo( array( 'id' => 'Q1' ) )
 			);
 
+		$databaseMock = $this->getMockBuilder( 'Doctrine\MongoDB\Database' )
+			->disableOriginalConstructor()
+			->getMock();
+		$databaseMock->expects( $this->once() )
+			->method( 'selectCollection' )
+			->with( $this->equalTo( 'item' ) )
+			->willReturn( $collectionMock );
+
 		$documentBuilderMock = $this->getMockBuilder( 'Wikibase\EntityStore\MongoDB\MongoDBDocumentBuilder' )
 			->disableOriginalConstructor()
 			->getMock();
@@ -109,7 +141,7 @@ class MongoDBEntityCollectionTest extends \PHPUnit_Framework_TestCase {
 			->with( $this->equalTo( $item ) )
 			->willReturn( array( 'id' => 'Q1' ) );
 
-		$entityStore = new MongoDBEntityCollection( $collectionMock, $documentBuilderMock );
+		$entityStore = new MongoDBEntityDatabase( $databaseMock, $documentBuilderMock );
 
 		$entityStore->saveEntityDocument( $item );
 	}

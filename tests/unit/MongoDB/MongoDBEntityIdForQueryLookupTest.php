@@ -52,6 +52,14 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 			->with( $this->equalTo( $mongoQuery ) )
 			->willReturn( $cursorMock );
 
+		$databaseMock = $this->getMockBuilder( 'Doctrine\MongoDB\Database' )
+			->disableOriginalConstructor()
+			->getMock();
+		$databaseMock->expects( $this->once() )
+			->method( 'selectCollection' )
+			->with( $this->equalTo( $type ) )
+			->willReturn( $collectionMock );
+
 		$documentBuilderMock = $this->getMockBuilder( 'Wikibase\EntityStore\MongoDB\MongoDBDocumentBuilder' )
 			->disableOriginalConstructor()
 			->getMock();
@@ -64,7 +72,7 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 			->with( $this->equalTo( 'item' ) )
 			->willReturn( 0 );
 
-		$lookup = new MongoDBEntityIdForQueryLookup( $collectionMock, $documentBuilderMock );
+		$lookup = new MongoDBEntityIdForQueryLookup( $databaseMock, $documentBuilderMock );
 
 		$this->assertEquals(
 			array( new ItemId( 'Q1' ) ),
@@ -271,6 +279,13 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 			->disableOriginalConstructor()
 			->getMock();
 
+		$databaseMock = $this->getMockBuilder( 'Doctrine\MongoDB\Database' )
+			->disableOriginalConstructor()
+			->getMock();
+		$databaseMock->expects( $this->once() )
+			->method( 'selectCollection' )
+			->willReturn( $collectionMock );
+
 		$documentBuilderMock = $this->getMockBuilder( 'Wikibase\EntityStore\MongoDB\MongoDBDocumentBuilder' )
 			->disableOriginalConstructor()
 			->getMock();
@@ -279,7 +294,7 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 			->with( $this->equalTo( 'foo' ) )
 			->willThrowException( new FeatureNotSupportedException() );
 
-		$lookup = new MongoDBEntityIdForQueryLookup( $collectionMock, $documentBuilderMock );
+		$lookup = new MongoDBEntityIdForQueryLookup( $databaseMock, $documentBuilderMock );
 
 		$this->setExpectedException( 'Wikibase\EntityStore\FeatureNotSupportedException');
 		$lookup->getEntityIdsForQuery( $query, $type );

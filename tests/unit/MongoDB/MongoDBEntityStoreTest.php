@@ -13,7 +13,7 @@ use Wikibase\EntityStore\EntityStoreTest;
 class MongoDBEntityStoreTest extends EntityStoreTest {
 
 	public function testGetEntityDocumentLookup() {
-		$collectionMock = $this->getMockBuilder( 'Doctrine\MongoDB\Collection' )
+		$collectionMock = $this->getMockBuilder( 'Doctrine\MongoDB\Database' )
 			->disableOriginalConstructor()
 			->getMock();
 		$store = new MongoDBEntityStore( $collectionMock );
@@ -22,7 +22,7 @@ class MongoDBEntityStoreTest extends EntityStoreTest {
 	}
 
 	public function testGetItemLookup() {
-		$collectionMock = $this->getMockBuilder( 'Doctrine\MongoDB\Collection' )
+		$collectionMock = $this->getMockBuilder( 'Doctrine\MongoDB\Database' )
 			->disableOriginalConstructor()
 			->getMock();
 		$store = new MongoDBEntityStore( $collectionMock );
@@ -31,7 +31,7 @@ class MongoDBEntityStoreTest extends EntityStoreTest {
 	}
 
 	public function testGetPropertyLookup() {
-		$collectionMock = $this->getMockBuilder( 'Doctrine\MongoDB\Collection' )
+		$collectionMock = $this->getMockBuilder( 'Doctrine\MongoDB\Database' )
 			->disableOriginalConstructor()
 			->getMock();
 		$store = new MongoDBEntityStore( $collectionMock );
@@ -40,7 +40,7 @@ class MongoDBEntityStoreTest extends EntityStoreTest {
 	}
 
 	public function testGetEntityDocumentSaver() {
-		$collectionMock = $this->getMockBuilder( 'Doctrine\MongoDB\Collection' )
+		$collectionMock = $this->getMockBuilder( 'Doctrine\MongoDB\Database' )
 			->disableOriginalConstructor()
 			->getMock();
 		$store = new MongoDBEntityStore( $collectionMock );
@@ -48,8 +48,8 @@ class MongoDBEntityStoreTest extends EntityStoreTest {
 		$this->assertInstanceOf( 'Wikibase\EntityStore\EntityDocumentSaver', $store->getEntityDocumentSaver() );
 	}
 
-	public function testGetItemForTermLookup() {
-		$collectionMock = $this->getMockBuilder( 'Doctrine\MongoDB\Collection' )
+	public function testGetItemIdForTermLookup() {
+		$collectionMock = $this->getMockBuilder( 'Doctrine\MongoDB\Database' )
 			->disableOriginalConstructor()
 			->getMock();
 		$store = new MongoDBEntityStore( $collectionMock );
@@ -57,8 +57,8 @@ class MongoDBEntityStoreTest extends EntityStoreTest {
 		$this->assertInstanceOf( 'Wikibase\EntityStore\ItemIdForTermLookup', $store->getItemIdForTermLookup() );
 	}
 
-	public function testGetPropertyForTermLookup() {
-		$collectionMock = $this->getMockBuilder( 'Doctrine\MongoDB\Collection' )
+	public function testGetPropertyIdForTermLookup() {
+		$collectionMock = $this->getMockBuilder( 'Doctrine\MongoDB\Database' )
 			->disableOriginalConstructor()
 			->getMock();
 		$store = new MongoDBEntityStore( $collectionMock );
@@ -66,8 +66,8 @@ class MongoDBEntityStoreTest extends EntityStoreTest {
 		$this->assertInstanceOf( 'Wikibase\EntityStore\PropertyIdForTermLookup', $store->getPropertyIdForTermLookup() );
 	}
 
-	public function testGetItemForQueryLookup() {
-		$collectionMock = $this->getMockBuilder( 'Doctrine\MongoDB\Collection' )
+	public function testGetItemIdForQueryLookup() {
+		$collectionMock = $this->getMockBuilder( 'Doctrine\MongoDB\Database' )
 			->disableOriginalConstructor()
 			->getMock();
 		$store = new MongoDBEntityStore( $collectionMock );
@@ -75,8 +75,8 @@ class MongoDBEntityStoreTest extends EntityStoreTest {
 		$this->assertInstanceOf( 'Wikibase\EntityStore\ItemIdForQueryLookup', $store->getItemIdForQueryLookup() );
 	}
 
-	public function testGetPropertyForQueryLookup() {
-		$collectionMock = $this->getMockBuilder( 'Doctrine\MongoDB\Collection' )
+	public function testGetPropertyIdForQueryLookup() {
+		$collectionMock = $this->getMockBuilder( 'Doctrine\MongoDB\Database' )
 			->disableOriginalConstructor()
 			->getMock();
 		$store = new MongoDBEntityStore( $collectionMock );

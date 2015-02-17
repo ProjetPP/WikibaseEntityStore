@@ -2,7 +2,7 @@
 
 namespace Wikibase\EntityStore\MongoDB;
 
-use Doctrine\MongoDB\Collection;
+use Doctrine\MongoDB\Database;
 use Doctrine\MongoDB\Query\Expr;
 use Wikibase\DataModel\Term\Term;
 use Wikibase\EntityStore\EntityIdForTermLookup;
@@ -16,9 +16,9 @@ use Wikibase\EntityStore\EntityIdForTermLookup;
 class MongoDBEntityIdForTermLookup implements EntityIdForTermLookup {
 
 	/**
-	 * @var Collection
+	 * @var Database
 	 */
-	private $collection;
+	private $database;
 
 	/**
 	 * @var MongoDBDocumentBuilder
@@ -26,11 +26,11 @@ class MongoDBEntityIdForTermLookup implements EntityIdForTermLookup {
 	private $documentBuilder;
 
 	/**
-	 * @param Collection $collection
+	 * @param Database $database
 	 * @param MongoDBDocumentBuilder $documentBuilder
 	 */
-	public function __construct( Collection $collection, MongoDBDocumentBuilder $documentBuilder ) {
-		$this->collection = $collection;
+	public function __construct( Database $database, MongoDBDocumentBuilder $documentBuilder ) {
+		$this->database = $database;
 		$this->documentBuilder = $documentBuilder;
 	}
 
@@ -38,10 +38,12 @@ class MongoDBEntityIdForTermLookup implements EntityIdForTermLookup {
 	 * @see EntityDocumentLookup::getEntityDocumentsForTerm
 	 */
 	public function getEntityIdsForTerm( Term $term, $entityType = null ) {
-		$documents = $this->collection->find(
-			$this->buildGetEntityIdForTermQuery( $term, $entityType ),
-			array( '_id' => 1 )
-		);
+		$documents = $this->database
+			->selectCollection( $entityType )
+			->find(
+				$this->buildGetEntityIdForTermQuery( $term, $entityType ),
+				array( '_id' => 1 )
+			);
 
 		$entities = array();
 

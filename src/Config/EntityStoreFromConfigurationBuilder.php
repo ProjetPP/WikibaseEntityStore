@@ -57,21 +57,20 @@ class EntityStoreFromConfigurationBuilder {
 			case 'api':
 				return new ApiEntityStore( new MediawikiApi( $config['api']['url'] ), null, $options );
 			case 'mongodb':
-				return new MongoDBEntityStore( $this->getMongoDbCollection( $config['mongodb'] ), $options );
+				return new MongoDBEntityStore( $this->getMongoDbDatabase( $config['mongodb'] ), $options );
 			default:
 				throw new InvalidArgumentException( 'Unknown backend: ' . $config['backend'] );
 		}
 	}
 
-	private function getMongoDbCollection( $config ) {
+	private function getMongoDbDatabase( $config ) {
 		$connection = new \Doctrine\MongoDB\Connection( $config['server'] );
 		if( !$connection->connect() ) {
 			throw new RuntimeException( 'Fail to connect to MongoDb' );
 		}
 
 		return $connection
-			->selectDatabase( $config['database'] )
-			->selectCollection( 'entity' );
+			->selectDatabase( $config['database'] );
 	}
 
 	private function buildCacheFromConfig( $config ) {

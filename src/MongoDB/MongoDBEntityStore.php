@@ -2,8 +2,10 @@
 
 namespace Wikibase\EntityStore\MongoDB;
 
-use Doctrine\MongoDB\Collection;
+use Doctrine\MongoDB\Database;
 use Wikibase\DataModel\Entity\BasicEntityIdParser;
+use Wikibase\DataModel\Entity\Item;
+use Wikibase\DataModel\Entity\Property;
 use Wikibase\EntityStore\EntityDocumentSaver;
 use Wikibase\EntityStore\EntityStore;
 use Wikibase\EntityStore\EntityStoreOptions;
@@ -20,10 +22,15 @@ use Wikibase\EntityStore\Internal\EntitySerializationFactory;
  */
 class MongoDBEntityStore extends EntityStore {
 
+	private static $SUPPORTED_TYPES = array(
+		Item::ENTITY_TYPE,
+		Property::ENTITY_TYPE
+	);
+
 	/**
-	 * @var Collection
+	 * @var Database
 	 */
-	private $collection;
+	private $database;
 
 	/**
 	 * @var EntityLookup
@@ -46,30 +53,30 @@ class MongoDBEntityStore extends EntityStore {
 	private $entitySaver;
 
 	/**
-	 * @param Collection $collection
+	 * @param Database $database
 	 * @param EntityStoreOptions $options
 	 */
-	public function __construct( Collection $collection, EntityStoreOptions $options = null ) {
-		$this->collection = $collection;
+	public function __construct( Database $database, EntityStoreOptions $options = null ) {
+		$this->database = $database;
 		parent::__construct( $options );
 
-		$entityCollection = $this->newEntityCollection( $collection );
-		$this->entityLookup = new EntityLookup( $entityCollection );
-		$this->entityForTermLookup = new DispatchingEntityIdForTermLookup( $this->newEntityIdForTermLookup( $collection ) );
-		$this->entityForQueryLookup = new DispatchingEntityIdForQueryLookup( $this->newEntityIdForQueryLookup( $collection ) );
-		$this->entitySaver = $entityCollection;
+		$entityDatabase = $this->newEntityDatabase( $database );
+		$this->entityLookup = new EntityLookup( $entityDatabase );
+		$this->entityForTermLookup = new DispatchingEntityIdForTermLookup( $this->newEntityIdForTermLookup( $database ) );
+		$this->entityForQueryLookup = new DispatchingEntityIdForQueryLookup( $this->newEntityIdForQueryLookup( $database ) );
+		$this->entitySaver = $entityDatabase;
 	}
 
-	private function newEntityCollection( Collection $collection ) {
-		return new MongoDBEntityCollection( $collection, $this->newDocumentBuilder() );
+	private function newEntityDatabase( Database $database ) {
+		return new MongoDBEntityDatabase( $database, $this->newDocumentBuilder() );
 	}
 
-	private function newEntityIdForTermLookup( Collection $collection ) {
-		return new MongoDBEntityIdForTermLookup( $collection, $this->newDocumentBuilder() );
+	private function newEntityIdForTermLookup( Database $database ) {
+		return new MongoDBEntityIdForTermLookup( $database, $this->newDocumentBuilder() );
 	}
 
-	private function newEntityIdForQueryLookup( Collection $collection ) {
-		return new MongoDBEntityIdForQueryLookup( $collection, $this->newDocumentBuilder() );
+	private function newEntityIdForQueryLookup( Database $database ) {
+		return new MongoDBEntityIdForQueryLookup( $database, $this->newDocumentBuilder() );
 	}
 
 	private function newDocumentBuilder() {
@@ -142,10 +149,12 @@ class MongoDBEntityStore extends EntityStore {
 	 * @see EntityStore::setupStore
 	 */
 	public function setupStore() {
-		$this->collection->getDatabase()->command( array(
-			'collMod' => $this->collection->getName(),
-			'usePowerOf2Sizes' => true
-		) );
+		foreach( self::$SUPPORTED_TYPES as $type ) {
+			$this->database->command( array(
+				'collMod' => $type,
+				'usePowerOf2Sizes' => true
+			) );
+		}
 	}
 
 	/**
@@ -164,10 +173,12 @@ class MongoDBEntityStore extends EntityStore {
 
 		foreach( $languagesOption as $language ) {
 			$key = 'sterms.' . $language;
-			$this->collection->ensureIndex(
-				array( $key => 1, '_type' => 1 ),
-				array( 'sparse' => true, 'socketTimeoutMS' => -1 )
-			);
+			foreach( self::$SUPPORTED_TYPES as $type ) {
+				$this->database->selectCollection( $type)->ensureIndex(
+					array( $key => 1, '_type' => 1 ),
+					array( 'sparse' => true, 'socketTimeoutMS' => -1 )
+				);
+			}
 		}
 	}
 }

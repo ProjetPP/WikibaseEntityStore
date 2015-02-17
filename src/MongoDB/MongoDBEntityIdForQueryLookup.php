@@ -14,7 +14,7 @@ use DataValues\DataValue;
 use DataValues\StringValue;
 use DataValues\TimeValue;
 use Doctrine\MongoDB\Cursor;
-use Doctrine\MongoDB\Collection;
+use Doctrine\MongoDB\Database;
 use Doctrine\MongoDB\Query\Expr;
 use Iterator;
 use MongoRegex;
@@ -33,9 +33,9 @@ use Wikibase\EntityStore\FeatureNotSupportedException;
 class MongoDBEntityIdForQueryLookup implements EntityIdForQueryLookup {
 
 	/**
-	 * @var Collection
+	 * @var Database
 	 */
-	private $collection;
+	private $database;
 
 	/**
 	 * @var MongoDBDocumentBuilder
@@ -43,11 +43,11 @@ class MongoDBEntityIdForQueryLookup implements EntityIdForQueryLookup {
 	private $documentBuilder;
 
 	/**
-	 * @param Collection $collection
+	 * @param Database $database
 	 * @param MongoDBDocumentBuilder $documentBuilder
 	 */
-	public function __construct( Collection $collection, MongoDBDocumentBuilder $documentBuilder ) {
-		$this->collection = $collection;
+	public function __construct( Database $database, MongoDBDocumentBuilder $documentBuilder ) {
+		$this->database = $database;
 		$this->documentBuilder = $documentBuilder;
 	}
 
@@ -59,10 +59,12 @@ class MongoDBEntityIdForQueryLookup implements EntityIdForQueryLookup {
 	}
 
 	private function doQuery( Query $query, $entityType = null ) {
-		$cursor = $this->collection->find(
-			$this->buildQueryForDescription( $query->getDescription(), $entityType ),
-			array( '_id' => 1 )
-		);
+		$cursor = $this->database
+			->selectCollection( $entityType )
+			->find(
+				$this->buildQueryForDescription( $query->getDescription(), $entityType ),
+				array( '_id' => 1 )
+			);
 
 		return $this->applyOptionsToCursor( $cursor, $query->getOptions() );
 	}

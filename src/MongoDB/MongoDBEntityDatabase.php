@@ -2,7 +2,7 @@
 
 namespace Wikibase\EntityStore\MongoDB;
 
-use Doctrine\MongoDB\Collection;
+use Doctrine\MongoDB\Database;
 use Doctrine\MongoDB\Query\Expr;
 use Wikibase\DataModel\Entity\EntityDocument;
 use Wikibase\DataModel\Entity\EntityId;
@@ -16,12 +16,12 @@ use Wikibase\EntityStore\EntityNotFoundException;
  * @licence GPLv2+
  * @author Thomas Pellissier Tanon
  */
-class MongoDBEntityCollection implements EntityDocumentLookup, EntityDocumentSaver {
+class MongoDBEntityDatabase implements EntityDocumentLookup, EntityDocumentSaver {
 
 	/**
-	 * @var Collection
+	 * @var Database
 	 */
-	private $collection;
+	private $database;
 
 	/**
 	 * @var MongoDBDocumentBuilder
@@ -29,11 +29,11 @@ class MongoDBEntityCollection implements EntityDocumentLookup, EntityDocumentSav
 	private $documentBuilder;
 
 	/**
-	 * @param Collection $collection
+	 * @param Database $database
 	 * @param MongoDBDocumentBuilder $documentBuilder
 	 */
-	public function __construct( Collection $collection, MongoDBDocumentBuilder $documentBuilder ) {
-		$this->collection = $collection;
+	public function __construct( Database $database, MongoDBDocumentBuilder $documentBuilder ) {
+		$this->database = $database;
 		$this->documentBuilder = $documentBuilder;
 	}
 
@@ -41,7 +41,9 @@ class MongoDBEntityCollection implements EntityDocumentLookup, EntityDocumentSav
 	 * @see EntityDocumentLookup::getEntityDocumentForId
 	 */
 	public function getEntityDocumentForId( EntityId $entityId ) {
-		$document = $this->collection->findOne( $this->buildGetEntityForIdQuery( $entityId ) );
+		$document = $this->database
+			->selectCollection( $entityId->getEntityType() )
+			->findOne( $this->buildGetEntityForIdQuery( $entityId ) );
 
 		if( $document === null ) {
 			throw new EntityNotFoundException( $entityId );
@@ -54,14 +56,37 @@ class MongoDBEntityCollection implements EntityDocumentLookup, EntityDocumentSav
 	 * @see EntityDocumentLookup::getEntityDocumentsForIds
 	 */
 	public function getEntityDocumentsForIds( array $entityIds ) {
-		$documents = $this->collection->find( $this->buildGetEntitiesForIdsQuery( $entityIds ) );
-
 		$entities = array();
 
+		foreach( $this->splitEntityIdsPerType( $entityIds ) as $type => $entityIdsForType ) {
+			$entities = array_merge(
+				$entities,
+				$this->getEntitiesInCollection( $entityIdsForType, $type )
+			);
+		}
+
+		return $entities;
+	}
+
+	private function splitEntityIdsPerType( array $entityIds ) {
+		$entityIdsPerType = array();
+
+		/** @var EntityId $entityId */
+		foreach( $entityIds as $entityId ) {
+			$entityIdsPerType[$entityId->getEntityType()][] = $entityId;
+		}
+
+		return $entityIdsPerType;
+	}
+
+	private function getEntitiesInCollection( array $entityIds, $collectionName ) {
+		$documents = $this->database->selectCollection( $collectionName )->find( $this->buildGetEntitiesForIdsQuery( $entityIds ) );
+
+
+		$entities = array();
 		foreach( $documents as $document ) {
 			$entities[] = $this->documentBuilder->buildEntityForDocument( $document );
 		}
-
 		return $entities;
 	}
 
@@ -69,7 +94,7 @@ class MongoDBEntityCollection implements EntityDocumentLookup, EntityDocumentSav
 	 * @see EntityDocumentSaver::saveEntityDocument
 	 */
 	public function saveEntityDocument( EntityDocument $entityDocument ) {
-		$this->collection->upsert(
+		$this->database->selectCollection( $entityDocument->getType() )->upsert(
 			$this->buildGetEntityForIdQuery( $entityDocument->getId() ),
 			$this->documentBuilder->buildDocumentForEntity( $entityDocument )
 		);

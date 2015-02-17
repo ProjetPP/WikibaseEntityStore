@@ -51,6 +51,11 @@ class MongoDBTest extends \PHPUnit_Framework_TestCase {
 
 		$this->assertEquals(
 			array( new PropertyId( 'P16' ) ),
+			$store->getPropertyIdForTermLookup()->getPropertyIdsForTerm( new Term( 'en', 'highway system' ) )
+		);
+
+		$this->assertEquals(
+			array( new PropertyId( 'P16' ) ),
 			$store->getPropertyIdForQueryLookup()->getPropertyIdsForQuery( new Query(
 				new AnyValue(),
 				array(),
