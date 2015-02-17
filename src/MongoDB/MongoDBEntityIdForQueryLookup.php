@@ -62,24 +62,13 @@ class MongoDBEntityIdForQueryLookup implements EntityIdForQueryLookup {
 		$cursor = $this->database
 			->selectCollection( $entityType )
 			->find(
-				$this->buildQueryForDescription( $query->getDescription(), $entityType ),
+				$this->buildQueryForDescription( $query->getDescription(), new Expr() )->getQuery(),
 				array( '_id' => 1 )
 			);
 
 		return $this->applyOptionsToCursor( $cursor, $query->getOptions() );
 	}
-
-	private function buildQueryForDescription( Description $description, $entityType = null ) {
-		$expr = $this->buildCoreQueryForDescription( $description, new Expr() );
-
-		if( $entityType !== null ) {
-			$expr->field( '_type' )->equals( $this->documentBuilder->buildIntegerForType( $entityType ) );
-		}
-
-		return $expr->getQuery();
-	}
-
-	private function buildCoreQueryForDescription( Description $description, Expr $expr ) {
+	private function buildQueryForDescription( Description $description, Expr $expr ) {
 		if( $description instanceof AnyValue ) {
 			return $expr;
 		} elseif( $description instanceof Conjunction ) {
@@ -97,14 +86,14 @@ class MongoDBEntityIdForQueryLookup implements EntityIdForQueryLookup {
 
 	private function buildQueryForConjunction( Conjunction $conjunction, Expr $expr ) {
 		foreach( $conjunction->getDescriptions() as $description ) {
-			$expr->addAnd( $this->buildCoreQueryForDescription( $description, new Expr() ) );
+			$expr->addAnd( $this->buildQueryForDescription( $description, new Expr() ) );
 		}
 		return $expr;
 	}
 
 	private function buildQueryForDisjunction( Disjunction $disjunction, Expr $expr ) {
 		foreach( $disjunction->getDescriptions() as $description ) {
-			$expr->addOr( $this->buildCoreQueryForDescription( $description, new Expr() ) );
+			$expr->addOr( $this->buildQueryForDescription( $description, new Expr() ) );
 		}
 		return $expr;
 	}
@@ -115,7 +104,7 @@ class MongoDBEntityIdForQueryLookup implements EntityIdForQueryLookup {
 			throw new FeatureNotSupportedException( 'PropertyId should be an EntityIdValue' );
 		}
 
-		$subQuery = $this->buildCoreQueryForDescription( $someProperty->getSubDescription(), new Expr() );
+		$subQuery = $this->buildQueryForDescription( $someProperty->getSubDescription(), new Expr() );
 
 		if( $someProperty->isSubProperty() ) {
 			throw new FeatureNotSupportedException( 'Sub-properties are not supported yet' );

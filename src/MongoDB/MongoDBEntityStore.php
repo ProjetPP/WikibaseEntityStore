@@ -173,9 +173,10 @@ class MongoDBEntityStore extends EntityStore {
 
 		foreach( $languagesOption as $language ) {
 			$key = 'sterms.' . $language;
+
 			foreach( self::$SUPPORTED_TYPES as $type ) {
 				$this->database->selectCollection( $type)->ensureIndex(
-					array( $key => 1, '_type' => 1 ),
+					array( $key => 1 ),
 					array( 'sparse' => true, 'socketTimeoutMS' => -1 )
 				);
 			}

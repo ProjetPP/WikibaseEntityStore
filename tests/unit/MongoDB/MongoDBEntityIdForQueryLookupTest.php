@@ -107,8 +107,7 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 				array(
 					'claims.P1' => array(
 						'$elemMatch' => array( 'mainsnak.datavalue.value.numeric-id' => 1 )
-					),
-					'_type' => 0
+					)
 				),
 				10,
 				20,
@@ -142,8 +141,7 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 								'$elemMatch' => array( 'mainsnak.datavalue.value.numeric-id' => 42 )
 							),
 						)
-					),
-					'_type' => 0
+					)
 				),
 				0,
 				10,
@@ -177,8 +175,7 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 								'$elemMatch' => array( 'mainsnak.datavalue.value.numeric-id' => 42 )
 							),
 						)
-					),
-					'_type' => 0
+					)
 				),
 				0,
 				10,
@@ -213,8 +210,7 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 								array( 'mainsnak.datavalue.value.numeric-id' => 42 )
 							)
 						)
-					),
-					'_type' => 0
+					)
 				),
 				0,
 				10,
@@ -237,8 +233,7 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 						'$elemMatch' => array(
 							'mainsnak.datavalue.value.time' => new MongoRegex( '/^\+00000001952\-03\-11/' )
 						)
-					),
-					'_type' => 0
+					)
 				),
 				0,
 				10,
@@ -261,8 +256,7 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 						'$elemMatch' => array(
 							'mainsnak.datavalue.value.time' => new MongoRegex( '/^\+00000001952/' )
 						)
-					),
-					'_type' => 0
+					)
 				),
 				0,
 				10,

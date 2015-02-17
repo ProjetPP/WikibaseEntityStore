@@ -20,8 +20,7 @@ class MongoDBEntityIdForTermLookupTest extends \PHPUnit_Framework_TestCase {
 		$collectionMock->expects( $this->once() )
 			->method( 'find' )
 			->with( $this->equalTo( array(
-				'sterms.en' => 'foo',
-				'_type' => 0
+				'sterms.en' => 'foo'
 			) ) )
 			->willReturn( array( array( '_id' => 'Q1' ) ) );
 

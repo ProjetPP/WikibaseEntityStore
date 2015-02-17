@@ -24,14 +24,6 @@ use Wikibase\EntityStore\FeatureNotSupportedException;
  */
 class MongoDBDocumentBuilder {
 
-	const ITEM_TYPE_INTEGER = 0;
-	const PROPERTY_TYPE_INTEGER = 1;
-
-	private static $INTEGER_FOR_TYPES = array(
-		Item::ENTITY_TYPE => self::ITEM_TYPE_INTEGER,
-		Property::ENTITY_TYPE => self::PROPERTY_TYPE_INTEGER
-	);
-
 	/**
 	 * @var Serializer
 	 */
@@ -82,7 +74,6 @@ class MongoDBDocumentBuilder {
 
 	private function addIndexedDataToSerialization( array $serialization ) {
 		$serialization['_id'] = $serialization['id'];
-		$serialization['_type'] = $this->buildIntegerForType( $serialization['type'] );
 		$serialization['sterms'] = $this->buildSearchTermsForEntity( $serialization );
 
 		return $serialization;
@@ -107,14 +98,6 @@ class MongoDBDocumentBuilder {
 		}
 
 		return $serialization;
-	}
-
-	public function buildIntegerForType( $type ) {
-		if( !array_key_exists( $type, self::$INTEGER_FOR_TYPES) ) {
-			throw new FeatureNotSupportedException( 'Unknown entity type: ' . $type );
-		}
-
-		return self::$INTEGER_FOR_TYPES[$type];
 	}
 
 	private function buildSearchTermsForEntity( array $serialization ) {

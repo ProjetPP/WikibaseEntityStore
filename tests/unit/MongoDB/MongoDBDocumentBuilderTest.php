@@ -67,7 +67,6 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals(
 			array(
 				'_id' => 'Q1',
-				'_type' => 0,
 				'type' => 'item',
 				'id' => 'Q1',
 				'labels' => array(
@@ -142,7 +141,6 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals(
 			array(
 				'_id' => 'Q1',
-				'_type' => 0,
 				'id' => 'Q1',
 				'type' => 'item',
 				'labels' => array(
@@ -257,29 +255,6 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 				new MongoBinData( 'test', MongoBinData::GENERIC )
 			),
 		);
-	}
-
-	public function testBuildItegerForType( ) {
-		$entitySerializerMock = $this->getMock( 'Serializers\Serializer' );
-		$entityDeserializerMock = $this->getMock( 'Deserializers\Deserializer' );
-		$documentBuilder = new MongoDBDocumentBuilder(
-			$entitySerializerMock,
-			$entityDeserializerMock,
-			new BasicEntityIdParser(),
-			new EntityStoreOptions(array( EntityStore::OPTION_LANGUAGES => null ) )
-		);
-
-		$this->assertEquals(
-			MongoDBDocumentBuilder::ITEM_TYPE_INTEGER,
-			$documentBuilder->buildIntegerForType( Item::ENTITY_TYPE )
-		);
-		$this->assertEquals(
-			MongoDBDocumentBuilder::PROPERTY_TYPE_INTEGER,
-			$documentBuilder->buildIntegerForType( Property::ENTITY_TYPE )
-		);
-
-		$this->setExpectedException( 'Wikibase\EntityStore\FeatureNotSupportedException' );
-		$documentBuilder->buildIntegerForType( 'foo' );
 	}
 
 	public function testBuildEntityIdForDocument() {

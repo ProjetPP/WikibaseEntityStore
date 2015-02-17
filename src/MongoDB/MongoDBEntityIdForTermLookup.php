@@ -54,16 +54,11 @@ class MongoDBEntityIdForTermLookup implements EntityIdForTermLookup {
 		return $entities;
 	}
 
-	private function buildGetEntityIdForTermQuery( Term $term, $entityType = null ) {
+	private function buildGetEntityIdForTermQuery( Term $term ) {
 		$expr = new Expr();
 		$expr->field( 'sterms.' . $term->getLanguageCode() )->equals(
 			$this->documentBuilder->cleanTextForSearch( $term->getText() )
 		);
-
-		if( $entityType !== null ) {
-			$expr->field( '_type' )->equals( $this->documentBuilder->buildIntegerForType( $entityType ) );
-		}
-
 		return $expr->getQuery();
 	}
 }
