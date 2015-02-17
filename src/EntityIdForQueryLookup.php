@@ -3,6 +3,7 @@
 namespace Wikibase\EntityStore;
 
 use Ask\Language\Query;
+use Wikibase\DataModel\Entity\EntityId;
 
 /**
  * @licence GPLv2+
@@ -17,5 +18,5 @@ interface EntityIdForQueryLookup {
 	 * @param string|null $entityType
 	 * @return EntityId[]
 	 */
-	public function getEntityIdsForQuery( Query $query, $entityType = null );
+	public function getEntityIdsForQuery( Query $query, $entityType );
 }

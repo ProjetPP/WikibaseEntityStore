@@ -38,18 +38,7 @@ class ApiEntityIdForTermLookup implements EntityIdForTermLookup {
 	/**
 	 * @see EntityIdsForTermLookup::getEntityIdsForTerm
 	 */
-	public function getEntityIdsForTerm( Term $term, $entityType = null ) {
-		if( $entityType === null ) {
-			return array_merge(
-				$this->getEntityIdsForTerm( $term, 'item' ),
-				$this->getEntityIdsForTerm( $term, 'property' )
-			);
-		} else {
-			return $this->getEntityIdsForTermWithType( $term, $entityType );
-		}
-	}
-
-	private function getEntityIdsForTermWithType( Term $term, $entityType) {
+	public function getEntityIdsForTerm( Term $term, $entityType ) {
 		return $this->parseResult( $this->doQuery( $term, $entityType ), $term->getText() );
 	}
 

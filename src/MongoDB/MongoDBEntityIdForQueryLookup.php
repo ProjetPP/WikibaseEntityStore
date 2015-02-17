@@ -54,11 +54,11 @@ class MongoDBEntityIdForQueryLookup implements EntityIdForQueryLookup {
 	/**
 	 * @see EntityForQueryLookup::getEntityIdsForQuery
 	 */
-	public function getEntityIdsForQuery( Query $query, $entityType = null ) {
+	public function getEntityIdsForQuery( Query $query, $entityType ) {
 		return $this->formatResults( $this->doQuery( $query, $entityType ) );
 	}
 
-	private function doQuery( Query $query, $entityType = null ) {
+	private function doQuery( Query $query, $entityType ) {
 		$cursor = $this->database
 			->selectCollection( $entityType )
 			->find(

@@ -19,5 +19,5 @@ interface EntityIdForTermLookup {
 	 * @param string|null $entityType
 	 * @return EntityId[]
 	 */
-	public function getEntityIdsForTerm( Term $term, $entityType = null );
+	public function getEntityIdsForTerm( Term $term, $entityType );
 }

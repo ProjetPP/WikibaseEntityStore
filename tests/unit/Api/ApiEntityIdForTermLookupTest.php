@@ -54,40 +54,4 @@ class ApiEntityIdForTermLookupTest extends \PHPUnit_Framework_TestCase {
 			$lookup->getEntityIdsForTerm( new Term( 'en', 'foo' ), 'item' )
 		);
 	}
-
-	public function testGetEntityDocumentsForTermWithNoType() {
-		$mediawikiApiMock = $this->getMockBuilder( 'Mediawiki\Api\MediawikiApi' )
-			->disableOriginalConstructor()
-			->getMock();
-		$mediawikiApiMock->expects( $this->exactly( 2 ) )
-			->method( 'getAction' )
-			->with( $this->equalTo( 'wbsearchentities' ) )
-			->will( $this->onConsecutiveCalls(
-				array(
-					'search' => array(
-						array(
-							'id' => 'Q1',
-							'label' => 'foo',
-							'aliases' => array( 'bar', 'baz' )
-						),
-					)
-				),
-				array(
-					'search' => array(
-						array(
-							'id' => 'P1',
-							'label' => 'bar',
-							'aliases' => array( 'foo', 'baz' )
-						),
-					)
-				)
-			) );
-
-		$lookup = new ApiEntityIdForTermLookup( $mediawikiApiMock, new BasicEntityIdParser() );
-
-		$this->assertEquals(
-			array( new ItemId( 'Q1' ), new PropertyId( 'P1' ) ),
-			$lookup->getEntityIdsForTerm( new Term( 'en', 'foo' ) )
-		);
-	}
 }
