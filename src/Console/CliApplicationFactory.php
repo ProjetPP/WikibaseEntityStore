@@ -14,6 +14,7 @@ class CliApplicationFactory {
 		$application = new Application( 'WikibaseEntityStore' );
 
 		$application->add( new ImportJsonDumpCommand() );
+		$application->add( new ImportIncrementalXmlDumpCommand() );
 
 		return $application;
 	}

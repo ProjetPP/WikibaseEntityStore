@@ -14,7 +14,7 @@ use Wikibase\DataModel\Entity\EntityDocument;
  * @licence GPLv2+
  * @author Thomas Pellissier Tanon
  */
-class JsonDumpReader implements Iterator {
+class IncrementalXmlDumpReader implements Iterator {
 
 	/**
 	 * @var resource
@@ -64,6 +64,8 @@ class JsonDumpReader implements Iterator {
 	public function next() {
 		$this->currentEntity = null;
 
+		$isEntity = false;
+		$text = '';
 		while( true ) {
 			$line = fgets( $this->fileStream );
 
@@ -71,10 +73,13 @@ class JsonDumpReader implements Iterator {
 				return;
 			}
 
-			$line = trim( $line, ", \n\t\r" );
+			if( preg_match( '/<model>wikibase-[a-z]+<\/model>/', $line ) ) {
+				$isEntity = true;
+			} elseif( preg_match( '/<text.*>(.*)<\/text>/', $line, $m ) ) {
+				$text = $m[1];
+			} elseif( preg_match( '/<\/page>/', $line, $m ) && $isEntity ) {
 
-			if( $line !== '' && $line[0] === '{' ) {
-				$json = json_decode( $line, true );
+				$json = json_decode( html_entity_decode( $text ), true );
 				try {
 					$this->currentEntity = $this->entityDeserializer->deserialize( $json );
 					return;
@@ -82,6 +87,9 @@ class JsonDumpReader implements Iterator {
 					$id = array_key_exists( 'id', $json ) ? $json['id'] : '';
 					$this->logger->error( 'Deserialization of entity ' . $id . ' failed: ' . $e->getMessage() );
 				}
+
+				$isEntity = false;
+				$text = '';
 			}
 		}
 	}

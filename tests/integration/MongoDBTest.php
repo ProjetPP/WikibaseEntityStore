@@ -33,6 +33,11 @@ class MongoDBTest extends \PHPUnit_Framework_TestCase {
 			$store->getItemLookup()->getItemForId( new ItemId( 'Q1' ) )->getId()
 		);
 
+		$this->assertEquals(
+			new PropertyId( 'P1' ),
+			$store->getPropertyLookup()->getPropertyForId( new PropertyId( 'P1' ) )->getId()
+		);
+
 		$results = $store->getEntityDocumentLookup()->getEntityDocumentsForIds(
 			array( new ItemId( 'Q1' ), new ItemId( 'Q1000' ) )
 		);
@@ -77,11 +82,16 @@ class MongoDBTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	private function setupMongoDB() {
+		$this->importCommand( 'import-json-dump', 'valid.json' );
+		$this->importCommand( 'import-incremental-xml-dump', 'valid-incremental.xml' );
+	}
+
+	private function importCommand( $command, $file ) {
 		$applicationFactory = new CliApplicationFactory();
-		$importCommand = $applicationFactory->newApplication()->find( 'import-json-dump' );
+		$importCommand = $applicationFactory->newApplication()->find( $command );
 		$input = new ArrayInput( array(
-			'command' => 'import-json-dump',
-			'file' => __DIR__ . '/../data/valid.json',
+			'command' => $command,
+			'file' => __DIR__ . '/../data/' . $file,
 			'configuration' => __DIR__ . '/../data/valid-config-mongodb.json'
 		) );
 		$importCommand->run( $input, new NullOutput() );
