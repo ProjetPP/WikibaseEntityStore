@@ -82,13 +82,13 @@ class MongoDBTest extends \PHPUnit_Framework_TestCase {
 		$input = new ArrayInput( array(
 			'command' => 'import-json-dump',
 			'file' => __DIR__ . '/../data/valid.json',
-			'configuration' => __DIR__ . '/../data/valid-config.json'
+			'configuration' => __DIR__ . '/../data/valid-config-mongodb.json'
 		) );
 		$importCommand->run( $input, new NullOutput() );
 	}
 
 	private function getEntityStoreFromConfiguration() {
 		$configBuilder = new EntityStoreFromConfigurationBuilder();
-		return $configBuilder->buildEntityStore( __DIR__ . '/../data/valid-config.json' );
+		return $configBuilder->buildEntityStore( __DIR__ . '/../data/valid-config-mongodb.json' );
 	}
 }

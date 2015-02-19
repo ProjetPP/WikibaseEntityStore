@@ -1,0 +1,7 @@
+{
+  "backend": "api",
+  "api": {
+    "url": "http://www.wikidata.org/w/api.php",
+    "wikidataquery-url": "http://wdq.wmflabs.org/api"
+  }
+}
