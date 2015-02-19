@@ -44,6 +44,23 @@ class EntityStoreConfigurationTest extends \PHPUnit_Framework_TestCase {
 			),
 			array(
 				array(
+					'backend' => 'api',
+					'api' => array(
+						'url' => 'http://www.wikidata.org/w/api.php',
+						'wikidataquery-url' => 'http://wdq.wmflabs.org/api'
+					)
+				),
+				array(
+					'backend' => 'api',
+					'api' => array(
+						'url' => 'http://www.wikidata.org/w/api.php',
+						'wikidataquery_url' => 'http://wdq.wmflabs.org/api'
+					),
+					'options' => array()
+				)
+			),
+			array(
+				array(
 					'backend' => 'mongodb',
 					'mongodb' => array(
 						'server' => ''
@@ -174,6 +191,15 @@ class EntityStoreConfigurationTest extends \PHPUnit_Framework_TestCase {
 					'backend' => 'api',
 					'api' => array(
 						'url' => ''
+					)
+				)
+			),
+			array(
+				array(
+					'backend' => 'api',
+					'api' => array(
+						'url' => 'http://www.wikidata.org/w/api.php',
+						'wikidataquery-url' => ''
 					)
 				)
 			),

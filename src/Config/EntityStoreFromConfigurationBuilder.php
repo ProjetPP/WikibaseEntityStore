@@ -14,6 +14,7 @@ use Wikibase\EntityStore\Cache\CachedEntityStore;
 use Wikibase\EntityStore\EntityStore;
 use Wikibase\EntityStore\EntityStoreOptions;
 use Wikibase\EntityStore\MongoDB\MongoDBEntityStore;
+use WikidataQueryApi\WikidataQueryApi;
 
 class EntityStoreFromConfigurationBuilder {
 
@@ -55,12 +56,26 @@ class EntityStoreFromConfigurationBuilder {
 
 		switch( $config['backend'] ) {
 			case 'api':
-				return new ApiEntityStore( new MediawikiApi( $config['api']['url'] ), null, $options );
+				return new ApiEntityStore(
+					$this->getWikibaseApi( $config['api'] ),
+					$this->getWikidataQueryApi( $config['api'] ),
+					$options
+				);
 			case 'mongodb':
 				return new MongoDBEntityStore( $this->getMongoDbDatabase( $config['mongodb'] ), $options );
 			default:
 				throw new InvalidArgumentException( 'Unknown backend: ' . $config['backend'] );
 		}
+	}
+
+	private function getWikibaseApi( $config ) {
+		return new MediawikiApi( $config['url'] );
+	}
+
+	private function getWikidataQueryApi( $config ) {
+		return array_key_exists( 'wikidataquery_url', $config )
+			? new WikidataQueryApi( $config['wikidataquery_url'] )
+			: null;
 	}
 
 	private function getMongoDbDatabase( $config ) {
