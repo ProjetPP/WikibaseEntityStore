@@ -91,12 +91,6 @@ class ApiEntityIdForTermLookup implements EntityIdForTermLookup {
 
 	private function cleanLabel($label) {
 		$label = mb_strtolower( $label, 'UTF-8' );
-		$label = str_replace( //TODO useful? + tests
-			array( '\'', '-' ),
-			array( ' ', ' ' ),
-			$label
-		);
-
 		return trim( $label );
 	}
 }

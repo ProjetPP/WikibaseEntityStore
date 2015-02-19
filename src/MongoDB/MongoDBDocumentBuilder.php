@@ -123,11 +123,6 @@ class MongoDBDocumentBuilder {
 	 */
 	public function cleanTextForSearch( $text ) {
 		$text = mb_strtolower( $text, 'UTF-8' ); //TODO: said to be very slow
-		$text = str_replace(
-			array( '\'', '-' ),
-			array( '', '' ),
-			$text
-		);
 		$text = trim( $text );
 
 		return new MongoBinData( $text, MongoBinData::GENERIC );

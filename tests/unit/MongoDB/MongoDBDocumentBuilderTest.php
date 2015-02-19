@@ -245,14 +245,6 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 				'Être',
 				new MongoBinData( 'être', MongoBinData::GENERIC )
 			),
-			array(
-				'FOO-BAR\'BAZ',
-				new MongoBinData( 'foobarbaz', MongoBinData::GENERIC )
-			),
-			array(
-				'\'test-',
-				new MongoBinData( 'test', MongoBinData::GENERIC )
-			),
 		);
 	}
 
