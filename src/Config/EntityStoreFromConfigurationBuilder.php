@@ -73,9 +73,11 @@ class EntityStoreFromConfigurationBuilder {
 	}
 
 	private function getWikidataQueryApi( $config ) {
-		return array_key_exists( 'wikidataquery_url', $config )
-			? new WikidataQueryApi( $config['wikidataquery_url'] )
-			: null;
+		if( !array_key_exists( 'wikidataquery_url', $config ) ) {
+			return null;
+		}
+
+		return new WikidataQueryApi( $config['wikidataquery_url'] );
 	}
 
 	private function getMongoDbDatabase( $config ) {
