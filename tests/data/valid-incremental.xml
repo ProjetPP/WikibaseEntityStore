@@ -11,17 +11,6 @@
         </revision>
     </page>
     <page>
-        <title>Property:P21</title>
-        <ns>0</ns>
-        <id>1422347</id>
-        <revision>
-            <model>wikibase-property</model>
-            <format>application/json</format>
-            <text xml:space="preserve">{&quot;id&quot;:&quot;P1&quot;,&quot;type&quot;:&quot;property&quot;,&quot;datatype&quot;:&quot;string&quot;}</text>
-            <sha1>cmpqpszb06q5y1nb05ycaowggkz4wwq</sha1>
-        </revision>
-    </page>
-    <page>
         <title>Wikidata:Test</title>
         <ns>2</ns>
         <id>1422347</id>
@@ -29,6 +18,28 @@
             <model>wikitext</model>
             <format>text/wikitext</format>
             <text xml:space="preserve">fooo</text>
+            <sha1>cmpqpszb06q5y1nb05ycaowggkz4wwq</sha1>
+        </revision>
+    </page>
+    <page>
+        <title>Q12345</title>
+        <ns>0</ns>
+        <id>1422347</id>
+        <revision>
+            <model>wikibase-item</model>
+            <format>application/json</format>
+            <text xml:space="preserve">{&quot;entity&quot;:&quot;Q12345&quot;,&quot;redirect&quot;:&quot;Q54321&quot;}</text>
+            <sha1>cmpqpszb06q5y1nsdgdfshfdghfggkz4wwq</sha1>
+        </revision>
+    </page>
+    <page>
+        <title>Property:P21</title>
+        <ns>0</ns>
+        <id>1422347</id>
+        <revision>
+            <model>wikibase-property</model>
+            <format>application/json</format>
+            <text xml:space="preserve">{&quot;id&quot;:&quot;P1&quot;,&quot;type&quot;:&quot;property&quot;,&quot;datatype&quot;:&quot;string&quot;}</text>
             <sha1>cmpqpszb06q5y1nb05ycaowggkz4wwq</sha1>
         </revision>
     </page>

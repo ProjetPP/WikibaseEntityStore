@@ -80,6 +80,12 @@ class IncrementalXmlDumpReader implements Iterator {
 			} elseif( preg_match( '/<\/page>/', $line, $m ) && $isEntity ) {
 
 				$json = json_decode( html_entity_decode( $text ), true );
+
+				if( array_key_exists( 'redirect', $json ) ) {
+					$this->logger->info( 'Entity redirection not supported.' );
+					continue;
+				}
+
 				try {
 					$this->currentEntity = $this->entityDeserializer->deserialize( $json );
 					return;
@@ -87,9 +93,6 @@ class IncrementalXmlDumpReader implements Iterator {
 					$id = array_key_exists( 'id', $json ) ? $json['id'] : '';
 					$this->logger->error( 'Deserialization of entity ' . $id . ' failed: ' . $e->getMessage() );
 				}
-
-				$isEntity = false;
-				$text = '';
 			}
 		}
 	}
