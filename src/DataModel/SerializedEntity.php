@@ -2,6 +2,7 @@
 
 namespace Wikibase\EntityStore\DataModel;
 
+use InvalidArgumentException;
 use Wikibase\DataModel\Entity\EntityDocument;
 use Wikibase\DataModel\Entity\EntityId;
 
@@ -28,6 +29,10 @@ class SerializedEntity implements EntityDocument {
 	 * @param array $serialization
 	 */
 	public function __construct( EntityId $entityId = null, array $serialization ) {
+		if( !array_key_exists( 'type', $serialization ) ) {
+			throw new InvalidArgumentException( 'The entity serialization does not have a type.' );
+		}
+
 		$this->entityId = $entityId;
 		$this->serialization = $serialization;
 	}
@@ -43,7 +48,7 @@ class SerializedEntity implements EntityDocument {
 	 * @see EntityDocument::getType
 	 */
 	public function getType() {
-		return array_key_exists( 'type', $this->serialization ) ? $this->serialization['type'] : '';
+		return $this->serialization['type'];
 	}
 
 	/**

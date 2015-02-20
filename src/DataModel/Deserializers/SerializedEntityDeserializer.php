@@ -29,7 +29,7 @@ class SerializedEntityDeserializer implements DispatchableDeserializer {
 	 * @see Deserializer::isDeserializerFor
 	 */
 	public function isDeserializerFor( $object ) {
-		return is_array( $object );
+		return is_array( $object ) && array_key_exists( 'type', $object );
 	}
 
 	/**
