@@ -3,6 +3,7 @@
 namespace Wikibase\EntityStore\Api;
 
 use Mediawiki\Api\MediawikiApi;
+use Mediawiki\Api\SimpleRequest;
 use Wikibase\DataModel\Entity\EntityIdParser;
 use Wikibase\DataModel\Term\Term;
 use Wikibase\EntityStore\Internal\EntityIdForTermLookup;
@@ -39,18 +40,19 @@ class ApiEntityIdForTermLookup implements EntityIdForTermLookup {
 	 * @see EntityIdsForTermLookup::getEntityIdsForTerm
 	 */
 	public function getEntityIdsForTerm( Term $term, $entityType ) {
-		return $this->parseResult( $this->doQuery( $term, $entityType ), $term->getText() );
+		return $this->parseResult( $this->api->getRequest( $this->buildRequest( $term, $entityType ) ), $term->getText() );
 	}
 
-	protected function doQuery( Term $term, $entityType ) {
-		$params = array(
-			'search' => $term->getText(),
-			'language' => $term->getLanguageCode(),
-			'type' => $entityType,
-			'limit' => 50
+	protected function buildRequest( Term $term, $entityType ) {
+		return new SimpleRequest(
+			'wbsearchentities',
+			array(
+				'search' => $term->getText(),
+				'language' => $term->getLanguageCode(),
+				'type' => $entityType,
+				'limit' => 50
+			)
 		);
-
-		return $this->api->getAction( 'wbsearchentities', $params );
 	}
 
 	private function parseResult( array $result, $search ) {

@@ -9,9 +9,9 @@ use Wikibase\EntityStore\EntityStoreOptions;
 use Wikibase\EntityStore\FeatureNotSupportedException;
 use Wikibase\EntityStore\Internal\DispatchingEntityIdForTermLookup;
 use Wikibase\EntityStore\Internal\EntityLookup;
+use Wikibase\EntityStore\Internal\EntitySerializationFactory;
 use WikidataQueryApi\WikidataQueryApi;
 use WikidataQueryApi\WikidataQueryFactory;
-use Wikibase\EntityStore\Internal\EntitySerializationFactory;
 
 /**
  * @licence GPLv2+

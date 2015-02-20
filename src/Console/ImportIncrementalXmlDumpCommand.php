@@ -12,7 +12,6 @@ use Wikibase\DataModel\Entity\BasicEntityIdParser;
 use Wikibase\EntityStore\Config\EntityStoreFromConfigurationBuilder;
 use Wikibase\EntityStore\DataModel\Deserializers\SerializedEntityDeserializer;
 use Wikibase\EntityStore\Internal\IncrementalXmlDumpReader;
-use Wikibase\EntityStore\Internal\JsonDumpReader;
 
 /**
  * @licence GPLv2+

@@ -2,6 +2,7 @@
 
 namespace Wikibase\EntityStore\Api;
 
+use Mediawiki\Api\SimpleRequest;
 use Wikibase\DataModel\Entity\BasicEntityIdParser;
 use Wikibase\DataModel\Entity\ItemId;
 use Wikibase\DataModel\Term\Term;
@@ -19,13 +20,18 @@ class ApiEntityIdForTermLookupTest extends \PHPUnit_Framework_TestCase {
 			->disableOriginalConstructor()
 			->getMock();
 		$mediawikiApiMock->expects( $this->once() )
-			->method( 'getAction' )
-			->with( $this->equalTo( 'wbsearchentities' ), $this->equalTo( array(
-				'search' => 'foo',
-				'language' => 'en',
-				'type' => 'item',
-				'limit' => 50
-			) ) )
+			->method( 'getRequest' )
+			->with( $this->equalTo(
+				new SimpleRequest(
+					'wbsearchentities',
+					array(
+						'search' => 'foo',
+						'language' => 'en',
+						'type' => 'item',
+						'limit' => 50
+					)
+				)
+			) )
 			->will( $this->returnValue( array(
 				'search' => array(
 					array(
