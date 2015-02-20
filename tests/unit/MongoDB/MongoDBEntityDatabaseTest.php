@@ -6,7 +6,7 @@ use Wikibase\DataModel\Entity\Item;
 use Wikibase\DataModel\Entity\ItemId;
 
 /**
- * @covers Wikibase\EntityStore\MongoDB\MongoDBEntityCollection
+ * @covers Wikibase\EntityStore\MongoDB\MongoDBEntityDatabase
  *
  * @licence GPLv2+
  * @author Thomas Pellissier Tanon
