@@ -14,7 +14,7 @@ class SerializedEntityTest extends \PHPUnit_Framework_TestCase {
 
 	public function testConstructorWithNoType() {
 		$this->setExpectedException( 'InvalidArgumentException' );
-		$entity = new SerializedEntity( null, array() );
+		new SerializedEntity( null, array() );
 	}
 
 	public function testGetId() {
