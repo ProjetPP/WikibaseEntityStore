@@ -11,6 +11,17 @@
         </revision>
     </page>
     <page>
+        <title>Q12345678</title>
+        <ns>0</ns>
+        <id>142234723</id>
+        <revision>
+            <model>wikibase-item</model>
+            <format>application/json</format>
+            <text xml:space="preserve">{&quot;entity&quot;</text>
+            <sha1>cmpqpszb06q5y1nsdgdfshfdgddffd4wwq</sha1>
+        </revision>
+    </page>
+    <page>
         <title>Wikidata:Test</title>
         <ns>2</ns>
         <id>1422347</id>

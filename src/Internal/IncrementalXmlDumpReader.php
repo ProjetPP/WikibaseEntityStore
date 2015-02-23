@@ -80,6 +80,10 @@ class IncrementalXmlDumpReader implements Iterator {
 			} elseif( preg_match( '/<\/page>/', $line, $m ) && $isEntity ) {
 
 				$json = json_decode( html_entity_decode( $text ), true );
+				if( $json === null ) {
+					$this->logger->error( 'The serialization is not a valid JSON document.' );
+					continue;
+				}
 
 				if( array_key_exists( 'redirect', $json ) ) {
 					$this->logger->info( 'Entity redirection not supported.' );
