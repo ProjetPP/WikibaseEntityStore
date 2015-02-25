@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/ProjetPP/WikibaseEntityStore.svg?branch=master)](https://travis-ci.org/ProjetPP/WikibaseEntityStore)
 [![Code Coverage](https://scrutinizer-ci.com/g/ProjetPP/WikibaseEntityStore/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/ProjetPP/WikibaseEntityStore/?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ProjetPP/WikibaseEntityStore/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ProjetPP/WikibaseEntityStore/?branch=master)
-[![Dependency Status](https://www.versioneye.com/user/projects/54d0e3fa3ca08473b400010f/badge.svg?style=flat)](https://www.versioneye.com/user/projects/54d0e3fa3ca08473b400010f)
+[![Dependency Status](https://www.versioneye.com/php/ppp:wikibase-entity-store/0.0.0+NA/badge.svg)](https://www.versioneye.com/php/ppp:wikibase-entity-store/0.0.0+NA)
 
 On [Packagist](https://packagist.org/packages/ppp/wikibase-entity-store):
 [![Latest Stable Version](https://poser.pugx.org/ppp/wikibase-entity-store/version.png)](https://packagist.org/packages/ppp/wikibase-entity-store)
