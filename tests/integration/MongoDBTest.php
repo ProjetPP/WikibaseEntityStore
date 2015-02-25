@@ -8,6 +8,7 @@ use Ask\Language\Description\ValueDescription;
 use Ask\Language\Option\QueryOptions;
 use Ask\Language\Query;
 use DataValues\StringValue;
+use MongoConnectionException;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Wikibase\DataModel\Entity\EntityIdValue;
@@ -24,7 +25,12 @@ use Wikibase\EntityStore\Console\CliApplicationFactory;
 class MongoDBTest extends \PHPUnit_Framework_TestCase {
 
 	public function testMongoDbStore() {
-		$this->setupMongoDB();
+		try {
+			$this->setupMongoDB();
+		} catch( MongoConnectionException $e ) {
+			$this->markTestSkipped( 'MongoDB is not running: ' . $e->getMessage() );
+			return;
+		}
 
 		$store = $this->getEntityStoreFromConfiguration();
 
