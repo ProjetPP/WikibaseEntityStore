@@ -1,6 +1,6 @@
 # WikibaseEntityStore
 
-[![Build Status](https://scrutinizer-ci.com/g/ProjetPP/WikibaseEntityStore/badges/build.png?b=master)](https://scrutinizer-ci.com/g/ProjetPP/WikibaseEntityStore/build-status/master)
+[![Build Status](https://travis-ci.org/ProjetPP/WikibaseEntityStore.svg?branch=master)](https://travis-ci.org/ProjetPP/WikibaseEntityStore)
 [![Code Coverage](https://scrutinizer-ci.com/g/ProjetPP/WikibaseEntityStore/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/ProjetPP/WikibaseEntityStore/?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ProjetPP/WikibaseEntityStore/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ProjetPP/WikibaseEntityStore/?branch=master)
 [![Dependency Status](https://www.versioneye.com/user/projects/54d0e3fa3ca08473b400010f/badge.svg?style=flat)](https://www.versioneye.com/user/projects/54d0e3fa3ca08473b400010f)
