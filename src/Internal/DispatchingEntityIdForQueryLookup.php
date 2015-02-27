@@ -2,7 +2,8 @@
 
 namespace Wikibase\EntityStore\Internal;
 
-use Ask\Language\Query;
+use Ask\Language\Description\Description;
+use Ask\Language\Option\QueryOptions;
 use Wikibase\DataModel\Entity\Item;
 use Wikibase\DataModel\Entity\Property;
 use Wikibase\EntityStore\ItemIdForQueryLookup;
@@ -31,21 +32,21 @@ class DispatchingEntityIdForQueryLookup implements ItemIdForQueryLookup, Propert
 	/**
 	 * @see EntityIdsForQueryLookup:getEntityDocumentsForQuery
 	 */
-	public function getEntityIdsForQuery( Query $term, $entityType = null ) {
-		return $this->entityIdForQueryLookup->getEntityIdsForQuery( $term, $entityType );
+	public function getEntityIdsForQuery( Description $queryDescription, QueryOptions $queryOptions = null, $entityType = null ) {
+		return $this->entityIdForQueryLookup->getEntityIdsForQuery( $queryDescription, $queryOptions, $entityType );
 	}
 
 	/**
 	 * @see ItemIdsForQueryLookup::getItemForQuery
 	 */
-	public function getItemIdsForQuery( Query $term ) {
-		return $this->entityIdForQueryLookup->getEntityIdsForQuery( $term, Item::ENTITY_TYPE );
+	public function getItemIdsForQuery( Description $queryDescription, QueryOptions $queryOptions = null ) {
+		return $this->entityIdForQueryLookup->getEntityIdsForQuery( $queryDescription, $queryOptions, Item::ENTITY_TYPE );
 	}
 
 	/**
 	 * @see PropertyIdsForQueryLookup::getPropertyForQuery
 	 */
-	public function getPropertyIdsForQuery( Query $term ) {
-		return $this->entityIdForQueryLookup->getEntityIdsForQuery( $term, Property::ENTITY_TYPE );
+	public function getPropertyIdsForQuery( Description $queryDescription, QueryOptions $queryOptions = null ) {
+		return $this->entityIdForQueryLookup->getEntityIdsForQuery( $queryDescription, $queryOptions, Property::ENTITY_TYPE );
 	}
 }

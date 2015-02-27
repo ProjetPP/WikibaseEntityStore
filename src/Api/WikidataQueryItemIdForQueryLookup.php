@@ -8,7 +8,7 @@ use Ask\Language\Description\Description;
 use Ask\Language\Description\Disjunction;
 use Ask\Language\Description\SomeProperty;
 use Ask\Language\Description\ValueDescription;
-use Ask\Language\Query;
+use Ask\Language\Option\QueryOptions;
 use DataValues\StringValue;
 use DataValues\TimeValue;
 use Wikibase\DataModel\Entity\EntityIdValue;
@@ -46,8 +46,8 @@ class WikidataQueryItemIdForQueryLookup implements ItemIdForQueryLookup {
 	/**
 	 * @see ItemIdForQueryLookup::getItemIdsForQuery
 	 */
-	public function getItemIdsForQuery( Query $query ) {
-		return $this->queryService->doQuery( $this->buildQueryForDescription( $query->getDescription() ) );
+	public function getItemIdsForQuery( Description $queryDescription, QueryOptions $queryOptions = null ) {
+		return $this->queryService->doQuery( $this->buildQueryForDescription( $queryDescription ) );
 	}
 
 	private function buildQueryForDescription( Description $description, PropertyId $propertyId = null ) {

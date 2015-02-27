@@ -2,7 +2,8 @@
 
 namespace Wikibase\EntityStore;
 
-use Ask\Language\Query;
+use Ask\Language\Description\Description;
+use Ask\Language\Option\QueryOptions;
 use Wikibase\DataModel\Entity\PropertyId;
 
 /**
@@ -14,8 +15,9 @@ interface PropertyIdForQueryLookup {
 	/**
 	 * Execute a query and returns the matching entities
 	 *
-	 * @param Query $query
+	 * @param Description $queryDescription
+	 * @param QueryOptions|null $queryOptions
 	 * @return PropertyId[]
 	 */
-	public function getPropertyIdsForQuery( Query $query );
+	public function getPropertyIdsForQuery( Description $queryDescription, QueryOptions $queryOptions = null );
 }

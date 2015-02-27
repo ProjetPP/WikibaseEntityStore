@@ -4,8 +4,9 @@ namespace Wikibase\EntityStore\Internal;
 
 use Ask\Language\Description\AnyValue;
 use Ask\Language\Option\QueryOptions;
-use Ask\Language\Query;
+use Wikibase\DataModel\Entity\Item;
 use Wikibase\DataModel\Entity\ItemId;
+use Wikibase\DataModel\Entity\Property;
 use Wikibase\DataModel\Entity\PropertyId;
 
 /**
@@ -22,13 +23,13 @@ class DispatchingEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase 
 			->getMock();
 		$entityIdForQueryLookupMock->expects( $this->once() )
 			->method( 'getEntityIdsForQuery' )
-			->with( $this->equalTo( new Query( new AnyValue(), array(), new QueryOptions( 10, 0 ) ) ) )
+			->with( $this->equalTo( new AnyValue() ), $this->equalTo( new QueryOptions( 10, 0 ) ) )
 			->willReturn( array( new ItemId( 'Q1' ) ) );
 
 		$entityIdForQueryLookup = new DispatchingEntityIdForQueryLookup( $entityIdForQueryLookupMock );
 		$this->assertEquals(
 			array( new ItemId( 'Q1' ) ),
-			$entityIdForQueryLookup->getEntityIdsForQuery( new Query( new AnyValue(), array(), new QueryOptions( 10, 0 ) ) )
+			$entityIdForQueryLookup->getEntityIdsForQuery( new AnyValue(), new QueryOptions( 10, 0 ) )
 		);
 	}
 
@@ -38,13 +39,17 @@ class DispatchingEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase 
 			->getMock();
 		$entityIdForQueryLookupMock->expects( $this->once() )
 			->method( 'getEntityIdsForQuery' )
-			->with( $this->equalTo( new Query( new AnyValue(), array(), new QueryOptions( 10, 0 ) ) ) )
+			->with(
+				$this->equalTo( new AnyValue() ),
+				$this->equalTo( new QueryOptions( 10, 0 ) ),
+				$this->equalTo( Item::ENTITY_TYPE )
+			)
 			->willReturn( array( new ItemId( 'Q1' ) ) );
 
 		$entityIdForQueryLookup = new DispatchingEntityIdForQueryLookup( $entityIdForQueryLookupMock );
 		$this->assertEquals(
 			array( new ItemId( 'Q1' ) ),
-			$entityIdForQueryLookup->getItemIdsForQuery( new Query( new AnyValue(), array(), new QueryOptions( 10, 0 ) ) )
+			$entityIdForQueryLookup->getItemIdsForQuery( new AnyValue(), new QueryOptions( 10, 0 ) )
 		);
 	}
 
@@ -54,13 +59,17 @@ class DispatchingEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase 
 			->getMock();
 		$entityIdForQueryLookupMock->expects( $this->once() )
 			->method( 'getEntityIdsForQuery' )
-			->with( $this->equalTo( new Query( new AnyValue(), array(), new QueryOptions( 10, 0 ) ) ) )
+			->with(
+				$this->equalTo( new AnyValue() ),
+				$this->equalTo( new QueryOptions( 10, 0 ) ),
+				$this->equalTo( Property::ENTITY_TYPE )
+			)
 			->willReturn( array( new PropertyId( 'P1' ) ) );
 
 		$entityIdForQueryLookup = new DispatchingEntityIdForQueryLookup( $entityIdForQueryLookupMock );
 		$this->assertEquals(
 			array( new PropertyId( 'P1' ) ),
-			$entityIdForQueryLookup->getPropertyIdsForQuery( new Query( new AnyValue(), array(), new QueryOptions( 10, 0 ) ) )
+			$entityIdForQueryLookup->getPropertyIdsForQuery( new AnyValue(), new QueryOptions( 10, 0 ) )
 		);
 	}
 }

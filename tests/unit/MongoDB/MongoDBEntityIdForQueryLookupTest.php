@@ -5,11 +5,11 @@ namespace Wikibase\EntityStore\MongoDB;
 use ArrayIterator;
 use Ask\Language\Description\AnyValue;
 use Ask\Language\Description\Conjunction;
+use Ask\Language\Description\Description;
 use Ask\Language\Description\Disjunction;
 use Ask\Language\Description\SomeProperty;
 use Ask\Language\Description\ValueDescription;
 use Ask\Language\Option\QueryOptions;
-use Ask\Language\Query;
 use DataValues\MonolingualTextValue;
 use DataValues\StringValue;
 use DataValues\TimeValue;
@@ -31,7 +31,7 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 	/**
 	 * @dataProvider getEntityIdsForQueryProvider
 	 */
-	public function testGetEntityIdsForQuery( Query $query, $type = null, $mongoQuery, $skip, $limit, $mongoResult ) {
+	public function testGetEntityIdsForQuery( Description $queryDescription, QueryOptions $queryOptions, $type = null, $mongoQuery, $skip, $limit, $mongoResult ) {
 		$cursorMock = $this->getMockBuilder( 'Doctrine\MongoDB\Cursor' )
 			->disableOriginalConstructor()
 			->getMock();
@@ -76,18 +76,15 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 
 		$this->assertEquals(
 			array( new ItemId( 'Q1' ) ),
-			$lookup->getEntityIdsForQuery( $query, $type )
+			$lookup->getEntityIdsForQuery( $queryDescription, $queryOptions, $type )
 		);
 	}
 
 	public function getEntityIdsForQueryProvider() {
 		return array(
 			array(
-				new Query(
-					new AnyValue(),
-					array(),
-					new QueryOptions( 10, 0 )
-				),
+				new AnyValue(),
+				new QueryOptions( 10, 0 ),
 				null,
 				array(),
 				0,
@@ -95,14 +92,11 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 				array( array( '_id' => 'Q1' ) )
 			),
 			array(
-				new Query(
-					new SomeProperty(
-						new EntityIdValue( new PropertyId( 'P1' ) ),
-						new ValueDescription( new EntityIdValue( new ItemId( 'Q1' ) ) )
-					),
-					array(),
-					new QueryOptions( 20, 10 )
+				new SomeProperty(
+					new EntityIdValue( new PropertyId( 'P1' ) ),
+					new ValueDescription( new EntityIdValue( new ItemId( 'Q1' ) ) )
 				),
+				new QueryOptions( 20, 10 ),
 				Item::ENTITY_TYPE,
 				array(
 					'claims.P1' => array(
@@ -114,20 +108,17 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 				array( array( '_id' => 'Q1' ) )
 			),
 			array(
-				new Query(
-					new Conjunction( array(
-						new SomeProperty(
-							new EntityIdValue( new PropertyId( 'P42' ) ),
-							new ValueDescription( new StringValue( 'foo' ) )
-						),
-						new SomeProperty(
-							new EntityIdValue( new PropertyId( 'P1' ) ),
-							new ValueDescription( new EntityIdValue( new PropertyId( 'P42' ) ) )
-						)
-					) ),
-					array(),
-					new QueryOptions( 10, 0 )
-				),
+				new Conjunction( array(
+					new SomeProperty(
+						new EntityIdValue( new PropertyId( 'P42' ) ),
+						new ValueDescription( new StringValue( 'foo' ) )
+					),
+					new SomeProperty(
+						new EntityIdValue( new PropertyId( 'P1' ) ),
+						new ValueDescription( new EntityIdValue( new PropertyId( 'P42' ) ) )
+					)
+				) ),
+				new QueryOptions( 10, 0 ),
 				Item::ENTITY_TYPE,
 				array(
 					'$and' => array(
@@ -148,20 +139,17 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 				array( array( '_id' => 'Q1' ) )
 			),
 			array(
-				new Query(
-					new Disjunction( array(
-						new SomeProperty(
-							new EntityIdValue( new PropertyId( 'P42' ) ),
-							new ValueDescription( new StringValue( 'foo' ) )
-						),
-						new SomeProperty(
-							new EntityIdValue( new PropertyId( 'P1' ) ),
-							new ValueDescription( new EntityIdValue( new PropertyId( 'P42' ) ) )
-						)
-					) ),
-					array(),
-					new QueryOptions( 10, 0 )
-				),
+				new Disjunction( array(
+					new SomeProperty(
+						new EntityIdValue( new PropertyId( 'P42' ) ),
+						new ValueDescription( new StringValue( 'foo' ) )
+					),
+					new SomeProperty(
+						new EntityIdValue( new PropertyId( 'P1' ) ),
+						new ValueDescription( new EntityIdValue( new PropertyId( 'P42' ) ) )
+					)
+				) ),
+				new QueryOptions( 10, 0 ),
 				Item::ENTITY_TYPE,
 				array(
 					'$or' => array(
@@ -182,20 +170,17 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 				array( array( '_id' => 'Q1' ) )
 			),
 			array(
-				new Query(
-					new SomeProperty(
-						new EntityIdValue( new PropertyId( 'P42' ) ),
-						new Conjunction( array(
-							new Disjunction( array(
-								new ValueDescription( new StringValue( 'foo' ) )
-							) ),
-							new AnyValue(),
-							new ValueDescription( new EntityIdValue( new PropertyId( 'P42' ) ) )
-						) )
-					),
-					array(),
-					new QueryOptions( 10, 0 )
+				new SomeProperty(
+					new EntityIdValue( new PropertyId( 'P42' ) ),
+					new Conjunction( array(
+						new Disjunction( array(
+							new ValueDescription( new StringValue( 'foo' ) )
+						) ),
+						new AnyValue(),
+						new ValueDescription( new EntityIdValue( new PropertyId( 'P42' ) ) )
+					) )
 				),
+				new QueryOptions( 10, 0 ),
 				Item::ENTITY_TYPE,
 				array(
 					'claims.P42' => array(
@@ -217,16 +202,13 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 				array( array( '_id' => 'Q1' ) )
 			),
 			array(
-				new Query(
-					new SomeProperty(
-						new EntityIdValue( new PropertyId( 'P42' ) ),
-						new ValueDescription(
-							new TimeValue( '+00000001952-03-11T00:00:00Z', 0, 0, 0, TimeValue::PRECISION_DAY, '' )
-						)
-					),
-					array(),
-					new QueryOptions( 10, 0 )
+				new SomeProperty(
+					new EntityIdValue( new PropertyId( 'P42' ) ),
+					new ValueDescription(
+						new TimeValue( '+00000001952-03-11T00:00:00Z', 0, 0, 0, TimeValue::PRECISION_DAY, '' )
+					)
 				),
+				new QueryOptions( 10, 0 ),
 				Item::ENTITY_TYPE,
 				array(
 					'claims.P42' => array(
@@ -240,16 +222,13 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 				array( array( '_id' => 'Q1' ) )
 			),
 			array(
-				new Query(
-					new SomeProperty(
-						new EntityIdValue( new PropertyId( 'P42' ) ),
-						new ValueDescription(
-							new TimeValue( '+00000001952-00-00T00:00:00Z', 0, 0, 0, TimeValue::PRECISION_YEAR, '' )
-						)
-					),
-					array(),
-					new QueryOptions( 10, 0 )
+				new SomeProperty(
+					new EntityIdValue( new PropertyId( 'P42' ) ),
+					new ValueDescription(
+						new TimeValue( '+00000001952-00-00T00:00:00Z', 0, 0, 0, TimeValue::PRECISION_YEAR, '' )
+					)
 				),
+				new QueryOptions( 10, 0 ),
 				Item::ENTITY_TYPE,
 				array(
 					'claims.P42' => array(
@@ -268,7 +247,7 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 	/**
 	 * @dataProvider getEntityIdsForQueryWithFeatureNotSupportedExceptionProvider
 	 */
-	public function testGetEntityIdsForQueryWithFeatureNotSupportedException( Query $query ) {
+	public function testGetEntityIdsForQueryWithFeatureNotSupportedException( Description $queryDescription ) {
 		$collectionMock = $this->getMockBuilder( 'Doctrine\MongoDB\Collection' )
 			->disableOriginalConstructor()
 			->getMock();
@@ -291,72 +270,48 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 		$lookup = new MongoDBEntityIdForQueryLookup( $databaseMock, $documentBuilderMock );
 
 		$this->setExpectedException( 'Wikibase\EntityStore\FeatureNotSupportedException');
-		$lookup->getEntityIdsForQuery( $query, 'item' );
+		$lookup->getEntityIdsForQuery( $queryDescription, null, 'item' );
 	}
 
 	public function getEntityIdsForQueryWithFeatureNotSupportedExceptionProvider() {
 		return array(
 			array(
-				new Query(
-					$this->getMockForAbstractClass( 'Ask\Language\Description\Description' ),
-					array(),
-					new QueryOptions( 20, 10 )
+				$this->getMockForAbstractClass( 'Ask\Language\Description\Description' )
+			),
+			array(
+				new SomeProperty(
+					new StringValue( 'foo' ),
+					new ValueDescription( new EntityIdValue( new ItemId( 'Q1' ) ) )
 				)
 			),
 			array(
-				new Query(
-					new SomeProperty(
-						new StringValue( 'foo' ),
-						new ValueDescription( new EntityIdValue( new ItemId( 'Q1' ) ) )
-					),
-					array(),
-					new QueryOptions( 20, 10 )
-				)
-			),
-			array(
-				new Query(
+				new SomeProperty(
+					new EntityIdValue( new PropertyId( 'P42' ) ),
 					new SomeProperty(
 						new EntityIdValue( new PropertyId( 'P42' ) ),
-						new SomeProperty(
-							new EntityIdValue( new PropertyId( 'P42' ) ),
-							new ValueDescription( new EntityIdValue( new ItemId( 'Q1' ) ) ),
-							true
-						)
-					),
-					array(),
-					new QueryOptions( 20, 10 )
+						new ValueDescription( new EntityIdValue( new ItemId( 'Q1' ) ) ),
+						true
+					)
 				)
 			),
 			array(
-				new Query(
-					new SomeProperty(
-						new EntityIdValue( new PropertyId( 'P42' ) ),
-						new ValueDescription( new EntityIdValue( new ItemId( 'Q1' ) ), ValueDescription::COMP_GREATER )
-					),
-					array(),
-					new QueryOptions( 20, 10 )
+				new SomeProperty(
+					new EntityIdValue( new PropertyId( 'P42' ) ),
+					new ValueDescription( new EntityIdValue( new ItemId( 'Q1' ) ), ValueDescription::COMP_GREATER )
 				)
 			),
 			array(
-				new Query(
-					new SomeProperty(
-						new EntityIdValue( new PropertyId( 'P42' ) ),
-						new ValueDescription( new MonolingualTextValue( 'en', 'Foo' ) )
-					),
-					array(),
-					new QueryOptions( 20, 10 )
+				new SomeProperty(
+					new EntityIdValue( new PropertyId( 'P42' ) ),
+					new ValueDescription( new MonolingualTextValue( 'en', 'Foo' ) )
 				)
 			),
 			array(
-				new Query(
-					new SomeProperty(
-						new EntityIdValue( new PropertyId( 'P42' ) ),
-						new ValueDescription( new EntityIdValue(
-							$this->getMockForAbstractClass( 'Wikibase\DataModel\Entity\EntityId' )
-						) )
-					),
-					array(),
-					new QueryOptions( 20, 10 )
+				new SomeProperty(
+					new EntityIdValue( new PropertyId( 'P42' ) ),
+					new ValueDescription( new EntityIdValue(
+						$this->getMockForAbstractClass( 'Wikibase\DataModel\Entity\EntityId' )
+					) )
 				)
 			),
 		);

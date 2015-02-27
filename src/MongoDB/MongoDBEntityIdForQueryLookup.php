@@ -32,6 +32,8 @@ use Wikibase\EntityStore\Internal\EntityIdForQueryLookup;
  */
 class MongoDBEntityIdForQueryLookup implements EntityIdForQueryLookup {
 
+	const DEFAULT_QUERY_LIMIT = 100;
+
 	/**
 	 * @var Database
 	 */
@@ -54,19 +56,21 @@ class MongoDBEntityIdForQueryLookup implements EntityIdForQueryLookup {
 	/**
 	 * @see EntityForQueryLookup::getEntityIdsForQuery
 	 */
-	public function getEntityIdsForQuery( Query $query, $entityType ) {
-		return $this->formatResults( $this->doQuery( $query, $entityType ) );
+	public function getEntityIdsForQuery( Description $queryDescription, QueryOptions $queryOptions = null, $entityType ) {
+		$queryOptions = $queryOptions ?: new QueryOptions( self::DEFAULT_QUERY_LIMIT, 0 );
+
+		return $this->formatResults( $this->doQuery( $queryDescription, $queryOptions, $entityType ) );
 	}
 
-	private function doQuery( Query $query, $entityType ) {
+	private function doQuery( Description $queryDescription, QueryOptions $queryOptions, $entityType ) {
 		$cursor = $this->database
 			->selectCollection( $entityType )
 			->find(
-				$this->buildQueryForDescription( $query->getDescription(), new Expr() )->getQuery(),
+				$this->buildQueryForDescription( $queryDescription, new Expr() )->getQuery(),
 				array( '_id' => 1 )
 			);
 
-		return $this->applyOptionsToCursor( $cursor, $query->getOptions() );
+		return $this->applyOptionsToCursor( $cursor, $queryOptions );
 	}
 	private function buildQueryForDescription( Description $description, Expr $expr ) {
 		if( $description instanceof AnyValue ) {

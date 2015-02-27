@@ -44,13 +44,9 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
 
 		$this->assertEquals(
 			array( new ItemId( 'Q1' ) ),
-			$store->getItemIdForQueryLookup()->getItemIdsForQuery( new Query(
-				new SomeProperty(
-					new EntityIdValue( new PropertyId( 'P18' ) ),
-					new ValueDescription( new StringValue( 'Hubble ultra deep field.jpg' ) )
-				),
-				array(),
-				new QueryOptions( 10, 0 )
+			$store->getItemIdForQueryLookup()->getItemIdsForQuery( new SomeProperty(
+				new EntityIdValue( new PropertyId( 'P18' ) ),
+				new ValueDescription( new StringValue( 'Hubble ultra deep field.jpg' ) )
 			) )
 		);
 	}

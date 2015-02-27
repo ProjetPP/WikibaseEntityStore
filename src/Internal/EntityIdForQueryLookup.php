@@ -2,7 +2,8 @@
 
 namespace Wikibase\EntityStore\Internal;
 
-use Ask\Language\Query;
+use Ask\Language\Description\Description;
+use Ask\Language\Option\QueryOptions;
 use Wikibase\DataModel\Entity\EntityId;
 
 /**
@@ -14,9 +15,10 @@ interface EntityIdForQueryLookup {
 	/**
 	 * Execute a query and returns the matching entities
 	 *
-	 * @param Query $query
-	 * @param string|null $entityType
+	 * @param Description $queryDescription
+	 * @param QueryOptions|null $queryOptions
+	 * @param string $entityType
 	 * @return EntityId[]
 	 */
-	public function getEntityIdsForQuery( Query $query, $entityType );
+	public function getEntityIdsForQuery( Description $queryDescription, QueryOptions $queryOptions = null, $entityType );
 }

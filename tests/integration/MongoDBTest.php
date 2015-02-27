@@ -67,23 +67,21 @@ class MongoDBTest extends \PHPUnit_Framework_TestCase {
 
 		$this->assertEquals(
 			array( new PropertyId( 'P16' ) ),
-			$store->getPropertyIdForQueryLookup()->getPropertyIdsForQuery( new Query(
+			$store->getPropertyIdForQueryLookup()->getPropertyIdsForQuery(
 				new AnyValue(),
-				array(),
 				new QueryOptions( 1, 0 )
-			) )
+			)
 		);
 
 		$this->assertEquals(
 			array( new ItemId( 'Q1' ) ),
-			$store->getItemIdForQueryLookup()->getItemIdsForQuery( new Query(
+			$store->getItemIdForQueryLookup()->getItemIdsForQuery(
 				new SomeProperty(
 					new EntityIdValue( new PropertyId( 'P18' ) ),
 					new ValueDescription( new StringValue( 'Hubble ultra deep field.jpg' ) )
 				),
-				array(),
 				new QueryOptions( 10, 0 )
-			) )
+			)
 		);
 	}
 
