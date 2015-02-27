@@ -6,7 +6,6 @@ use Ask\Language\Description\AnyValue;
 use Ask\Language\Description\SomeProperty;
 use Ask\Language\Description\ValueDescription;
 use Ask\Language\Option\QueryOptions;
-use Ask\Language\Query;
 use DataValues\StringValue;
 use MongoConnectionException;
 use Symfony\Component\Console\Input\ArrayInput;

@@ -4,8 +4,6 @@ namespace Wikibase\EntityStore;
 
 use Ask\Language\Description\SomeProperty;
 use Ask\Language\Description\ValueDescription;
-use Ask\Language\Option\QueryOptions;
-use Ask\Language\Query;
 use DataValues\StringValue;
 use Wikibase\DataModel\Entity\EntityIdValue;
 use Wikibase\DataModel\Entity\ItemId;

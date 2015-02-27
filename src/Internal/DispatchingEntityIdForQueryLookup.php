@@ -32,7 +32,11 @@ class DispatchingEntityIdForQueryLookup implements ItemIdForQueryLookup, Propert
 	/**
 	 * @see EntityIdsForQueryLookup:getEntityDocumentsForQuery
 	 */
-	public function getEntityIdsForQuery( Description $queryDescription, QueryOptions $queryOptions = null, $entityType = null ) {
+	public function getEntityIdsForQuery(
+		Description $queryDescription,
+		QueryOptions $queryOptions = null,
+		$entityType = null
+	) {
 		return $this->entityIdForQueryLookup->getEntityIdsForQuery( $queryDescription, $queryOptions, $entityType );
 	}
 

@@ -8,7 +8,6 @@ use Ask\Language\Description\Description;
 use Ask\Language\Description\Disjunction;
 use Ask\Language\Description\SomeProperty;
 use Ask\Language\Description\ValueDescription;
-use Ask\Language\Option\QueryOptions;
 use DataValues\MonolingualTextValue;
 use DataValues\StringValue;
 use DataValues\TimeValue;
