@@ -17,7 +17,7 @@ install:
 
 script:
   - composer validate
-  - vendor/bin/phpcs src/* tests/* --standard=phpcs.xml --extensions=php -sp
+  - vendor/bin/phpcs src/* tests/* --standard=phpcs.xml --extensions=php -sp --runtime-set ignore_warnings_on_exit true
   - phpunit --coverage-clover=coverage.clover
 
 after_script:
