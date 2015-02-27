@@ -9,7 +9,6 @@ use Ask\Language\Description\Disjunction;
 use Ask\Language\Description\SomeProperty;
 use Ask\Language\Description\ValueDescription;
 use Ask\Language\Option\QueryOptions;
-use Ask\Language\Query;
 use DataValues\DataValue;
 use DataValues\StringValue;
 use DataValues\TimeValue;
@@ -72,60 +71,65 @@ class MongoDBEntityIdForQueryLookup implements EntityIdForQueryLookup {
 
 		return $this->applyOptionsToCursor( $cursor, $queryOptions );
 	}
-	private function buildQueryForDescription( Description $description, Expr $expr ) {
+	private function buildQueryForDescription( Description $description, Expr $expr, PropertyId $currentProperty = null ) {
 		if( $description instanceof AnyValue ) {
 			return $expr;
 		} elseif( $description instanceof Conjunction ) {
-			return $this->buildQueryForConjunction( $description, $expr );
+			return $this->buildQueryForConjunction( $description, $expr, $currentProperty );
 		} elseif( $description instanceof Disjunction ) {
-			return $this->buildQueryForDisjunction( $description, $expr );
+			return $this->buildQueryForDisjunction( $description, $expr, $currentProperty );
 		} elseif( $description instanceof SomeProperty ) {
 			return $this->buildQueryForSomeProperty( $description, $expr );
 		} elseif( $description instanceof ValueDescription ) {
-			return $this->buildQueryForValueDescription( $description, $expr );
+			return $this->buildQueryForValueDescription( $description, $expr, $currentProperty );
 		} else {
 			throw new FeatureNotSupportedException( 'Unknown description type: ' . $description->getType() );
 		}
 	}
 
-	private function buildQueryForConjunction( Conjunction $conjunction, Expr $expr ) {
+	private function buildQueryForConjunction( Conjunction $conjunction, Expr $expr, PropertyId $currentProperty = null ) {
 		foreach( $conjunction->getDescriptions() as $description ) {
-			$expr->addAnd( $this->buildQueryForDescription( $description, new Expr() ) );
+			$expr->addAnd( $this->buildQueryForDescription( $description, new Expr(), $currentProperty ) );
 		}
 		return $expr;
 	}
 
-	private function buildQueryForDisjunction( Disjunction $disjunction, Expr $expr ) {
+	private function buildQueryForDisjunction( Disjunction $disjunction, Expr $expr, PropertyId $currentProperty = null ) {
 		foreach( $disjunction->getDescriptions() as $description ) {
-			$expr->addOr( $this->buildQueryForDescription( $description, new Expr() ) );
+			$expr->addOr( $this->buildQueryForDescription( $description, new Expr(), $currentProperty ) );
 		}
 		return $expr;
 	}
 
 	private function buildQueryForSomeProperty( SomeProperty $someProperty, Expr $expr ) {
+		if( $someProperty->isSubProperty() ) {
+			throw new FeatureNotSupportedException( 'Sub-properties are not supported yet' );
+		}
+
 		$propertyIdValue = $someProperty->getPropertyId();
 		if( !( $propertyIdValue instanceof EntityIdValue ) ) {
 			throw new FeatureNotSupportedException( 'PropertyId should be an EntityIdValue' );
 		}
 
-		$subQuery = $this->buildQueryForDescription( $someProperty->getSubDescription(), new Expr() );
-
-		if( $someProperty->isSubProperty() ) {
-			throw new FeatureNotSupportedException( 'Sub-properties are not supported yet' );
-		} else {
-			return $expr->field( 'claims.' . $propertyIdValue->getEntityId()->getSerialization() )->elemMatch( $subQuery );
+		$propertyId = $propertyIdValue->getEntityId();
+		if( !( $propertyId instanceof PropertyId ) ) {
+			throw new FeatureNotSupportedException( 'PropertyId should be a PropertyId' );
 		}
+
+		return $this->buildQueryForDescription( $someProperty->getSubDescription(), $expr, $propertyId );
 	}
 
-	private function buildQueryForValueDescription( ValueDescription $valueDescription, Expr $expr ) {
-		$parameters = $this->buildDataValueForSearch( $valueDescription->getValue() );
+	private function buildQueryForValueDescription(
+		ValueDescription $valueDescription,
+		Expr $expr,
+		PropertyId $currentProperty = null
+	) {
+		$value = $valueDescription->getValue();
 
 		switch( $valueDescription->getComparator() ) {
 			case ValueDescription::COMP_EQUAL:
 			case ValueDescription::COMP_LIKE:
-				foreach( $parameters as $key => $value ) {
-					$expr->field( 'mainsnak.datavalue.' . $key )->equals( $value );
-				}
+				$expr->field( 'sclaims.' . $value->getType() )->equals( $this->buildPropertyValueForSearch( $currentProperty, $value ) );
 				return $expr;
 
 			default:
@@ -133,41 +137,36 @@ class MongoDBEntityIdForQueryLookup implements EntityIdForQueryLookup {
 		}
 	}
 
-	private function buildDataValueForSearch( DataValue $dataValue ) {
+	private function buildPropertyValueForSearch( PropertyId $propertyId, DataValue $dataValue ) {
 		if( $dataValue instanceof EntityIdValue ) {
-			return $this->buildEntityIdValueForSearch( $dataValue );
+			return $this->buildEntityIdValueForSearch( $propertyId, $dataValue );
 		} elseif( $dataValue instanceof StringValue ) {
-			return $this->buildStringValueForSearch( $dataValue );
+			return $this->buildStringValueForSearch( $propertyId, $dataValue );
 		} elseif( $dataValue instanceof TimeValue ) {
-			return $this->buildTimeValueForSearch( $dataValue );
+			return $this->buildTimeValueForSearch( $propertyId, $dataValue );
 		} else {
 			throw new FeatureNotSupportedException( 'Not supported DataValue type: ' . $dataValue->getType() );
 		}
 	}
 
-	private function buildEntityIdValueForSearch( EntityIdValue $entityIdValue ) {
+	private function buildEntityIdValueForSearch( PropertyId $propertyId, EntityIdValue $entityIdValue ) {
 		$entityId = $entityIdValue->getEntityId();
 
 		if( !( $entityId instanceof ItemId || $entityId instanceof PropertyId ) ) {
 			throw new FeatureNotSupportedException( 'Not supported entity type: ' . $entityId->getEntityType() );
 		}
-		return array(
-			'value.numeric-id' => $entityId->getNumericId() //It assumes that the range of the property is only one entity type
-		);
+
+		return $propertyId->getSerialization() . '-' . $entityIdValue->getEntityId()->getSerialization();
 	}
 
-	private function buildStringValueForSearch( StringValue $stringValue ) {
-		return array(
-			'value' => $stringValue->getValue()
-		);
+	private function buildStringValueForSearch( PropertyId $propertyId, StringValue $stringValue ) {
+		return $propertyId->getSerialization() . '-' . $stringValue->getValue();
 	}
 
-	private function buildTimeValueForSearch( TimeValue $timeValue ) {
+	private function buildTimeValueForSearch( PropertyId $propertyId, TimeValue $timeValue ) {
 		$significantTimePart = preg_replace( '/(-00)*T00:00:00Z$/', '', $timeValue->getTime() );
 
-		return array(
-			'value.time' => new MongoRegex( '/^' . preg_quote( $significantTimePart, '/' ) . '/' )
-		);
+		return new MongoRegex( '/^' . preg_quote( $propertyId->getSerialization() . '-' . $significantTimePart, '/' ) . '/' );
 	}
 
 	private function applyOptionsToCursor( Cursor $cursor, QueryOptions $options ) {

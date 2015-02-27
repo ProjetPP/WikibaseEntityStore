@@ -41,7 +41,7 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 				'type' => 'item',
 				'id' => 'Q1',
 				'labels' => array(
-					'en' => array( 'language' => 'en', 'value' => 'foo' ),
+					'en' => array( 'language' => 'en', 'value' => 'foo' )
 				),
 				'descriptions' => array(
 					'en' => array( 'language' => 'en', 'value' => 'bar' ),
@@ -50,6 +50,62 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 					'fr' => array(
 						array( 'language' => 'fr', 'value' => 'baz' ),
 						array( 'language' => 'fr', 'value' => 'bat' )
+					)
+				),
+				'claims' => array(
+					'P1' => array(
+						array(
+							'mainsnak' => array(
+								'snaktype' => 'value',
+								'property' => 'P1',
+								'datavalue' => array(
+									'value' => 'foo',
+									'type' => 'string'
+								)
+							)
+						),
+						array(
+							'mainsnak' => array(
+								'snaktype' => 'value',
+								'property' => 'P1',
+								'datavalue' => array(
+									'value' => array( 'entity-type' => 'item', 'numeric-id' => 1 ),
+									'type' => 'wikibase-entityid'
+								)
+							)
+						),
+						array(
+							'mainsnak' => array(
+								'snaktype' => 'value',
+								'property' => 'P1',
+								'datavalue' => array(
+									'value' => array( 'entity-type' => 'property', 'numeric-id' => 1 ),
+									'type' => 'wikibase-entityid'
+								)
+							)
+						)
+					),
+					'P2' => array(
+						array(
+							'mainsnak' => array(
+								'snaktype' => 'value',
+								'property' => 'P2',
+								'datavalue' => array(
+									'value' => array( 'time' => '+00000001952-03-11T00:00:00Z' ),
+									'type' => 'time'
+								)
+							)
+						),
+						array(
+							'mainsnak' => array(
+								'snaktype' => 'value',
+								'property' => 'P2',
+								'datavalue' => array(
+									'value' => array( 'latitude' => 1, 'longitude' => 1 ),
+									'type' => 'globecoordinate'
+								)
+							)
+						)
 					)
 				)
 			) );
@@ -80,12 +136,73 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 						array( 'language' => 'fr', 'value' => 'bat' )
 					)
 				),
+				'claims' => array(
+					'P1' => array(
+						array(
+							'mainsnak' => array(
+								'snaktype' => 'value',
+								'property' => 'P1',
+								'datavalue' => array(
+									'value' => 'foo',
+									'type' => 'string'
+								)
+							)
+						),
+						array(
+							'mainsnak' => array(
+								'snaktype' => 'value',
+								'property' => 'P1',
+								'datavalue' => array(
+									'value' => array( 'entity-type' => 'item', 'numeric-id' => 1 ),
+									'type' => 'wikibase-entityid'
+								)
+							)
+						),
+						array(
+							'mainsnak' => array(
+								'snaktype' => 'value',
+								'property' => 'P1',
+								'datavalue' => array(
+									'value' => array( 'entity-type' => 'property', 'numeric-id' => 1 ),
+									'type' => 'wikibase-entityid'
+								)
+							)
+						)
+					),
+					'P2' => array(
+						array(
+							'mainsnak' => array(
+								'snaktype' => 'value',
+								'property' => 'P2',
+								'datavalue' => array(
+									'value' => array( 'time' => '+00000001952-03-11T00:00:00Z' ),
+									'type' => 'time'
+								)
+							)
+						),
+						array(
+							'mainsnak' => array(
+								'snaktype' => 'value',
+								'property' => 'P2',
+								'datavalue' => array(
+									'value' => array( 'latitude' => 1, 'longitude' => 1 ),
+									'type' => 'globecoordinate'
+								)
+							)
+						)
+					)
+				),
 				'sterms' => array(
 					'en' => array( new MongoBinData( 'foo', MongoBinData::GENERIC ) ),
 					'fr' => array(
 						new MongoBinData( 'baz', MongoBinData::GENERIC ),
 						new MongoBinData( 'bat', MongoBinData::GENERIC )
 					)
+				),
+				'sclaims' => array(
+					'string' => array( 'P1-foo' ),
+					'wikibase-entityid' => array( 'P1-Q1', 'P1-P1' ),
+					'time' => array( 'P2-+00000001952-03-11T00:00:00Z' )
 				)
 			),
 			$documentBuilder->buildDocumentForEntity( $item )
@@ -160,7 +277,8 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 						new MongoBinData( 'baz', MongoBinData::GENERIC ),
 						new MongoBinData( 'bat', MongoBinData::GENERIC )
 					)
-				)
+				),
+				'sclaims' => array()
 			),
 			$documentBuilder->buildDocumentForEntity( $item )
 		);

@@ -12,6 +12,7 @@ use Wikibase\DataModel\Entity\EntityIdParser;
 use Wikibase\DataModel\Entity\EntityIdParsingException;
 use Wikibase\EntityStore\EntityStore;
 use Wikibase\EntityStore\EntityStoreOptions;
+use Wikibase\EntityStore\FeatureNotSupportedException;
 
 /**
  * Internal class
@@ -72,6 +73,7 @@ class MongoDBDocumentBuilder {
 	private function addIndexedDataToSerialization( array $serialization ) {
 		$serialization['_id'] = $serialization['id'];
 		$serialization['sterms'] = $this->buildSearchTermsForEntity( $serialization );
+		$serialization['sclaims'] = $this->buildSearchClaimsForEntity( $serialization );
 
 		return $serialization;
 	}
@@ -126,6 +128,65 @@ class MongoDBDocumentBuilder {
 		$text = trim( $text );
 
 		return new MongoBinData( $text, MongoBinData::GENERIC );
+	}
+
+	private function buildSearchClaimsForEntity( array $serialization ) {
+		if( !array_key_exists( 'claims', $serialization ) ) {
+			return array();
+		}
+
+		$searchClaims = array();
+
+		foreach( $serialization['claims'] as $claimBag ) {
+			foreach( $claimBag as $claim ) {
+				$this->addSnakToSearchClaims( $claim['mainsnak'], $searchClaims );
+			}
+		}
+
+		return $searchClaims;
+	}
+
+	private function addSnakToSearchClaims( array $snak, array &$searchClaims ) {
+		if( $snak['snaktype'] !== 'value' ) {
+			return;
+		}
+
+		$valueType = $snak['datavalue']['type'];
+		if( !$this->isSupportedDataValueType( $valueType ) ) {
+			return;
+		}
+
+		$searchClaims[$valueType][] = $snak['property'] . '-' . $this->buildSearchedDataValue( $snak['datavalue'] );
+	}
+
+	private function isSupportedDataValueType( $type ) {
+		return in_array( $type, array( 'string', 'time', 'wikibase-entityid' ) );
+	}
+
+	private function buildSearchedDataValue( array $dataValue ) {
+		$value = $dataValue['value'];
+
+		switch( $dataValue['type'] ) {
+			case 'string':
+				return $value;
+			case 'time':
+				return $value['time'];
+			case 'wikibase-entityid':
+				return $this->buildSearchEntityIdValue( $value );
+			default:
+				throw new FeatureNotSupportedException( 'Not supported DataValue type: ' . $dataValue['type'] );
+		}
+	}
+
+	private function buildSearchEntityIdValue( array $value ) {
+		switch( $value['entity-type'] ) {
+			case 'item':
+				return 'Q' . $value['numeric-id'];
+			case 'property':
+				return 'P' . $value['numeric-id'];
+			default:
+				throw new FeatureNotSupportedException( 'Unknown entity type: ' . $value['entity-type'] );
+		}
 	}
 
 	/**

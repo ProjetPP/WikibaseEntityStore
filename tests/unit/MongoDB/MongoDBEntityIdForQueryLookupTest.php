@@ -31,7 +31,15 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 	/**
 	 * @dataProvider getEntityIdsForQueryProvider
 	 */
-	public function testGetEntityIdsForQuery( Description $queryDescription, QueryOptions $queryOptions, $type = null, $mongoQuery, $skip, $limit, $mongoResult ) {
+	public function testGetEntityIdsForQuery(
+		Description $queryDescription,
+		QueryOptions $queryOptions,
+		$type = null,
+		$mongoQuery,
+		$skip,
+		$limit,
+		$mongoResult
+	) {
 		$cursorMock = $this->getMockBuilder( 'Doctrine\MongoDB\Cursor' )
 			->disableOriginalConstructor()
 			->getMock();
@@ -98,11 +106,7 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 				),
 				new QueryOptions( 20, 10 ),
 				Item::ENTITY_TYPE,
-				array(
-					'claims.P1' => array(
-						'$elemMatch' => array( 'mainsnak.datavalue.value.numeric-id' => 1 )
-					)
-				),
+				array( 'sclaims.wikibase-entityid' => 'P1-Q1' ),
 				10,
 				20,
 				array( array( '_id' => 'Q1' ) )
@@ -122,16 +126,8 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 				Item::ENTITY_TYPE,
 				array(
 					'$and' => array(
-						array(
-							'claims.P42' => array(
-								'$elemMatch' => array( 'mainsnak.datavalue.value' => 'foo' )
-							)
-						),
-						array(
-							'claims.P1' => array(
-								'$elemMatch' => array( 'mainsnak.datavalue.value.numeric-id' => 42 )
-							),
-						)
+						array( 'sclaims.string' => 'P42-foo' ),
+						array( 'sclaims.wikibase-entityid' => 'P1-P42' )
 					)
 				),
 				0,
@@ -153,16 +149,8 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 				Item::ENTITY_TYPE,
 				array(
 					'$or' => array(
-						array(
-							'claims.P42' => array(
-								'$elemMatch' => array( 'mainsnak.datavalue.value' => 'foo' )
-							)
-						),
-						array(
-							'claims.P1' => array(
-								'$elemMatch' => array( 'mainsnak.datavalue.value.numeric-id' => 42 )
-							),
-						)
+						array( 'sclaims.string' => 'P42-foo' ),
+						array( 'sclaims.wikibase-entityid' => 'P1-P42' )
 					)
 				),
 				0,
@@ -183,18 +171,14 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 				new QueryOptions( 10, 0 ),
 				Item::ENTITY_TYPE,
 				array(
-					'claims.P42' => array(
-						'$elemMatch' => array(
-							'$and' => array(
-								array(
-									'$or' => array(
-										array( 'mainsnak.datavalue.value' => 'foo' )
-									)
-								),
-								array(),
-								array( 'mainsnak.datavalue.value.numeric-id' => 42 )
+					'$and' => array(
+						array(
+							'$or' => array(
+								array( 'sclaims.string' => 'P42-foo' )
 							)
-						)
+						),
+						array(),
+						array( 'sclaims.wikibase-entityid' => 'P42-P42' )
 					)
 				),
 				0,
@@ -210,13 +194,7 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 				),
 				new QueryOptions( 10, 0 ),
 				Item::ENTITY_TYPE,
-				array(
-					'claims.P42' => array(
-						'$elemMatch' => array(
-							'mainsnak.datavalue.value.time' => new MongoRegex( '/^\+00000001952\-03\-11/' )
-						)
-					)
-				),
+				array( 'sclaims.time' => new MongoRegex( '/^P42\-\+00000001952\-03\-11/' ) ),
 				0,
 				10,
 				array( array( '_id' => 'Q1' ) )
@@ -230,13 +208,7 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 				),
 				new QueryOptions( 10, 0 ),
 				Item::ENTITY_TYPE,
-				array(
-					'claims.P42' => array(
-						'$elemMatch' => array(
-							'mainsnak.datavalue.value.time' => new MongoRegex( '/^\+00000001952/' )
-						)
-					)
-				),
+				array( 'sclaims.time' => new MongoRegex( '/^P42\-\+00000001952/' ) ),
 				0,
 				10,
 				array( array( '_id' => 'Q1' ) )
@@ -281,6 +253,12 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 			array(
 				new SomeProperty(
 					new StringValue( 'foo' ),
+					new ValueDescription( new EntityIdValue( new ItemId( 'Q1' ) ) )
+				)
+			),
+			array(
+				new SomeProperty(
+					new EntityIdValue( new ItemId( 'Q1' ) ),
 					new ValueDescription( new EntityIdValue( new ItemId( 'Q1' ) ) )
 				)
 			),
