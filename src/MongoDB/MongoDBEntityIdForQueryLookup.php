@@ -31,8 +31,6 @@ use Wikibase\EntityStore\Internal\EntityIdForQueryLookup;
  */
 class MongoDBEntityIdForQueryLookup implements EntityIdForQueryLookup {
 
-	const DEFAULT_QUERY_LIMIT = 100;
-
 	/**
 	 * @var Database
 	 */
@@ -56,12 +54,11 @@ class MongoDBEntityIdForQueryLookup implements EntityIdForQueryLookup {
 	 * @see EntityForQueryLookup::getEntityIdsForQuery
 	 */
 	public function getEntityIdsForQuery( Description $queryDescription, QueryOptions $queryOptions = null, $entityType ) {
-		$queryOptions = $queryOptions ?: new QueryOptions( self::DEFAULT_QUERY_LIMIT, 0 );
 
 		return $this->formatResults( $this->doQuery( $queryDescription, $queryOptions, $entityType ) );
 	}
 
-	private function doQuery( Description $queryDescription, QueryOptions $queryOptions, $entityType ) {
+	private function doQuery( Description $queryDescription, QueryOptions $queryOptions = null, $entityType ) {
 		$cursor = $this->database
 			->selectCollection( $entityType )
 			->find(
@@ -69,8 +66,13 @@ class MongoDBEntityIdForQueryLookup implements EntityIdForQueryLookup {
 				array( '_id' => 1 )
 			);
 
+		if( $queryOptions === null ) {
+			return $cursor;
+		}
+
 		return $this->applyOptionsToCursor( $cursor, $queryOptions );
 	}
+
 	private function buildQueryForDescription( Description $description, Expr $expr, PropertyId $currentProperty = null ) {
 		if( $description instanceof AnyValue ) {
 			return $expr;

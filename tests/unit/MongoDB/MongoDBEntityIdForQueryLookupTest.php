@@ -216,6 +216,44 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 		);
 	}
 
+	public function testGetEntityIdsForQueryWithoutLimits() {
+
+		$collectionMock = $this->getMockBuilder( 'Doctrine\MongoDB\Collection' )
+			->disableOriginalConstructor()
+			->getMock();
+		$collectionMock->expects( $this->once() )
+			->method( 'find' )
+			->with( $this->equalTo( array() ) )
+			->willReturn( new ArrayIterator( array( array( '_id' => 'Q1' ) ) ) );
+
+		$databaseMock = $this->getMockBuilder( 'Doctrine\MongoDB\Database' )
+			->disableOriginalConstructor()
+			->getMock();
+		$databaseMock->expects( $this->once() )
+			->method( 'selectCollection' )
+			->with( $this->equalTo( Item::ENTITY_TYPE ) )
+			->willReturn( $collectionMock );
+
+		$documentBuilderMock = $this->getMockBuilder( 'Wikibase\EntityStore\MongoDB\MongoDBDocumentBuilder' )
+			->disableOriginalConstructor()
+			->getMock();
+		$documentBuilderMock->expects( $this->once() )
+			->method( 'buildEntityIdForDocument' )
+			->with( $this->equalTo( array( '_id' => 'Q1' ) ) )
+			->willReturn( new ItemId( 'Q1' ) );
+		$documentBuilderMock->expects( $this->any() )
+			->method( 'buildIntegerForType' )
+			->with( $this->equalTo( 'item' ) )
+			->willReturn( 0 );
+
+		$lookup = new MongoDBEntityIdForQueryLookup( $databaseMock, $documentBuilderMock );
+
+		$this->assertEquals(
+			array( new ItemId( 'Q1' ) ),
+			$lookup->getEntityIdsForQuery( new AnyValue(), null, Item::ENTITY_TYPE )
+		);
+	}
+
 	/**
 	 * @dataProvider getEntityIdsForQueryWithFeatureNotSupportedExceptionProvider
 	 */
