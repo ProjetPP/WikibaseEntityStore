@@ -4,11 +4,6 @@
     "server": "",
     "database": "wikibase"
   },
-  "cache": {
-    "lifetime": 86400,
-    "array": true,
-    "memcached": true
-  },
   "options": {
     "languages": ["en", "fr"]
   }

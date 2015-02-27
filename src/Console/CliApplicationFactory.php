@@ -15,6 +15,7 @@ class CliApplicationFactory {
 
 		$application->add( new ImportJsonDumpCommand() );
 		$application->add( new ImportIncrementalXmlDumpCommand() );
+		$application->add( new MongoDBRebuildDocumentsCommand() );
 
 		return $application;
 	}

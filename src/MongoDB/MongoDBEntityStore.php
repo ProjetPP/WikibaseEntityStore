@@ -190,4 +190,8 @@ class MongoDBEntityStore extends EntityStore {
 			}
 		}
 	}
+
+	public function getDatabase() {
+		return $this->database;
+	}
 }
