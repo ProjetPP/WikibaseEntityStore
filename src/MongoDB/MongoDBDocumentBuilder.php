@@ -10,6 +10,8 @@ use Wikibase\DataModel\Entity\EntityDocument;
 use Wikibase\DataModel\Entity\EntityId;
 use Wikibase\DataModel\Entity\EntityIdParser;
 use Wikibase\DataModel\Entity\EntityIdParsingException;
+use Wikibase\DataModel\Entity\Item;
+use Wikibase\DataModel\Entity\Property;
 use Wikibase\EntityStore\EntityStore;
 use Wikibase\EntityStore\EntityStoreOptions;
 use Wikibase\EntityStore\FeatureNotSupportedException;
@@ -21,6 +23,17 @@ use Wikibase\EntityStore\FeatureNotSupportedException;
  * @author Thomas Pellissier Tanon
  */
 class MongoDBDocumentBuilder {
+
+	public static $SUPPORTED_ENTITY_TYPES = array(
+		Item::ENTITY_TYPE,
+		Property::ENTITY_TYPE
+	);
+
+	public static $SUPPORTED_DATAVALUE_TYPES = array(
+		'string',
+		'time',
+		'wikibase-entityid'
+	);
 
 	/**
 	 * @var Serializer
@@ -160,7 +173,7 @@ class MongoDBDocumentBuilder {
 	}
 
 	private function isSupportedDataValueType( $type ) {
-		return in_array( $type, array( 'string', 'time', 'wikibase-entityid' ) );
+		return in_array( $type, self::$SUPPORTED_DATAVALUE_TYPES );
 	}
 
 	private function buildSearchedDataValue( array $dataValue ) {

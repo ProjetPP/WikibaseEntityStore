@@ -4,8 +4,6 @@ namespace Wikibase\EntityStore\MongoDB;
 
 use Doctrine\MongoDB\Database;
 use Wikibase\DataModel\Entity\BasicEntityIdParser;
-use Wikibase\DataModel\Entity\Item;
-use Wikibase\DataModel\Entity\Property;
 use Wikibase\EntityStore\EntityDocumentSaver;
 use Wikibase\EntityStore\EntityStore;
 use Wikibase\EntityStore\EntityStoreOptions;
@@ -21,11 +19,6 @@ use Wikibase\EntityStore\Internal\EntitySerializationFactory;
  * @todo add indexes if all languages are supported
  */
 class MongoDBEntityStore extends EntityStore {
-
-	private static $SUPPORTED_TYPES = array(
-		Item::ENTITY_TYPE,
-		Property::ENTITY_TYPE
-	);
 
 	/**
 	 * @var Database
@@ -149,7 +142,7 @@ class MongoDBEntityStore extends EntityStore {
 	 * @see EntityStore::setupStore
 	 */
 	public function setupStore() {
-		foreach( self::$SUPPORTED_TYPES as $type ) {
+		foreach( MongoDBDocumentBuilder::$SUPPORTED_ENTITY_TYPES as $type ) {
 			$this->database->command( array(
 				'collMod' => $type,
 				'usePowerOf2Sizes' => true
@@ -162,6 +155,7 @@ class MongoDBEntityStore extends EntityStore {
 	 */
 	public function setupIndexes() {
 		$this->setupTermIndexes();
+		$this->setupClaimsIndexes();
 	}
 
 	private function setupTermIndexes() {
@@ -174,8 +168,22 @@ class MongoDBEntityStore extends EntityStore {
 		foreach( $languagesOption as $language ) {
 			$key = 'sterms.' . $language;
 
-			foreach( self::$SUPPORTED_TYPES as $type ) {
-				$this->database->selectCollection( $type)->ensureIndex(
+			foreach( MongoDBDocumentBuilder::$SUPPORTED_ENTITY_TYPES as $type ) {
+				$this->database->selectCollection( $type )->ensureIndex(
+					array( $key => 1 ),
+					array( 'sparse' => true, 'socketTimeoutMS' => -1 )
+				);
+			}
+		}
+	}
+
+	private function setupClaimsIndexes() {
+		foreach( MongoDBDocumentBuilder::$SUPPORTED_ENTITY_TYPES as $entityType ) {
+			$collection = $this->database->selectCollection( $entityType );
+
+			foreach( MongoDBDocumentBuilder::$SUPPORTED_DATAVALUE_TYPES as $dataValueType ) {
+				$key = 'sclaims.' . $dataValueType;
+				$collection->ensureIndex(
 					array( $key => 1 ),
 					array( 'sparse' => true, 'socketTimeoutMS' => -1 )
 				);
