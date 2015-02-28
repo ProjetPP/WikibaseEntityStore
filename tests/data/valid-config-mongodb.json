@@ -10,6 +10,7 @@
     "memcached": true
   },
   "options": {
-    "languages": ["en", "fr"]
+    "languages": ["en", "fr"],
+    "mongodb-query-time-limit": 5000
   }
 }

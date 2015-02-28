@@ -21,6 +21,11 @@ use Wikibase\EntityStore\Internal\EntitySerializationFactory;
 class MongoDBEntityStore extends EntityStore {
 
 	/**
+	 * Option to set the time limit for query operations in milliseconds.
+	 */
+	const OPTION_QUERY_TIME_LIMIT = 'mongodb-query-time-limit';
+
+	/**
 	 * @var Database
 	 */
 	private $database;
@@ -51,7 +56,9 @@ class MongoDBEntityStore extends EntityStore {
 	 */
 	public function __construct( Database $database, EntityStoreOptions $options = null ) {
 		$this->database = $database;
+
 		parent::__construct( $options );
+		$this->defaultOption( self::OPTION_QUERY_TIME_LIMIT, null );
 
 		$entityDatabase = $this->newEntityDatabase( $database );
 		$this->entityLookup = new EntityLookup( $entityDatabase );
@@ -69,7 +76,11 @@ class MongoDBEntityStore extends EntityStore {
 	}
 
 	private function newEntityIdForQueryLookup( Database $database ) {
-		return new MongoDBEntityIdForQueryLookup( $database, $this->newDocumentBuilder() );
+		return new MongoDBEntityIdForQueryLookup(
+			$database,
+			$this->newDocumentBuilder(),
+			$this->getOption( self::OPTION_QUERY_TIME_LIMIT )
+		);
 	}
 
 	private function newDocumentBuilder() {

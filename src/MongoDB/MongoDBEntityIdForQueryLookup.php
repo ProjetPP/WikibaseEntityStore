@@ -42,19 +42,25 @@ class MongoDBEntityIdForQueryLookup implements EntityIdForQueryLookup {
 	private $documentBuilder;
 
 	/**
+	 * @var int|null
+	 */
+	private $timeLimit;
+
+	/**
 	 * @param Database $database
 	 * @param MongoDBDocumentBuilder $documentBuilder
+	 * @param int|null $timeLimit
 	 */
-	public function __construct( Database $database, MongoDBDocumentBuilder $documentBuilder ) {
+	public function __construct( Database $database, MongoDBDocumentBuilder $documentBuilder, $timeLimit = null ) {
 		$this->database = $database;
 		$this->documentBuilder = $documentBuilder;
+		$this->timeLimit = $timeLimit;
 	}
 
 	/**
 	 * @see EntityForQueryLookup::getEntityIdsForQuery
 	 */
 	public function getEntityIdsForQuery( Description $queryDescription, QueryOptions $queryOptions = null, $entityType ) {
-
 		return $this->formatResults( $this->doQuery( $queryDescription, $queryOptions, $entityType ) );
 	}
 
@@ -63,7 +69,7 @@ class MongoDBEntityIdForQueryLookup implements EntityIdForQueryLookup {
 			->selectCollection( $entityType )
 			->find(
 				$this->buildQueryForDescription( $queryDescription, new Expr() )->getQuery(),
-				array( '_id' => 1 )
+				$this->buildQueryModifiers()
 			);
 
 		if( $queryOptions === null ) {
@@ -171,7 +177,21 @@ class MongoDBEntityIdForQueryLookup implements EntityIdForQueryLookup {
 		return new MongoRegex( '/^' . preg_quote( $propertyId->getSerialization() . '-' . $significantTimePart, '/' ) . '/' );
 	}
 
+	private function buildQueryModifiers() {
+		$modifiers = array( '_id' => 1 );
+
+		if( $this->timeLimit !== null ) {
+			$modifiers['$maxTimeMS'] = $this->timeLimit;
+		}
+
+		return $modifiers;
+	}
+
 	private function applyOptionsToCursor( Cursor $cursor, QueryOptions $options ) {
+		if( $this->timeLimit !== null ) {
+			$cursor->timeout( $this->timeLimit );
+		}
+
 		return $cursor
 			->skip( $options->getOffset() )
 			->limit( $options->getLimit() );
