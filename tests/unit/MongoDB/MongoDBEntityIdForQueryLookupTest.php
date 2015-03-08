@@ -79,6 +79,10 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 			->method( 'buildIntegerForType' )
 			->with( $this->equalTo( 'item' ) )
 			->willReturn( 0 );
+		$documentBuilderMock->expects( $this->any() )
+			->method( 'buildSearchedStringValue' )
+			->with( $this->equalTo( 'foo' ) )
+			->willReturn( 'foo' );
 
 		$lookup = new MongoDBEntityIdForQueryLookup( $databaseMock, $documentBuilderMock );
 

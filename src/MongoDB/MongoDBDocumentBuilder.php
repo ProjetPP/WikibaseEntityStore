@@ -181,17 +181,31 @@ class MongoDBDocumentBuilder {
 
 		switch( $dataValue['type'] ) {
 			case 'string':
-				return $value;
+				return $this->buildSearchedStringValue( $value );
 			case 'time':
 				return $value['time'];
 			case 'wikibase-entityid':
-				return $this->buildSearchEntityIdValue( $value );
+				return $this->buildSearchedEntityIdValue( $value );
 			default:
 				throw new FeatureNotSupportedException( 'Not supported DataValue type: ' . $dataValue['type'] );
 		}
 	}
 
-	private function buildSearchEntityIdValue( array $value ) {
+	/**
+	 * Does an hash if needed to keep string size lower than MongoDB index key limit
+	 *
+	 * @param string $value
+	 * @return string
+	 */
+	public function buildSearchedStringValue( $value ) {
+		if( strlen( $value ) <= 128 ) {
+			return $value;
+		}
+
+		return hash( 'md5', $value );
+	}
+
+	private function buildSearchedEntityIdValue( array $value ) {
 		switch( $value['entity-type'] ) {
 			case 'item':
 				return 'Q' . $value['numeric-id'];

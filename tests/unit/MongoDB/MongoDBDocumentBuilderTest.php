@@ -69,6 +69,16 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 								'snaktype' => 'value',
 								'property' => 'P1',
 								'datavalue' => array(
+									'value' => str_repeat( '0123456789', 20 ),
+									'type' => 'string'
+								)
+							)
+						),
+						array(
+							'mainsnak' => array(
+								'snaktype' => 'value',
+								'property' => 'P1',
+								'datavalue' => array(
 									'value' => array( 'entity-type' => 'item', 'numeric-id' => 1 ),
 									'type' => 'wikibase-entityid'
 								)
@@ -153,6 +163,16 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 								'snaktype' => 'value',
 								'property' => 'P1',
 								'datavalue' => array(
+									'value' => str_repeat( '0123456789', 20 ),
+									'type' => 'string'
+								)
+							)
+						),
+						array(
+							'mainsnak' => array(
+								'snaktype' => 'value',
+								'property' => 'P1',
+								'datavalue' => array(
 									'value' => array( 'entity-type' => 'item', 'numeric-id' => 1 ),
 									'type' => 'wikibase-entityid'
 								)
@@ -200,7 +220,7 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 					)
 				),
 				'sclaims' => array(
-					'string' => array( 'P1-foo' ),
+					'string' => array( 'P1-foo', 'P1-c902a17556796a9f97afa23bad130b04' ),
 					'wikibase-entityid' => array( 'P1-Q1', 'P1-P1' ),
 					'time' => array( 'P2-+00000001952-03-11T00:00:00Z' )
 				)

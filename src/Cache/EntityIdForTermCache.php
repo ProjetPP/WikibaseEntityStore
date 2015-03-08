@@ -79,7 +79,7 @@ class EntityIdForTermCache {
 
 	private function getCacheId( Term $term, $entityType ) {
 		return self::CACHE_ID_PREFIX . WIKIBASE_DATAMODEL_VERSION . '-' .
-			$entityType . '-' . $term->getLanguageCode() . '-' . md5( $term->getText() );
+			$entityType . '-' . $term->getLanguageCode() . '-' . hash( 'md5', $term->getText() );
 	}
 }
 

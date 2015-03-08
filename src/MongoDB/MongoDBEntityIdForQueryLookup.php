@@ -168,7 +168,8 @@ class MongoDBEntityIdForQueryLookup implements EntityIdForQueryLookup {
 	}
 
 	private function buildStringValueForSearch( PropertyId $propertyId, StringValue $stringValue ) {
-		return $propertyId->getSerialization() . '-' . $stringValue->getValue();
+		return $propertyId->getSerialization() . '-' .
+			$this->documentBuilder->buildSearchedStringValue( $stringValue->getValue() );
 	}
 
 	private function buildTimeValueForSearch( PropertyId $propertyId, TimeValue $timeValue ) {
