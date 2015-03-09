@@ -27,6 +27,11 @@ class CachedEntityStore extends EntityStore {
 	private $entityIdForTermCache;
 
 	/**
+	 * @var EntityIdForQueryCache
+	 */
+	private $entityIdForQueryCache;
+
+	/**
 	 * @param EntityStore $entityStore
 	 * @param Cache $cache
 	 * @param int $lifeTime
@@ -35,6 +40,7 @@ class CachedEntityStore extends EntityStore {
 		$this->entityStore = $entityStore;
 		$this->entityCache = new EntityDocumentCache( $cache, $lifeTime );
 		$this->entityIdForTermCache = new EntityIdForTermCache( $cache, $lifeTime );
+		$this->entityIdForQueryCache = new EntityIdForQueryCache( $cache, $lifeTime );
 	}
 
 	/**
@@ -83,7 +89,7 @@ class CachedEntityStore extends EntityStore {
 	 * @see EntityStore::getItemIdForQueryLookup
 	 */
 	public function getItemIdForQueryLookup() {
-		return $this->entityStore->getItemIdForQueryLookup();
+		return new CachedItemIdForQueryLookup( $this->entityStore->getItemIdForQueryLookup(), $this->entityIdForQueryCache );
 	}
 
 	/**
