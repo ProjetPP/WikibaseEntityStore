@@ -235,3 +235,16 @@ $cacheLifeTime = 100000; //Life time of cache in seconds
 
 $cachedStore = new \Wikibase\EntityStore\Cache\CachedEntityStore( $store, $cache, $cacheLifeTime );
 ```
+
+
+## Release notes
+
+### 0.1.0 (2015-04-21)
+
+Initial release with these features:
+
+* Retrieve entities from ids or terms
+* Import Wikidata JSON full dumps and incremental XML dumps
+* Beginning of support of simple queries
+* API and MongoDB backends
+* Basic cache system
