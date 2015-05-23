@@ -154,10 +154,10 @@ class MongoDBEntityStore extends EntityStore {
 	 */
 	public function setupStore() {
 		foreach( MongoDBDocumentBuilder::$SUPPORTED_ENTITY_TYPES as $type ) {
-			$this->database->command( array(
+			$this->database->command( [
 				'collMod' => $type,
 				'usePowerOf2Sizes' => true
-			) );
+			] );
 		}
 	}
 
@@ -181,8 +181,8 @@ class MongoDBEntityStore extends EntityStore {
 
 			foreach( MongoDBDocumentBuilder::$SUPPORTED_ENTITY_TYPES as $type ) {
 				$this->database->selectCollection( $type )->ensureIndex(
-					array( $key => 1 ),
-					array( 'sparse' => true, 'socketTimeoutMS' => -1 )
+					[ $key => 1 ],
+					[ 'sparse' => true, 'socketTimeoutMS' => -1 ]
 				);
 			}
 		}
@@ -195,8 +195,8 @@ class MongoDBEntityStore extends EntityStore {
 			foreach( MongoDBDocumentBuilder::$SUPPORTED_DATAVALUE_TYPES as $dataValueType ) {
 				$key = 'sclaims.' . $dataValueType;
 				$collection->ensureIndex(
-					array( $key => 1 ),
-					array( 'sparse' => true, 'socketTimeoutMS' => -1 )
+					[ $key => 1 ],
+					[ 'sparse' => true, 'socketTimeoutMS' => -1 ]
 				);
 			}
 		}

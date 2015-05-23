@@ -16,9 +16,9 @@ class EntityIdForTermCacheTest extends \PHPUnit_Framework_TestCase {
 
 	public function testFetch() {
 		$cache = new EntityIdForTermCache( new ArrayCache() );
-		$cache->save( new Term( 'en', 'foo' ), 'item', array( new ItemId( 'Q42' ) ) );
+		$cache->save( new Term( 'en', 'foo' ), 'item', [ new ItemId( 'Q42' ) ] );
 
-		$this->assertEquals( array( new ItemId( 'Q42' ) ), $cache->fetch( new Term( 'en', 'foo' ), 'item' ) );
+		$this->assertEquals( [ new ItemId( 'Q42' ) ], $cache->fetch( new Term( 'en', 'foo' ), 'item' ) );
 	}
 
 	public function testFetchWithException() {
@@ -30,7 +30,7 @@ class EntityIdForTermCacheTest extends \PHPUnit_Framework_TestCase {
 
 	public function testContainsTrue() {
 		$cache = new EntityIdForTermCache( new ArrayCache() );
-		$cache->save( new Term( 'en', 'foo' ), 'item', array( new ItemId( 'Q42' ) ) );
+		$cache->save( new Term( 'en', 'foo' ), 'item', [ new ItemId( 'Q42' ) ] );
 
 		$this->assertTrue( $cache->contains( new Term( 'en', 'foo' ), 'item' ) );
 	}

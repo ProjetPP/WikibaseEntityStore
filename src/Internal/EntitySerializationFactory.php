@@ -25,10 +25,10 @@ class EntitySerializationFactory {
 	 */
 	public function newEntitySerializer() {
 		$factory = new SerializerFactory( new DataValueSerializer() );
-		return new DispatchingSerializer( array(
+		return new DispatchingSerializer( [
 			new SerializedEntitySerializer(),
 			$factory->newEntitySerializer(),
-		) );
+		] );
 	}
 
 	/**
@@ -40,7 +40,7 @@ class EntitySerializationFactory {
 	}
 
 	private function newDataValueDeserializer() {
-		return new DataValueDeserializer( array(
+		return new DataValueDeserializer( [
 			'number' => 'DataValues\NumberValue',
 			'string' => 'DataValues\StringValue',
 			'globecoordinate' => 'DataValues\GlobeCoordinateValue',
@@ -49,6 +49,6 @@ class EntitySerializationFactory {
 			'quantity' => 'DataValues\QuantityValue',
 			'time' => 'DataValues\TimeValue',
 			'wikibase-entityid' => 'Wikibase\DataModel\Entity\EntityIdValue'
-		) );
+		] );
 	}
 }

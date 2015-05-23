@@ -11,7 +11,7 @@ namespace Wikibase\EntityStore;
 class EntityStoreOptionsTest extends \PHPUnit_Framework_TestCase {
 
 	public function testGetOption() {
-		$options = new EntityStoreOptions( array( 'foo' => 'bar' ) );
+		$options = new EntityStoreOptions( [ 'foo' => 'bar' ] );
 		$this->assertEquals(
 			'bar',
 			$options->getOption( 'foo' )
@@ -36,7 +36,7 @@ class EntityStoreOptionsTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function testHasOption() {
-		$options = new EntityStoreOptions( array( 'foo' => 'bar' ) );
+		$options = new EntityStoreOptions( [ 'foo' => 'bar' ] );
 
 		$this->assertTrue( $options->hasOption( 'foo' ) );
 		$this->assertFalse( $options->hasOption( 'bar' ) );
@@ -53,7 +53,7 @@ class EntityStoreOptionsTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function testDefaultOptionWithValue() {
-		$options = new EntityStoreOptions( array( 'foo' => 'bar') );
+		$options = new EntityStoreOptions( [ 'foo' => 'bar'] );
 		$options->defaultOption( 'foo', 'baz' );
 
 		$this->assertEquals(

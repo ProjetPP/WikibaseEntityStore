@@ -39,33 +39,33 @@ class WikidataQueryItemIdForQueryLookupTest extends \PHPUnit_Framework_TestCase 
 		$queryServiceMock->expects( $this->once() )
 			->method( 'doQuery' )
 			->with( $this->equalTo( $wikidataQueryQuery ) )
-			->willReturn( array( new ItemId( 'Q1' ) ) );
+			->willReturn( [ new ItemId( 'Q1' ) ] );
 		$lookup = new WikidataQueryItemIdForQueryLookup( $queryServiceMock );
 
 		$this->assertEquals(
-			array( new ItemId( 'Q1' ) ),
+			[ new ItemId( 'Q1' ) ],
 			$lookup->getItemIdsForQuery( $queryDescription )
 		);
 	}
 
 	public function getEntityIdsForQueryProvider() {
-		return array(
-			array(
+		return [
+			[
 				new SomeProperty(
 					new EntityIdValue( new PropertyId( 'P1' ) ),
 					new AnyValue()
 				),
 				new ClaimQuery( new PropertyId( 'P1' ) )
-			),
-			array(
+			],
+			[
 				new SomeProperty(
 					new EntityIdValue( new PropertyId( 'P1' ) ),
 					new ValueDescription( new EntityIdValue( new ItemId( 'Q1' ) ) )
 				),
 				new ClaimQuery( new PropertyId( 'P1' ), new ItemId( 'Q1' ) )
-			),
-			array(
-				new Conjunction( array(
+			],
+			[
+				new Conjunction( [
 					new SomeProperty(
 						new EntityIdValue( new PropertyId( 'P42' ) ),
 						new ValueDescription( new StringValue( 'foo' ) )
@@ -74,14 +74,14 @@ class WikidataQueryItemIdForQueryLookupTest extends \PHPUnit_Framework_TestCase 
 						new EntityIdValue( new PropertyId( 'P1' ) ),
 						new ValueDescription( new EntityIdValue( new ItemId( 'Q42' ) ) )
 					)
-				) ),
-				new AndQuery( array(
+				] ),
+				new AndQuery( [
 					new StringQuery( new PropertyId( 'P42' ), new StringValue( 'foo' ) ),
 					new ClaimQuery( new PropertyId( 'P1' ), new ItemId( 'Q42' ) )
-				) )
-			),
-			array(
-				new Disjunction( array(
+				] )
+			],
+			[
+				new Disjunction( [
 					new SomeProperty(
 						new EntityIdValue( new PropertyId( 'P42' ) ),
 						new ValueDescription( new StringValue( 'foo' ) )
@@ -90,32 +90,32 @@ class WikidataQueryItemIdForQueryLookupTest extends \PHPUnit_Framework_TestCase 
 						new EntityIdValue( new PropertyId( 'P1' ) ),
 						new ValueDescription( new EntityIdValue( new ItemId( 'Q42' ) ) )
 					)
-				) ),
-				new OrQuery( array(
+				] ),
+				new OrQuery( [
 					new StringQuery( new PropertyId( 'P42' ), new StringValue( 'foo' ) ),
 					new ClaimQuery( new PropertyId( 'P1' ), new ItemId( 'Q42' ) )
-				) )
-			),
-			array(
+				] )
+			],
+			[
 				new SomeProperty(
 					new EntityIdValue( new PropertyId( 'P42' ) ),
-					new Conjunction( array(
-						new Disjunction( array(
+					new Conjunction( [
+						new Disjunction( [
 							new ValueDescription( new StringValue( 'foo' ) )
-						) ),
+						] ),
 						new AnyValue(),
 						new ValueDescription( new EntityIdValue( new ItemId( 'Q42' ) ) )
-					) )
+					] )
 				),
-				new AndQuery( array(
-					new OrQuery( array(
+				new AndQuery( [
+					new OrQuery( [
 						new StringQuery( new PropertyId( 'P42' ), new StringValue( 'foo' ) )
-					) ),
+					] ),
 					new ClaimQuery( new PropertyId( 'P42' ) ),
 					new ClaimQuery( new PropertyId( 'P42' ), new ItemId( 'Q42' ) )
-				) )
-			),
-			array(
+				] )
+			],
+			[
 				new SomeProperty(
 					new EntityIdValue( new PropertyId( 'P42' ) ),
 					new ValueDescription(
@@ -127,8 +127,8 @@ class WikidataQueryItemIdForQueryLookupTest extends \PHPUnit_Framework_TestCase 
 					new TimeValue( '+00000001952-03-11T00:00:00Z', 0, 0, 0, TimeValue::PRECISION_DAY, '' ),
 					new TimeValue( '+00000001952-03-11T00:00:00Z', 0, 0, 0, TimeValue::PRECISION_DAY, '' )
 				)
-			),
-		);
+			],
+		];
 	}
 
 
@@ -146,23 +146,23 @@ class WikidataQueryItemIdForQueryLookupTest extends \PHPUnit_Framework_TestCase 
 	}
 
 	public function getEntityIdsForQueryWithFeatureNotSupportedExceptionProvider() {
-		return array(
-			array(
+		return [
+			[
 				new AnyValue()
-			),
-			array(
+			],
+			[
 				$this->getMockForAbstractClass( 'Ask\Language\Description\Description' )
-			),
-			array(
+			],
+			[
 				new ValueDescription( new EntityIdValue( new ItemId( 'Q1' ) ) ),
-			),
-			array(
+			],
+			[
 				new SomeProperty(
 					new StringValue( 'foo' ),
 					new ValueDescription( new EntityIdValue( new ItemId( 'Q1' ) ) )
 				)
-			),
-			array(
+			],
+			[
 				new SomeProperty(
 					new EntityIdValue( new PropertyId( 'P42' ) ),
 					new SomeProperty(
@@ -171,27 +171,27 @@ class WikidataQueryItemIdForQueryLookupTest extends \PHPUnit_Framework_TestCase 
 						true
 					)
 				)
-			),
-			array(
+			],
+			[
 				new SomeProperty(
 					new EntityIdValue( new PropertyId( 'P42' ) ),
 					new ValueDescription( new EntityIdValue( new ItemId( 'Q1' ) ), ValueDescription::COMP_GREATER )
 				)
-			),
-			array(
+			],
+			[
 				new SomeProperty(
 					new EntityIdValue( new PropertyId( 'P42' ) ),
 					new ValueDescription( new MonolingualTextValue( 'en', 'Foo' ) )
 				),
-			),
-			array(
+			],
+			[
 				new SomeProperty(
 					new EntityIdValue( new PropertyId( 'P42' ) ),
 					new ValueDescription( new EntityIdValue(
 						$this->getMockForAbstractClass( 'Wikibase\DataModel\Entity\EntityId' )
 					) )
 				)
-			),
-		);
+			],
+		];
 	}
 }

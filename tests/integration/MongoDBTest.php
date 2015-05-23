@@ -44,28 +44,28 @@ class MongoDBTest extends \PHPUnit_Framework_TestCase {
 		);
 
 		$results = $store->getEntityDocumentLookup()->getEntityDocumentsForIds(
-			array( new ItemId( 'Q1' ), new ItemId( 'Q1000' ) )
+			[ new ItemId( 'Q1' ), new ItemId( 'Q1000' ) ]
 		);
 		$this->assertEquals( 1, count( $results ) );
 		$this->assertEquals( new ItemId( 'Q1' ), $results[0]->getId() );
 
 		$this->assertEquals(
-			array( new ItemId( 'Q1' ) ),
+			[ new ItemId( 'Q1' ) ],
 			$store->getItemIdForTermLookup()->getItemIdsForTerm( new Term( 'en', 'universe' ) )
 		);
 
 		$this->assertEquals(
-			array(),
+			[],
 			$store->getItemIdForTermLookup()->getItemIdsForTerm( new Term( 'pl', 'Kosmos' ) )
 		);
 
 		$this->assertEquals(
-			array( new PropertyId( 'P16' ) ),
+			[ new PropertyId( 'P16' ) ],
 			$store->getPropertyIdForTermLookup()->getPropertyIdsForTerm( new Term( 'en', 'highway system' ) )
 		);
 
 		$this->assertEquals(
-			array( new PropertyId( 'P16' ) ),
+			[ new PropertyId( 'P16' ) ],
 			$store->getPropertyIdForQueryLookup()->getPropertyIdsForQuery(
 				new AnyValue(),
 				new QueryOptions( 1, 0 )
@@ -73,7 +73,7 @@ class MongoDBTest extends \PHPUnit_Framework_TestCase {
 		);
 
 		$this->assertEquals(
-			array( new ItemId( 'Q1' ) ),
+			[ new ItemId( 'Q1' ) ],
 			$store->getItemIdForQueryLookup()->getItemIdsForQuery(
 				new SomeProperty(
 					new EntityIdValue( new PropertyId( 'P18' ) ),
@@ -92,11 +92,11 @@ class MongoDBTest extends \PHPUnit_Framework_TestCase {
 	private function importCommand( $command, $file ) {
 		$applicationFactory = new CliApplicationFactory();
 		$importCommand = $applicationFactory->newApplication()->find( $command );
-		$input = new ArrayInput( array(
+		$input = new ArrayInput( [
 			'command' => $command,
 			'file' => __DIR__ . '/../data/' . $file,
 			'configuration' => __DIR__ . '/../data/valid-config-mongodb.json'
-		) );
+		] );
 		$importCommand->run( $input, new NullOutput() );
 	}
 

@@ -24,16 +24,16 @@ use Wikibase\EntityStore\FeatureNotSupportedException;
  */
 class MongoDBDocumentBuilder {
 
-	public static $SUPPORTED_ENTITY_TYPES = array(
+	public static $SUPPORTED_ENTITY_TYPES = [
 		Item::ENTITY_TYPE,
 		Property::ENTITY_TYPE
-	);
+	];
 
-	public static $SUPPORTED_DATAVALUE_TYPES = array(
+	public static $SUPPORTED_DATAVALUE_TYPES = [
 		'string',
 		'time',
 		'wikibase-entityid'
-	);
+	];
 
 	/**
 	 * @var Serializer
@@ -113,7 +113,7 @@ class MongoDBDocumentBuilder {
 	}
 
 	private function buildSearchTermsForEntity( array $serialization ) {
-		$searchTerms = array();
+		$searchTerms = [];
 
 		if( array_key_exists( 'labels', $serialization ) ) {
 			foreach( $serialization['labels'] as $label ) {
@@ -145,10 +145,10 @@ class MongoDBDocumentBuilder {
 
 	private function buildSearchClaimsForEntity( array $serialization ) {
 		if( !array_key_exists( 'claims', $serialization ) ) {
-			return array();
+			return [];
 		}
 
-		$searchClaims = array();
+		$searchClaims = [];
 
 		foreach( $serialization['claims'] as $claimBag ) {
 			foreach( $claimBag as $claim ) {

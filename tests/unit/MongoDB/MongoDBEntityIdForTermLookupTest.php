@@ -19,10 +19,10 @@ class MongoDBEntityIdForTermLookupTest extends \PHPUnit_Framework_TestCase {
 			->getMock();
 		$collectionMock->expects( $this->once() )
 			->method( 'find' )
-			->with( $this->equalTo( array(
+			->with( $this->equalTo( [
 				'sterms.en' => 'foo'
-			) ) )
-			->willReturn( array( array( '_id' => 'Q1' ) ) );
+			] ) )
+			->willReturn( [ [ '_id' => 'Q1' ] ] );
 
 		$databaseMock = $this->getMockBuilder( 'Doctrine\MongoDB\Database' )
 			->disableOriginalConstructor()
@@ -37,7 +37,7 @@ class MongoDBEntityIdForTermLookupTest extends \PHPUnit_Framework_TestCase {
 			->getMock();
 		$documentBuilderMock->expects( $this->once() )
 			->method( 'buildEntityIdForDocument' )
-			->with( $this->equalTo( array( '_id' => 'Q1' ) ) )
+			->with( $this->equalTo( [ '_id' => 'Q1' ] ) )
 			->willReturn( new ItemId( 'Q1' ) );
 		$documentBuilderMock->expects( $this->once() )
 			->method( 'cleanTextForSearch' )
@@ -47,7 +47,7 @@ class MongoDBEntityIdForTermLookupTest extends \PHPUnit_Framework_TestCase {
 		$lookup = new MongoDBEntityIdForTermLookup( $databaseMock, $documentBuilderMock );
 
 		$this->assertEquals(
-			array( new ItemId( 'Q1' ) ),
+			[ new ItemId( 'Q1' ) ],
 			$lookup->getEntityIdsForTerm( new Term( 'en', 'Foo' ), 'item' )
 		);
 	}

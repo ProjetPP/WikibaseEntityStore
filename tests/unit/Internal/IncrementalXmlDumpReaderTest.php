@@ -25,7 +25,7 @@ class IncrementalXmlDumpReaderTest extends \PHPUnit_Framework_TestCase {
 	 * @dataProvider iteratorProvider
 	 */
 	public function testIterator( $fileName, $expectedEntities ) {
-		$entityIds = array();
+		$entityIds = [];
 
 		foreach( $this->getReader( $fileName ) as $entity ) {
 			$entityIds[] = $entity->getId()->getSerialization();
@@ -35,11 +35,11 @@ class IncrementalXmlDumpReaderTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function iteratorProvider() {
-		return array(
-			array(
+		return [
+			[
 				'valid-incremental.xml',
-				array( 'Q12662', 'P1' )
-			)
-		);
+				[ 'Q12662', 'P1' ]
+			]
+		];
 	}
 }

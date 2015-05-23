@@ -13,19 +13,19 @@ use Wikibase\EntityStore\EntityStoreTest;
 class InMemoryEntityStoreTest extends EntityStoreTest {
 
 	public function testGetEntityDocumentLookup() {
-		$store = new InMemoryEntityStore( array() );
+		$store = new InMemoryEntityStore( [] );
 
 		$this->assertInstanceOf( 'Wikibase\EntityStore\EntityDocumentLookup', $store->getEntityDocumentLookup() );
 	}
 
 	public function testGetItemLookup() {
-		$store = new InMemoryEntityStore( array() );
+		$store = new InMemoryEntityStore( [] );
 
 		$this->assertInstanceOf( 'Wikibase\DataModel\Entity\ItemLookup', $store->getItemLookup() );
 	}
 
 	public function testGetPropertyLookup() {
-		$store = new InMemoryEntityStore( array() );
+		$store = new InMemoryEntityStore( [] );
 
 		$this->assertInstanceOf( 'Wikibase\DataModel\Entity\PropertyLookup', $store->getPropertyLookup() );
 	}

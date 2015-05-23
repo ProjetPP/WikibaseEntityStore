@@ -21,7 +21,7 @@ class EntityStoreConfiguration implements ConfigurationInterface {
 		$rootNode
 			->children()
 				->enumNode( 'backend' )
-					->values( array( 'api', 'mongodb' ) )
+					->values( [ 'api', 'mongodb' ] )
 					->info( 'The backend to use' )
 					->isRequired()
 					->end()
@@ -79,7 +79,7 @@ class EntityStoreConfiguration implements ConfigurationInterface {
 					->end()
 					->variableNode( 'options' )
 						->info( 'EntityStore options configuration' )
-						->defaultValue( array() )
+						->defaultValue( [] )
 					->end()
 				->end();
 

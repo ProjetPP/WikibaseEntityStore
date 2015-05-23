@@ -15,7 +15,7 @@ use Wikibase\DataModel\Term\Term;
 class CachedPropertyIdForTermLookupTest extends \PHPUnit_Framework_TestCase {
 
 	public function testGetPropertysForTermWithCacheHit() {
-		$propertyIds = array( new PropertyId( 'P1' ) );
+		$propertyIds = [ new PropertyId( 'P1' ) ];
 
 		$propertyForTermLookupMock = $this->getMockBuilder( 'Wikibase\EntityStore\PropertyIdForTermLookup' )
 			->disableOriginalConstructor()
@@ -37,7 +37,7 @@ class CachedPropertyIdForTermLookupTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function testGetPropertysForTermWithCacheMiss() {
-		$propertyIds = array( new PropertyId( 'P1' ) );
+		$propertyIds = [ new PropertyId( 'P1' ) ];
 
 		$propertyIdForTermLookupMock = $this->getMockBuilder( 'Wikibase\EntityStore\PropertyIdForTermLookup' )
 			->disableOriginalConstructor()

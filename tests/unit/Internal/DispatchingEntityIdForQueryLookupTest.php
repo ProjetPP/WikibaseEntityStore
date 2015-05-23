@@ -24,11 +24,11 @@ class DispatchingEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase 
 		$entityIdForQueryLookupMock->expects( $this->once() )
 			->method( 'getEntityIdsForQuery' )
 			->with( $this->equalTo( new AnyValue() ), $this->equalTo( new QueryOptions( 10, 0 ) ) )
-			->willReturn( array( new ItemId( 'Q1' ) ) );
+			->willReturn( [ new ItemId( 'Q1' ) ] );
 
 		$entityIdForQueryLookup = new DispatchingEntityIdForQueryLookup( $entityIdForQueryLookupMock );
 		$this->assertEquals(
-			array( new ItemId( 'Q1' ) ),
+			[ new ItemId( 'Q1' ) ],
 			$entityIdForQueryLookup->getEntityIdsForQuery( new AnyValue(), new QueryOptions( 10, 0 ) )
 		);
 	}
@@ -44,11 +44,11 @@ class DispatchingEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase 
 				$this->equalTo( new QueryOptions( 10, 0 ) ),
 				$this->equalTo( Item::ENTITY_TYPE )
 			)
-			->willReturn( array( new ItemId( 'Q1' ) ) );
+			->willReturn( [ new ItemId( 'Q1' ) ] );
 
 		$entityIdForQueryLookup = new DispatchingEntityIdForQueryLookup( $entityIdForQueryLookupMock );
 		$this->assertEquals(
-			array( new ItemId( 'Q1' ) ),
+			[ new ItemId( 'Q1' ) ],
 			$entityIdForQueryLookup->getItemIdsForQuery( new AnyValue(), new QueryOptions( 10, 0 ) )
 		);
 	}
@@ -64,11 +64,11 @@ class DispatchingEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase 
 				$this->equalTo( new QueryOptions( 10, 0 ) ),
 				$this->equalTo( Property::ENTITY_TYPE )
 			)
-			->willReturn( array( new PropertyId( 'P1' ) ) );
+			->willReturn( [ new PropertyId( 'P1' ) ] );
 
 		$entityIdForQueryLookup = new DispatchingEntityIdForQueryLookup( $entityIdForQueryLookupMock );
 		$this->assertEquals(
-			array( new PropertyId( 'P1' ) ),
+			[ new PropertyId( 'P1' ) ],
 			$entityIdForQueryLookup->getPropertyIdsForQuery( new AnyValue(), new QueryOptions( 10, 0 ) )
 		);
 	}

@@ -50,7 +50,7 @@ class ApiEntityLookup implements EntityDocumentLookup {
 	 * @see EntityDocumentLookup::getEntityDocumentForId
 	 */
 	public function getEntityDocumentForId( EntityId $entityId ) {
-		$entities = $this->getEntityDocumentsForIds( array( $entityId ) );
+		$entities = $this->getEntityDocumentsForIds( [ $entityId ] );
 
 		if( empty( $entities ) ) {
 			throw new EntityNotFoundException( $entityId );
@@ -64,16 +64,16 @@ class ApiEntityLookup implements EntityDocumentLookup {
 	 */
 	public function getEntityDocumentsForIds( array $entityIds ) {
 		if( empty( $entityIds ) ) {
-			return array();
+			return [];
 		}
 
 		return $this->parseResponse( $this->api->getRequest( $this->buildRequest( $entityIds ) ) );
 	}
 
 	private function buildRequest( array $entityIds ) {
-		$params = array(
+		$params = [
 			'ids' => implode( '|', $this->serializeEntityIds( $entityIds ) )
-		);
+		];
 
 		if( $this->options->getOption( EntityStore::OPTION_LANGUAGE_FALLBACK ) ) {
 			$params['languagefallback'] = true;
@@ -88,7 +88,7 @@ class ApiEntityLookup implements EntityDocumentLookup {
 	}
 
 	private function serializeEntityIds( array $entityIds ) {
-		$serialization = array();
+		$serialization = [];
 
 		/** @var EntityId $entityId */
 		foreach( $entityIds as $entityId ) {
@@ -99,7 +99,7 @@ class ApiEntityLookup implements EntityDocumentLookup {
 	}
 
 	private function parseResponse( array $response ) {
-		$entities = array();
+		$entities = [];
 
 		foreach( $response['entities'] as $serializedEntity ) {
 			$entities[] = $this->deserializer->deserialize( $serializedEntity );

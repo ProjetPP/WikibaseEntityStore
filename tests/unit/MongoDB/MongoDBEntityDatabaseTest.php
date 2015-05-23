@@ -21,8 +21,8 @@ class MongoDBEntityDatabaseTest extends \PHPUnit_Framework_TestCase {
 			->getMock();
 		$collectionMock->expects( $this->once() )
 			->method( 'findOne' )
-			->with( $this->equalTo( array( '_id' => 'Q1' ) ) )
-			->willReturn( array( 'id' => 'Q1' ) );
+			->with( $this->equalTo( [ '_id' => 'Q1' ] ) )
+			->willReturn( [ 'id' => 'Q1' ] );
 
 		$databaseMock = $this->getMockBuilder( 'Doctrine\MongoDB\Database' )
 			->disableOriginalConstructor()
@@ -37,7 +37,7 @@ class MongoDBEntityDatabaseTest extends \PHPUnit_Framework_TestCase {
 			->getMock();
 		$documentBuilderMock->expects( $this->once() )
 			->method( 'buildEntityForDocument' )
-			->with( $this->equalTo( array( 'id' => 'Q1' ) ) )
+			->with( $this->equalTo( [ 'id' => 'Q1' ] ) )
 			->willReturn( $item );
 
 		$entityStore = new MongoDBEntityDatabase( $databaseMock, $documentBuilderMock );
@@ -54,7 +54,7 @@ class MongoDBEntityDatabaseTest extends \PHPUnit_Framework_TestCase {
 			->getMock();
 		$collectionMock->expects( $this->once() )
 			->method( 'findOne' )
-			->with( $this->equalTo( array( '_id' => 'Q1' ) ) )
+			->with( $this->equalTo( [ '_id' => 'Q1' ] ) )
 			->willReturn( null );
 
 		$databaseMock = $this->getMockBuilder( 'Doctrine\MongoDB\Database' )
@@ -83,10 +83,10 @@ class MongoDBEntityDatabaseTest extends \PHPUnit_Framework_TestCase {
 			->getMock();
 		$collectionMock->expects( $this->once() )
 			->method( 'find' )
-			->with( $this->equalTo( array( '_id' => array( '$in' => array( 'Q1', 'Q2' ) ) ) ) )
-			->willReturn( array(
-				array( 'id' => 'Q1' )
-			) );
+			->with( $this->equalTo( [ '_id' => [ '$in' => [ 'Q1', 'Q2' ] ] ] ) )
+			->willReturn( [
+				[ 'id' => 'Q1' ]
+			] );
 
 		$databaseMock = $this->getMockBuilder( 'Doctrine\MongoDB\Database' )
 			->disableOriginalConstructor()
@@ -101,14 +101,14 @@ class MongoDBEntityDatabaseTest extends \PHPUnit_Framework_TestCase {
 			->getMock();
 		$documentBuilderMock->expects( $this->once() )
 			->method( 'buildEntityForDocument' )
-			->with( $this->equalTo( array( 'id' => 'Q1' ) ) )
+			->with( $this->equalTo( [ 'id' => 'Q1' ] ) )
 			->willReturn( $item );
 
 		$entityStore = new MongoDBEntityDatabase( $databaseMock, $documentBuilderMock );
 
 		$this->assertEquals(
-			array( $item ),
-			$entityStore->getEntityDocumentsForIds( array( new ItemId( 'Q1' ), new ItemId( 'Q2' ) ) )
+			[ $item ],
+			$entityStore->getEntityDocumentsForIds( [ new ItemId( 'Q1' ), new ItemId( 'Q2' ) ] )
 		);
 	}
 
@@ -121,8 +121,8 @@ class MongoDBEntityDatabaseTest extends \PHPUnit_Framework_TestCase {
 		$collectionMock->expects( $this->once() )
 			->method( 'upsert' )
 			->with(
-				$this->equalTo( array( '_id' => 'Q1' ) ),
-				$this->equalTo( array( 'id' => 'Q1' ) )
+				$this->equalTo( [ '_id' => 'Q1' ] ),
+				$this->equalTo( [ 'id' => 'Q1' ] )
 			);
 
 		$databaseMock = $this->getMockBuilder( 'Doctrine\MongoDB\Database' )
@@ -139,7 +139,7 @@ class MongoDBEntityDatabaseTest extends \PHPUnit_Framework_TestCase {
 		$documentBuilderMock->expects( $this->once() )
 			->method( 'buildDocumentForEntity' )
 			->with( $this->equalTo( $item ) )
-			->willReturn( array( 'id' => 'Q1' ) );
+			->willReturn( [ 'id' => 'Q1' ] );
 
 		$entityStore = new MongoDBEntityDatabase( $databaseMock, $documentBuilderMock );
 

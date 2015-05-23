@@ -56,13 +56,13 @@ class EntityLookupTest extends \PHPUnit_Framework_TestCase {
 			->getMock();
 		$entityDocumentLookupMock->expects( $this->once() )
 			->method( 'getEntityDocumentsForIds' )
-			->with( $this->equalTo( array( new ItemId( 'Q1' ) ) ) )
-			->willReturn( array( $item ) );
+			->with( $this->equalTo( [ new ItemId( 'Q1' ) ] ) )
+			->willReturn( [ $item ] );
 
 		$entityLookup = new EntityLookup( $entityDocumentLookupMock );
 		$this->assertEquals(
-			array( $item ),
-			$entityLookup->getEntityDocumentsForIds( array( new ItemId( 'Q1' ) ) )
+			[ $item ],
+			$entityLookup->getEntityDocumentsForIds( [ new ItemId( 'Q1' ) ] )
 		);
 	}
 

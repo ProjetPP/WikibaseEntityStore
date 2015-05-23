@@ -24,38 +24,38 @@ class ApiEntityIdForTermLookupTest extends \PHPUnit_Framework_TestCase {
 			->with( $this->equalTo(
 				new SimpleRequest(
 					'wbsearchentities',
-					array(
+					[
 						'search' => 'foo',
 						'language' => 'en',
 						'type' => 'item',
 						'limit' => 50
-					)
+					]
 				)
 			) )
-			->will( $this->returnValue( array(
-				'search' => array(
-					array(
+			->will( $this->returnValue( [
+				'search' => [
+					[
 						'id' => 'Q1',
 						'label' => 'foo',
-						'aliases' => array( 'bar', 'baz' )
-					),
-					array(
+						'aliases' => [ 'bar', 'baz' ]
+					],
+					[
 						'id' => 'Q2',
 						'label' => 'bar',
-						'aliases' => array( 'baz', 'foo' )
-					),
-					array(
+						'aliases' => [ 'baz', 'foo' ]
+					],
+					[
 						'id' => 'Q3',
 						'label' => 'bar',
-						'aliases' => array( 'baz' )
-					)
-				)
-			) ) );
+						'aliases' => [ 'baz' ]
+					]
+				]
+			] ) );
 
 		$lookup = new ApiEntityIdForTermLookup( $mediawikiApiMock, new BasicEntityIdParser() );
 
 		$this->assertEquals(
-			array( new ItemId( 'Q1' ), new ItemId( 'Q2' ) ),
+			[ new ItemId( 'Q1' ), new ItemId( 'Q2' ) ],
 			$lookup->getEntityIdsForTerm( new Term( 'en', 'foo' ), 'item' )
 		);
 	}

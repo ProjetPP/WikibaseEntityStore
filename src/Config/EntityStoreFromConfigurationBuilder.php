@@ -91,7 +91,7 @@ class EntityStoreFromConfigurationBuilder {
 	}
 
 	private function buildCacheFromConfig( $config ) {
-		$caches = array();
+		$caches = [];
 
 		if( $config['array']['enabled'] ) {
 			$caches[] = new ArrayCache();
@@ -126,7 +126,7 @@ class EntityStoreFromConfigurationBuilder {
 		$configuration = new EntityStoreConfiguration();
 		return $processor->processConfiguration(
 			$configuration,
-			array( $configValues )
+			[ $configValues ]
 		);
 	}
 }

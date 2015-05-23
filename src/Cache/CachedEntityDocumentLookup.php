@@ -50,8 +50,8 @@ class CachedEntityDocumentLookup implements EntityDocumentLookup {
 	 * @see EntityDocumentLookup::getEntityDocumentsForIds
 	 */
 	public function getEntityDocumentsForIds( array $entityIds ) {
-		$entities = array();
-		$entityIdsToRetrieve = array();
+		$entities = [];
+		$entityIdsToRetrieve = [];
 
 		foreach( $entityIds as $entityId ) {
 			try {
@@ -61,7 +61,7 @@ class CachedEntityDocumentLookup implements EntityDocumentLookup {
 			}
 		}
 
-		$additionalEntities = array();
+		$additionalEntities = [];
 		if( !empty( $entityIdsToRetrieve ) ) {
 			$additionalEntities = $this->entityLookup->getEntityDocumentsForIds( $entityIdsToRetrieve );
 		}

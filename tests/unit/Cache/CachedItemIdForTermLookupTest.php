@@ -15,7 +15,7 @@ use Wikibase\DataModel\Term\Term;
 class CachedItemIdForTermLookupTest extends \PHPUnit_Framework_TestCase {
 
 	public function testGetItemsForTermWithCacheHit() {
-		$itemIds = array( new ItemId( 'Q1' ) );
+		$itemIds = [ new ItemId( 'Q1' ) ];
 
 		$itemIdForTermLookupMock = $this->getMockBuilder( 'Wikibase\EntityStore\ItemIdForTermLookup' )
 			->disableOriginalConstructor()
@@ -37,7 +37,7 @@ class CachedItemIdForTermLookupTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function testGetItemsForTermWithCacheMiss() {
-		$itemIds = array( new ItemId( 'Q1' ) );
+		$itemIds = [ new ItemId( 'Q1' ) ];
 
 		$itemIdForTermLookupMock = $this->getMockBuilder( 'Wikibase\EntityStore\ItemIdForTermLookup' )
 			->disableOriginalConstructor()

@@ -21,7 +21,7 @@ class JsonDumpReaderTest extends \PHPUnit_Framework_TestCase {
 	 * @dataProvider iteratorProvider
 	 */
 	public function testIterator( $fileName, $expectedEntities ) {
-		$entityIds = array();
+		$entityIds = [];
 
 		foreach( $this->getReader( $fileName ) as $entity ) {
 			$entityIds[] = $entity->getId()->getSerialization();
@@ -31,15 +31,15 @@ class JsonDumpReaderTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function iteratorProvider() {
-		return array(
-			array(
+		return [
+			[
 				'valid.json',
-				array( 'Q1', 'P16', 'P22' )
-			),
-			array(
+				[ 'Q1', 'P16', 'P22' ]
+			],
+			[
 				'invalid.json',
-				array( 'Q1', 'P16', 'P22' )
-			)
-		);
+				[ 'Q1', 'P16', 'P22' ]
+			]
+		];
 	}
 }

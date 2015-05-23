@@ -22,8 +22,8 @@ class SerializedEntityDeserializerTest extends \PHPUnit_Framework_TestCase {
 	public function testIsDeserializerFor() {
 		$deserializer = $this->buildDeserializer();
 
-		$this->assertTrue( $deserializer->isDeserializerFor( array( 'type' => 'item' ) ) );
-		$this->assertFalse( $deserializer->isDeserializerFor( array() ) );
+		$this->assertTrue( $deserializer->isDeserializerFor( [ 'type' => 'item' ] ) );
+		$this->assertFalse( $deserializer->isDeserializerFor( [] ) );
 		$this->assertFalse( $deserializer->isDeserializerFor( null ) );
 	}
 
@@ -31,13 +31,13 @@ class SerializedEntityDeserializerTest extends \PHPUnit_Framework_TestCase {
 		$deserializer = $this->buildDeserializer();
 
 		$this->assertEquals(
-			new SerializedEntity( null, array( 'type' => 'foo' ) ),
-			$deserializer->deserialize( array( 'type' => 'foo' ) )
+			new SerializedEntity( null, [ 'type' => 'foo' ] ),
+			$deserializer->deserialize( [ 'type' => 'foo' ] )
 		);
 
 		$this->assertEquals(
-			new SerializedEntity( new ItemId( 'Q1' ), array( 'id' => 'Q1', 'type' => 'item' ) ),
-			$deserializer->deserialize( array( 'id' => 'Q1', 'type' => 'item' ) )
+			new SerializedEntity( new ItemId( 'Q1' ), [ 'id' => 'Q1', 'type' => 'item' ] ),
+			$deserializer->deserialize( [ 'id' => 'Q1', 'type' => 'item' ] )
 		);
 	}
 
@@ -45,13 +45,13 @@ class SerializedEntityDeserializerTest extends \PHPUnit_Framework_TestCase {
 		$deserializer = $this->buildDeserializer();
 
 		$this->setExpectedException( 'Deserializers\Exceptions\DeserializationException' );
-		$deserializer->deserialize( array() );
+		$deserializer->deserialize( [] );
 	}
 
 	public function testSerializeThrowExceptionForInvalidId() {
 		$deserializer = $this->buildDeserializer();
 
 		$this->setExpectedException( 'Deserializers\Exceptions\DeserializationException' );
-		$deserializer->deserialize( array( 'id' => 'bad' ) );
+		$deserializer->deserialize( [ 'id' => 'bad' ] );
 	}
 }

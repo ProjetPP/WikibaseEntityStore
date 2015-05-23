@@ -46,12 +46,12 @@ class ApiEntityIdForTermLookup implements EntityIdForTermLookup {
 	protected function buildRequest( Term $term, $entityType ) {
 		return new SimpleRequest(
 			'wbsearchentities',
-			array(
+			[
 				'search' => $term->getText(),
 				'language' => $term->getLanguageCode(),
 				'type' => $entityType,
 				'limit' => 50
-			)
+			]
 		);
 	}
 
@@ -60,7 +60,7 @@ class ApiEntityIdForTermLookup implements EntityIdForTermLookup {
 
 		$results = $this->filterResults( $result['search'], $search );
 
-		$entityIds = array();
+		$entityIds = [];
 		foreach( $results as $entry ) {
 			$entityIds[] = $this->entityIdParser->parse( $entry['id'] );
 		}
@@ -69,7 +69,7 @@ class ApiEntityIdForTermLookup implements EntityIdForTermLookup {
 	}
 
 	private function filterResults( array $results, $search ) {
-		$filtered = array();
+		$filtered = [];
 		foreach( $results as $entry ) {
 			if( $this->doResultsMatch($entry, $search ) ) {
 				$filtered[] = $entry;

@@ -75,7 +75,7 @@ class WikidataQueryItemIdForQueryLookup implements ItemIdForQueryLookup {
 	}
 
 	private function buildQueryForConjunction( Conjunction $conjunction, PropertyId $propertyId = null ) {
-		$parameters = array();
+		$parameters = [];
 		foreach( $conjunction->getDescriptions() as $description ) {
 			$parameters[] = $this->buildQueryForDescription( $description, $propertyId );
 		}
@@ -83,7 +83,7 @@ class WikidataQueryItemIdForQueryLookup implements ItemIdForQueryLookup {
 	}
 
 	private function buildQueryForDisjunction( Disjunction $disjunction, PropertyId $propertyId = null ) {
-		$parameters = array();
+		$parameters = [];
 		foreach( $disjunction->getDescriptions() as $description ) {
 			$parameters[] = $this->buildQueryForDescription( $description, $propertyId );
 		}
@@ -114,7 +114,7 @@ class WikidataQueryItemIdForQueryLookup implements ItemIdForQueryLookup {
 
 		if( !in_array(
 			$valueDescription->getComparator(),
-			array( ValueDescription::COMP_EQUAL, ValueDescription::COMP_LIKE )
+			[ ValueDescription::COMP_EQUAL, ValueDescription::COMP_LIKE ]
 		) ) {
 			throw new FeatureNotSupportedException( 'Unsupported ValueDescription comparator' );
 		}

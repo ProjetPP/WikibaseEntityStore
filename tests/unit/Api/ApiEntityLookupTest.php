@@ -28,41 +28,41 @@ class ApiEntityLookupTest extends \PHPUnit_Framework_TestCase {
 			->with( $this->equalTo(
 				new SimpleRequest(
 					'wbgetentities',
-					array(
+					[
 						'ids' => 'Q42|P42'
-					)
+					]
 				)
 			) )
-			->will( $this->returnValue( array(
-				'entities' => array(
-					array(
+			->will( $this->returnValue( [
+				'entities' => [
+					[
 						'id' => 'Q42',
 						'type' => 'item'
-					),
-					array(
+					],
+					[
 						'id' => 'P42',
 						'type' => 'property',
 						'datatype' => 'string'
-					)
-				)
-			) ) );
+					]
+				]
+			] ) );
 
 		$serializationFactory = new EntitySerializationFactory();
 		$lookup = new ApiEntityLookup(
 			$mediawikiApiMock,
 			$serializationFactory->newEntityDeserializer(),
-			new EntityStoreOptions( array(
+			new EntityStoreOptions( [
 				EntityStore::OPTION_LANGUAGES => null,
 				EntityStore::OPTION_LANGUAGE_FALLBACK => false
-			) )
+			] )
 		);
 
 		$this->assertEquals(
-			array(
+			[
 				new Item( new ItemId( 'Q42' ) ),
 				new Property( new PropertyId( 'P42' ), null, 'string' )
-			),
-			$lookup->getEntityDocumentsForIds( array( new ItemId( 'Q42' ), new PropertyId( 'P42' ) ) )
+			],
+			$lookup->getEntityDocumentsForIds( [ new ItemId( 'Q42' ), new PropertyId( 'P42' ) ] )
 		);
 	}
 
@@ -75,13 +75,13 @@ class ApiEntityLookupTest extends \PHPUnit_Framework_TestCase {
 		$lookup = new ApiEntityLookup(
 			$mediawikiApiMock,
 			$serializationFactory->newEntityDeserializer(),
-			new EntityStoreOptions( array(
+			new EntityStoreOptions( [
 				EntityStore::OPTION_LANGUAGES => null,
 				EntityStore::OPTION_LANGUAGE_FALLBACK => false
-			) )
+			] )
 		);
 
-		$this->assertEquals( array(), $lookup->getEntityDocumentsForIds( array() ) );
+		$this->assertEquals( [], $lookup->getEntityDocumentsForIds( [] ) );
 	}
 
 	public function testGetEntityDocumentForId() {
@@ -93,30 +93,30 @@ class ApiEntityLookupTest extends \PHPUnit_Framework_TestCase {
 			->with( $this->equalTo(
 				new SimpleRequest(
 					'wbgetentities',
-					array(
+					[
 						'ids' => 'Q42',
 						'languages' => 'en|fr',
 						'languagefallback' => true
-					)
+					]
 				)
 			) )
-			->will( $this->returnValue( array(
-				'entities' => array(
-					array(
+			->will( $this->returnValue( [
+				'entities' => [
+					[
 						'id' => 'Q42',
 						'type' => 'item'
-					)
-				)
-			) ) );
+					]
+				]
+			] ) );
 
 		$serializationFactory = new EntitySerializationFactory();
 		$lookup = new ApiEntityLookup(
 			$mediawikiApiMock,
 			$serializationFactory->newEntityDeserializer(),
-			new EntityStoreOptions( array(
-				EntityStore::OPTION_LANGUAGES => array( 'en', 'fr' ),
+			new EntityStoreOptions( [
+				EntityStore::OPTION_LANGUAGES => [ 'en', 'fr' ],
 				EntityStore::OPTION_LANGUAGE_FALLBACK => true
-			) )
+			] )
 		);
 
 		$this->assertEquals(
@@ -134,22 +134,22 @@ class ApiEntityLookupTest extends \PHPUnit_Framework_TestCase {
 			->with( $this->equalTo(
 				new SimpleRequest(
 					'wbgetentities',
-					array(
+					[
 						'ids' => 'Q42',
 						'languages' => 'en|fr'
-					)
+					]
 				)
 			) )
-			->will( $this->returnValue( array( 'entities' => array() ) ) );
+			->will( $this->returnValue( [ 'entities' => [] ] ) );
 
 		$serializationFactory = new EntitySerializationFactory();
 		$lookup = new ApiEntityLookup(
 			$mediawikiApiMock,
 			$serializationFactory->newEntityDeserializer(),
-			new EntityStoreOptions( array(
-				EntityStore::OPTION_LANGUAGES => array( 'en', 'fr' ),
+			new EntityStoreOptions( [
+				EntityStore::OPTION_LANGUAGES => [ 'en', 'fr' ],
 				EntityStore::OPTION_LANGUAGE_FALLBACK => false
-			) ) );
+			] ) );
 
 		$this->setExpectedException( 'Wikibase\EntityStore\EntityNotFoundException');
 		$lookup->getEntityDocumentForId( new ItemId( 'Q42' ) );

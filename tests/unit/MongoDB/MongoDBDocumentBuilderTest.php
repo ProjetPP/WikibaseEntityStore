@@ -27,9 +27,9 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 		$item = new Item(
 			new ItemId( 'Q1' ),
 			new Fingerprint(
-				new TermList( array( new Term( 'en', 'foo' ) ) ),
-				new TermList( array( new Term( 'en', 'bar' ) ) ),
-				new AliasGroupList( array( new AliasGroup( 'fr', array( 'bÊz', 'bat' ) ) ) )
+				new TermList( [ new Term( 'en', 'foo' ) ] ),
+				new TermList( [ new Term( 'en', 'bar' ) ] ),
+				new AliasGroupList( [ new AliasGroup( 'fr', [ 'bÊz', 'bat' ] ) ] )
 			)
 		);
 
@@ -37,88 +37,88 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 		$entitySerializerMock->expects( $this->once() )
 			->method( 'serialize' )
 			->with( $this->equalTo( $item ) )
-			->willReturn( array(
+			->willReturn( [
 				'type' => 'item',
 				'id' => 'Q1',
-				'labels' => array(
-					'en' => array( 'language' => 'en', 'value' => 'foo' )
-				),
-				'descriptions' => array(
-					'en' => array( 'language' => 'en', 'value' => 'bar' ),
-				),
-				'aliases' => array(
-					'fr' => array(
-						array( 'language' => 'fr', 'value' => 'baz' ),
-						array( 'language' => 'fr', 'value' => 'bat' )
-					)
-				),
-				'claims' => array(
-					'P1' => array(
-						array(
-							'mainsnak' => array(
+				'labels' => [
+					'en' => [ 'language' => 'en', 'value' => 'foo' ]
+				],
+				'descriptions' => [
+					'en' => [ 'language' => 'en', 'value' => 'bar' ],
+				],
+				'aliases' => [
+					'fr' => [
+						[ 'language' => 'fr', 'value' => 'baz' ],
+						[ 'language' => 'fr', 'value' => 'bat' ]
+					]
+				],
+				'claims' => [
+					'P1' => [
+						[
+							'mainsnak' => [
 								'snaktype' => 'value',
 								'property' => 'P1',
-								'datavalue' => array(
+								'datavalue' => [
 									'value' => 'foo',
 									'type' => 'string'
-								)
-							)
-						),
-						array(
-							'mainsnak' => array(
+								]
+							]
+						],
+						[
+							'mainsnak' => [
 								'snaktype' => 'value',
 								'property' => 'P1',
-								'datavalue' => array(
+								'datavalue' => [
 									'value' => str_repeat( '0123456789', 20 ),
 									'type' => 'string'
-								)
-							)
-						),
-						array(
-							'mainsnak' => array(
+								]
+							]
+						],
+						[
+							'mainsnak' => [
 								'snaktype' => 'value',
 								'property' => 'P1',
-								'datavalue' => array(
-									'value' => array( 'entity-type' => 'item', 'numeric-id' => 1 ),
+								'datavalue' => [
+									'value' => [ 'entity-type' => 'item', 'numeric-id' => 1 ],
 									'type' => 'wikibase-entityid'
-								)
-							)
-						),
-						array(
-							'mainsnak' => array(
+								]
+							]
+						],
+						[
+							'mainsnak' => [
 								'snaktype' => 'value',
 								'property' => 'P1',
-								'datavalue' => array(
-									'value' => array( 'entity-type' => 'property', 'numeric-id' => 1 ),
+								'datavalue' => [
+									'value' => [ 'entity-type' => 'property', 'numeric-id' => 1 ],
 									'type' => 'wikibase-entityid'
-								)
-							)
-						)
-					),
-					'P2' => array(
-						array(
-							'mainsnak' => array(
+								]
+							]
+						]
+					],
+					'P2' => [
+						[
+							'mainsnak' => [
 								'snaktype' => 'value',
 								'property' => 'P2',
-								'datavalue' => array(
-									'value' => array( 'time' => '+00000001952-03-11T00:00:00Z' ),
+								'datavalue' => [
+									'value' => [ 'time' => '+00000001952-03-11T00:00:00Z' ],
 									'type' => 'time'
-								)
-							)
-						),
-						array(
-							'mainsnak' => array(
+								]
+							]
+						],
+						[
+							'mainsnak' => [
 								'snaktype' => 'value',
 								'property' => 'P2',
-								'datavalue' => array(
-									'value' => array( 'latitude' => 1, 'longitude' => 1 ),
+								'datavalue' => [
+									'value' => [ 'latitude' => 1, 'longitude' => 1 ],
 									'type' => 'globecoordinate'
-								)
-							)
-						)
-					)
-				)
-			) );
+								]
+							]
+						]
+					]
+				]
+			] );
 
 		$entityDeserializerMock = $this->getMock( 'Deserializers\Deserializer' );
 
@@ -126,105 +126,105 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 			$entitySerializerMock,
 			$entityDeserializerMock,
 			new BasicEntityIdParser(),
-			new EntityStoreOptions(array( EntityStore::OPTION_LANGUAGES => null ) )
+			new EntityStoreOptions([ EntityStore::OPTION_LANGUAGES => null ] )
 		);
 
 		$this->assertEquals(
-			array(
+			[
 				'_id' => 'Q1',
 				'type' => 'item',
 				'id' => 'Q1',
-				'labels' => array(
-					'en' => array( 'language' => 'en', 'value' => 'foo' ),
-				),
-				'descriptions' => array(
-					'en' => array( 'language' => 'en', 'value' => 'bar' ),
-				),
-				'aliases' => array(
-					'fr' => array(
-						array( 'language' => 'fr', 'value' => 'baz' ),
-						array( 'language' => 'fr', 'value' => 'bat' )
-					)
-				),
-				'claims' => array(
-					'P1' => array(
-						array(
-							'mainsnak' => array(
+				'labels' => [
+					'en' => [ 'language' => 'en', 'value' => 'foo' ],
+				],
+				'descriptions' => [
+					'en' => [ 'language' => 'en', 'value' => 'bar' ],
+				],
+				'aliases' => [
+					'fr' => [
+						[ 'language' => 'fr', 'value' => 'baz' ],
+						[ 'language' => 'fr', 'value' => 'bat' ]
+					]
+				],
+				'claims' => [
+					'P1' => [
+						[
+							'mainsnak' => [
 								'snaktype' => 'value',
 								'property' => 'P1',
-								'datavalue' => array(
+								'datavalue' => [
 									'value' => 'foo',
 									'type' => 'string'
-								)
-							)
-						),
-						array(
-							'mainsnak' => array(
+								]
+							]
+						],
+						[
+							'mainsnak' => [
 								'snaktype' => 'value',
 								'property' => 'P1',
-								'datavalue' => array(
+								'datavalue' => [
 									'value' => str_repeat( '0123456789', 20 ),
 									'type' => 'string'
-								)
-							)
-						),
-						array(
-							'mainsnak' => array(
+								]
+							]
+						],
+						[
+							'mainsnak' => [
 								'snaktype' => 'value',
 								'property' => 'P1',
-								'datavalue' => array(
-									'value' => array( 'entity-type' => 'item', 'numeric-id' => 1 ),
+								'datavalue' => [
+									'value' => [ 'entity-type' => 'item', 'numeric-id' => 1 ],
 									'type' => 'wikibase-entityid'
-								)
-							)
-						),
-						array(
-							'mainsnak' => array(
+								]
+							]
+						],
+						[
+							'mainsnak' => [
 								'snaktype' => 'value',
 								'property' => 'P1',
-								'datavalue' => array(
-									'value' => array( 'entity-type' => 'property', 'numeric-id' => 1 ),
+								'datavalue' => [
+									'value' => [ 'entity-type' => 'property', 'numeric-id' => 1 ],
 									'type' => 'wikibase-entityid'
-								)
-							)
-						)
-					),
-					'P2' => array(
-						array(
-							'mainsnak' => array(
+								]
+							]
+						]
+					],
+					'P2' => [
+						[
+							'mainsnak' => [
 								'snaktype' => 'value',
 								'property' => 'P2',
-								'datavalue' => array(
-									'value' => array( 'time' => '+00000001952-03-11T00:00:00Z' ),
+								'datavalue' => [
+									'value' => [ 'time' => '+00000001952-03-11T00:00:00Z' ],
 									'type' => 'time'
-								)
-							)
-						),
-						array(
-							'mainsnak' => array(
+								]
+							]
+						],
+						[
+							'mainsnak' => [
 								'snaktype' => 'value',
 								'property' => 'P2',
-								'datavalue' => array(
-									'value' => array( 'latitude' => 1, 'longitude' => 1 ),
+								'datavalue' => [
+									'value' => [ 'latitude' => 1, 'longitude' => 1 ],
 									'type' => 'globecoordinate'
-								)
-							)
-						)
-					)
-				),
-				'sterms' => array(
-					'en' => array( new MongoBinData( 'foo', MongoBinData::GENERIC ) ),
-					'fr' => array(
+								]
+							]
+						]
+					]
+				],
+				'sterms' => [
+					'en' => [ new MongoBinData( 'foo', MongoBinData::GENERIC ) ],
+					'fr' => [
 						new MongoBinData( 'baz', MongoBinData::GENERIC ),
 						new MongoBinData( 'bat', MongoBinData::GENERIC )
-					)
-				),
-				'sclaims' => array(
-					'string' => array( 'P1-foo', 'P1-c902a17556796a9f97afa23bad130b04' ),
-					'wikibase-entityid' => array( 'P1-Q1', 'P1-P1' ),
-					'time' => array( 'P2-+00000001952-03-11T00:00:00Z' )
-				)
-			),
+					]
+				],
+				'sclaims' => [
+					'string' => [ 'P1-foo', 'P1-c902a17556796a9f97afa23bad130b04' ],
+					'wikibase-entityid' => [ 'P1-Q1', 'P1-P1' ],
+					'time' => [ 'P2-+00000001952-03-11T00:00:00Z' ]
+				]
+			],
 			$documentBuilder->buildDocumentForEntity( $item )
 		);
 	}
@@ -233,12 +233,12 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 		$item = new Item(
 			new ItemId( 'Q1' ),
 			new Fingerprint(
-				new TermList( array( new Term( 'en', 'foo' ), new Term( 'de', 'bar' ) ) ),
-				new TermList( array( new Term( 'en', 'bar' ) ) ),
-				new AliasGroupList( array(
-					new AliasGroup( 'fr', array( 'baz', 'bat' ) ),
-					new AliasGroup( 'it', array( 'foo' ) )
-				) )
+				new TermList( [ new Term( 'en', 'foo' ), new Term( 'de', 'bar' ) ] ),
+				new TermList( [ new Term( 'en', 'bar' ) ] ),
+				new AliasGroupList( [
+					new AliasGroup( 'fr', [ 'baz', 'bat' ] ),
+					new AliasGroup( 'it', [ 'foo' ] )
+				] )
 			)
 		);
 
@@ -246,24 +246,24 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 		$entitySerializerMock->expects( $this->once() )
 			->method( 'serialize' )
 			->with( $this->equalTo( $item ) )
-			->willReturn( array(
+			->willReturn( [
 				'type' => 'item',
 				'id' => 'Q1',
-				'labels' => array(
-					'en' => array( 'language' => 'en', 'value' => 'foo' ),
-					'de' => array( 'language' => 'en', 'value' => 'bar' ),
-				),
-				'descriptions' => array(
-					'en' => array( 'language' => 'en', 'value' => 'bar' ),
-				),
-				'aliases' => array(
-					'fr' => array(
-						array( 'language' => 'fr', 'value' => 'baz' ),
-						array( 'language' => 'fr', 'value' => 'bat' )
-					),
-					'it' => array( array( 'language' => 'it', 'value' => 'goo' ) )
-				)
-			) );
+				'labels' => [
+					'en' => [ 'language' => 'en', 'value' => 'foo' ],
+					'de' => [ 'language' => 'en', 'value' => 'bar' ],
+				],
+				'descriptions' => [
+					'en' => [ 'language' => 'en', 'value' => 'bar' ],
+				],
+				'aliases' => [
+					'fr' => [
+						[ 'language' => 'fr', 'value' => 'baz' ],
+						[ 'language' => 'fr', 'value' => 'bat' ]
+					],
+					'it' => [ [ 'language' => 'it', 'value' => 'goo' ] ]
+				]
+			] );
 
 		$entityDeserializerMock = $this->getMock( 'Deserializers\Deserializer' );
 
@@ -271,35 +271,35 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 			$entitySerializerMock,
 			$entityDeserializerMock,
 			new BasicEntityIdParser(),
-			new EntityStoreOptions(array( EntityStore::OPTION_LANGUAGES => array( 'en', 'fr' ) ) )
+			new EntityStoreOptions([ EntityStore::OPTION_LANGUAGES => [ 'en', 'fr' ] ] )
 		);
 
 		$this->assertEquals(
-			array(
+			[
 				'_id' => 'Q1',
 				'id' => 'Q1',
 				'type' => 'item',
-				'labels' => array(
-					'en' => array( 'language' => 'en', 'value' => 'foo' ),
-				),
-				'descriptions' => array(
-					'en' => array( 'language' => 'en', 'value' => 'bar' ),
-				),
-				'aliases' => array(
-					'fr' => array(
-						array( 'language' => 'fr', 'value' => 'baz' ),
-						array( 'language' => 'fr', 'value' => 'bat' )
-					)
-				),
-				'sterms' => array(
-					'en' => array( new MongoBinData( 'foo', MongoBinData::GENERIC ) ),
-					'fr' => array(
+				'labels' => [
+					'en' => [ 'language' => 'en', 'value' => 'foo' ],
+				],
+				'descriptions' => [
+					'en' => [ 'language' => 'en', 'value' => 'bar' ],
+				],
+				'aliases' => [
+					'fr' => [
+						[ 'language' => 'fr', 'value' => 'baz' ],
+						[ 'language' => 'fr', 'value' => 'bat' ]
+					]
+				],
+				'sterms' => [
+					'en' => [ new MongoBinData( 'foo', MongoBinData::GENERIC ) ],
+					'fr' => [
 						new MongoBinData( 'baz', MongoBinData::GENERIC ),
 						new MongoBinData( 'bat', MongoBinData::GENERIC )
-					)
-				),
-				'sclaims' => array()
-			),
+					]
+				],
+				'sclaims' => []
+			],
 			$documentBuilder->buildDocumentForEntity( $item )
 		);
 	}
@@ -312,19 +312,19 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 		$entityDeserializerMock = $this->getMock( 'Deserializers\Deserializer' );
 		$entityDeserializerMock->expects( $this->once() )
 			->method( 'deserialize' )
-			->with( $this->equalTo( array( 'id' => 'Q1' ) ) )
+			->with( $this->equalTo( [ 'id' => 'Q1' ] ) )
 			->willReturn( $item );
 
 		$documentBuilder = new MongoDBDocumentBuilder(
 			$entitySerializerMock,
 			$entityDeserializerMock,
 			new BasicEntityIdParser(),
-			new EntityStoreOptions(array( EntityStore::OPTION_LANGUAGES => null ) )
+			new EntityStoreOptions([ EntityStore::OPTION_LANGUAGES => null ] )
 		);
 
 		$this->assertEquals(
 			$item,
-			$documentBuilder->buildEntityForDocument( array( 'id' => 'Q1' ) )
+			$documentBuilder->buildEntityForDocument( [ 'id' => 'Q1' ] )
 		);
 	}
 
@@ -334,19 +334,19 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 		$entityDeserializerMock = $this->getMock( 'Deserializers\Deserializer' );
 		$entityDeserializerMock->expects( $this->once() )
 			->method( 'deserialize' )
-			->with( $this->equalTo( array( 'i' => 'Q1' ) ) )
+			->with( $this->equalTo( [ 'i' => 'Q1' ] ) )
 			->willThrowException( new DeserializationException() );
 
 		$documentBuilder = new MongoDBDocumentBuilder(
 			$entitySerializerMock,
 			$entityDeserializerMock,
 			new BasicEntityIdParser(),
-			new EntityStoreOptions(array( EntityStore::OPTION_LANGUAGES => null ) )
+			new EntityStoreOptions([ EntityStore::OPTION_LANGUAGES => null ] )
 		);
 
 		$this->assertEquals(
 			null,
-			$documentBuilder->buildEntityForDocument( array( 'i' => 'Q1' ) )
+			$documentBuilder->buildEntityForDocument( [ 'i' => 'Q1' ] )
 		);
 	}
 
@@ -360,7 +360,7 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 			$entitySerializerMock,
 			$entityDeserializerMock,
 			new BasicEntityIdParser(),
-			new EntityStoreOptions(array( EntityStore::OPTION_LANGUAGES => null ) )
+			new EntityStoreOptions([ EntityStore::OPTION_LANGUAGES => null ] )
 		);
 
 		$this->assertEquals(
@@ -370,20 +370,20 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function cleanTextForSearchProvider() {
-		return array(
-			array(
+		return [
+			[
 				'test',
 				new MongoBinData( 'test', MongoBinData::GENERIC )
-			),
-			array(
+			],
+			[
 				'TODO',
 				new MongoBinData( 'todo', MongoBinData::GENERIC )
-			),
-			array(
+			],
+			[
 				'Être',
 				new MongoBinData( 'être', MongoBinData::GENERIC )
-			),
-		);
+			],
+		];
 	}
 
 	public function testBuildEntityIdForDocument() {
@@ -393,12 +393,12 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 			$entitySerializerMock,
 			$entityDeserializerMock,
 			new BasicEntityIdParser(),
-			new EntityStoreOptions(array( EntityStore::OPTION_LANGUAGES => null ) )
+			new EntityStoreOptions([ EntityStore::OPTION_LANGUAGES => null ] )
 		);
 
 		$this->assertEquals(
 			new ItemId( 'Q42' ),
-			$documentBuilder->buildEntityIdForDocument( array( '_id' => 'Q42' ) )
+			$documentBuilder->buildEntityIdForDocument( [ '_id' => 'Q42' ] )
 		);
 	}
 
@@ -409,10 +409,10 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 			$entitySerializerMock,
 			$entityDeserializerMock,
 			new BasicEntityIdParser(),
-			new EntityStoreOptions(array( EntityStore::OPTION_LANGUAGES => null ) )
+			new EntityStoreOptions([ EntityStore::OPTION_LANGUAGES => null ] )
 		);
 
 		$this->setExpectedException( 'Wikibase\DataModel\Entity\EntityIdParsingException' );
-		$documentBuilder->buildEntityIdForDocument( array() );
+		$documentBuilder->buildEntityIdForDocument( [] );
 	}
 }

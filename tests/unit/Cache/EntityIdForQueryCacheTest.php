@@ -17,16 +17,16 @@ class EntityIdForQueryCacheTest extends \PHPUnit_Framework_TestCase {
 
 	public function testFetch() {
 		$cache = new EntityIdForQueryCache( new ArrayCache() );
-		$cache->save( new AnyValue(), null, 'item', array( new ItemId( 'Q42' ) ) );
+		$cache->save( new AnyValue(), null, 'item', [ new ItemId( 'Q42' ) ] );
 
-		$this->assertEquals( array( new ItemId( 'Q42' ) ), $cache->fetch( new AnyValue(), null, 'item' ) );
+		$this->assertEquals( [ new ItemId( 'Q42' ) ], $cache->fetch( new AnyValue(), null, 'item' ) );
 	}
 
 	public function testFetchWithOptions() {
 		$cache = new EntityIdForQueryCache( new ArrayCache() );
-		$cache->save( new AnyValue(), new QueryOptions( 10, 0 ), 'item', array( new ItemId( 'Q42' ) ) );
+		$cache->save( new AnyValue(), new QueryOptions( 10, 0 ), 'item', [ new ItemId( 'Q42' ) ] );
 
-		$this->assertEquals( array( new ItemId( 'Q42' ) ), $cache->fetch( new AnyValue(), new QueryOptions( 10, 0 ), 'item' ) );
+		$this->assertEquals( [ new ItemId( 'Q42' ) ], $cache->fetch( new AnyValue(), new QueryOptions( 10, 0 ), 'item' ) );
 	}
 
 	public function testFetchWithException() {
@@ -38,7 +38,7 @@ class EntityIdForQueryCacheTest extends \PHPUnit_Framework_TestCase {
 
 	public function testContainsTrue() {
 		$cache = new EntityIdForQueryCache( new ArrayCache() );
-		$cache->save(new AnyValue(), null, 'item', array( new ItemId( 'Q42' ) ) );
+		$cache->save(new AnyValue(), null, 'item', [ new ItemId( 'Q42' ) ] );
 
 		$this->assertTrue( $cache->contains( new AnyValue(), null, 'item' ) );
 	}

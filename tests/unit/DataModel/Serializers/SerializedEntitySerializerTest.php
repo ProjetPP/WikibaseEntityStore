@@ -16,7 +16,7 @@ class SerializedEntitySerializerTest extends \PHPUnit_Framework_TestCase {
 	public function testIsSerializerFor() {
 		$serializer = new SerializedEntitySerializer();
 
-		$this->assertTrue( $serializer->isSerializerFor( new SerializedEntity( null, array( 'type' => 'item' ) ) ) );
+		$this->assertTrue( $serializer->isSerializerFor( new SerializedEntity( null, [ 'type' => 'item' ] ) ) );
 		$this->assertFalse( $serializer->isSerializerFor( null ) );
 		$this->assertFalse( $serializer->isSerializerFor( new Item() ) );
 	}
@@ -25,8 +25,8 @@ class SerializedEntitySerializerTest extends \PHPUnit_Framework_TestCase {
 		$serializer = new SerializedEntitySerializer();
 
 		$this->assertEquals(
-			array( 'type' => 'foo' ),
-			$serializer->serialize( new SerializedEntity( null, array( 'type' => 'foo' )))
+			[ 'type' => 'foo' ],
+			$serializer->serialize( new SerializedEntity( null, [ 'type' => 'foo' ]))
 		);
 	}
 

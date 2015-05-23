@@ -101,8 +101,8 @@ class CachedEntityDocumentLookupTest extends \PHPUnit_Framework_TestCase {
 
 		$entityLookup = new CachedEntityDocumentLookup( $entityDocumentLookupMock, $entityDocumentCacheMock );
 		$this->assertEquals(
-			array( $item ),
-			$entityLookup->getEntityDocumentsForIds( array( new ItemId( 'Q1' ) ) )
+			[ $item ],
+			$entityLookup->getEntityDocumentsForIds( [ new ItemId( 'Q1' ) ] )
 		);
 	}
 
@@ -114,8 +114,8 @@ class CachedEntityDocumentLookupTest extends \PHPUnit_Framework_TestCase {
 			->getMock();
 		$entityDocumentLookupMock->expects( $this->once() )
 			->method( 'getEntityDocumentsForIds' )
-			->with( $this->equalTo( array( new ItemId( 'Q1' ) ) ) )
-			->willReturn( array( $item ) );
+			->with( $this->equalTo( [ new ItemId( 'Q1' ) ] ) )
+			->willReturn( [ $item ] );
 
 		$entityDocumentCacheMock = $this->getMockBuilder( 'Wikibase\EntityStore\Cache\EntityDocumentCache' )
 			->disableOriginalConstructor()
@@ -127,8 +127,8 @@ class CachedEntityDocumentLookupTest extends \PHPUnit_Framework_TestCase {
 
 		$entityLookup = new CachedEntityDocumentLookup( $entityDocumentLookupMock, $entityDocumentCacheMock );
 		$this->assertEquals(
-			array( $item ),
-			$entityLookup->getEntityDocumentsForIds( array( new ItemId( 'Q1' ) ) )
+			[ $item ],
+			$entityLookup->getEntityDocumentsForIds( [ new ItemId( 'Q1' ) ] )
 		);
 	}
 
@@ -138,8 +138,8 @@ class CachedEntityDocumentLookupTest extends \PHPUnit_Framework_TestCase {
 			->getMock();
 		$entityDocumentLookupMock->expects( $this->once() )
 			->method( 'getEntityDocumentsForIds' )
-			->with( $this->equalTo( array( new ItemId( 'Q1' ) ) ) )
-			->willReturn( array() );
+			->with( $this->equalTo( [ new ItemId( 'Q1' ) ] ) )
+			->willReturn( [] );
 
 		$entityDocumentCacheMock = $this->getMockBuilder( 'Wikibase\EntityStore\Cache\EntityDocumentCache' )
 			->disableOriginalConstructor()
@@ -151,8 +151,8 @@ class CachedEntityDocumentLookupTest extends \PHPUnit_Framework_TestCase {
 
 		$entityLookup = new CachedEntityDocumentLookup( $entityDocumentLookupMock, $entityDocumentCacheMock );
 		$this->assertEquals(
-			array(),
-			$entityLookup->getEntityDocumentsForIds( array( new ItemId( 'Q1' ) ) )
+			[],
+			$entityLookup->getEntityDocumentsForIds( [ new ItemId( 'Q1' ) ] )
 		);
 	}
 }

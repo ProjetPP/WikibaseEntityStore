@@ -15,7 +15,7 @@ use Wikibase\DataModel\Entity\ItemId;
 class CachedItemIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 
 	public function testGetItemsForQueryWithCacheHit() {
-		$itemIds = array( new ItemId( 'Q1' ) );
+		$itemIds = [ new ItemId( 'Q1' ) ];
 
 		$itemIdForQueryLookupMock = $this->getMockBuilder( 'Wikibase\EntityStore\ItemIdForQueryLookup' )
 			->disableOriginalConstructor()
@@ -37,7 +37,7 @@ class CachedItemIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function testGetItemsForQueryWithCacheMiss() {
-		$itemIds = array( new ItemId( 'Q1' ) );
+		$itemIds = [ new ItemId( 'Q1' ) ];
 
 		$itemIdForQueryLookupMock = $this->getMockBuilder( 'Wikibase\EntityStore\ItemIdForQueryLookup' )
 			->disableOriginalConstructor()

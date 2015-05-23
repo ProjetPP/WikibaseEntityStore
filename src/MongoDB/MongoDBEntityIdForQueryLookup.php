@@ -179,7 +179,7 @@ class MongoDBEntityIdForQueryLookup implements EntityIdForQueryLookup {
 	}
 
 	private function buildQueryModifiers() {
-		$modifiers = array( '_id' => 1 );
+		$modifiers = [ '_id' => 1 ];
 
 		if( $this->timeLimit !== null ) {
 			$modifiers['$maxTimeMS'] = $this->timeLimit;
@@ -199,7 +199,7 @@ class MongoDBEntityIdForQueryLookup implements EntityIdForQueryLookup {
 	}
 
 	private function formatResults( Iterator $cursor ) {
-		$entityIds = array();
+		$entityIds = [];
 
 		foreach( $cursor as $document ) {
 			$entityIds[] = $this->documentBuilder->buildEntityIdForDocument( $document );

@@ -21,11 +21,11 @@ class DispatchingEntityIdForTermLookupTest extends \PHPUnit_Framework_TestCase {
 		$entityIdForTermLookupMock->expects( $this->once() )
 			->method( 'getEntityIdsForTerm' )
 			->with( $this->equalTo( new Term( 'en', 'foo' ) ) )
-			->willReturn( array( new ItemId( 'Q1' ) ) );
+			->willReturn( [ new ItemId( 'Q1' ) ] );
 
 		$entityIdForTermLookup = new DispatchingEntityIdForTermLookup( $entityIdForTermLookupMock );
 		$this->assertEquals(
-			array( new ItemId( 'Q1' ) ),
+			[ new ItemId( 'Q1' ) ],
 			$entityIdForTermLookup->getEntityIdsForTerm( new Term( 'en', 'foo' ) )
 		);
 	}
@@ -37,11 +37,11 @@ class DispatchingEntityIdForTermLookupTest extends \PHPUnit_Framework_TestCase {
 		$entityIdForTermLookupMock->expects( $this->once() )
 			->method( 'getEntityIdsForTerm' )
 			->with( $this->equalTo( new Term( 'en', 'foo' ) ) )
-			->willReturn( array( new ItemId( 'Q1' ) ) );
+			->willReturn( [ new ItemId( 'Q1' ) ] );
 
 		$entityIdForTermLookup = new DispatchingEntityIdForTermLookup( $entityIdForTermLookupMock );
 		$this->assertEquals(
-			array( new ItemId( 'Q1' ) ),
+			[ new ItemId( 'Q1' ) ],
 			$entityIdForTermLookup->getItemIdsForTerm( new Term( 'en', 'foo' ) )
 		);
 	}
@@ -53,11 +53,11 @@ class DispatchingEntityIdForTermLookupTest extends \PHPUnit_Framework_TestCase {
 		$entityIdForTermLookupMock->expects( $this->once() )
 			->method( 'getEntityIdsForTerm' )
 			->with( $this->equalTo( new Term( 'en', 'foo' ) ) )
-			->willReturn( array( new PropertyId( 'P1' ) ) );
+			->willReturn( [ new PropertyId( 'P1' ) ] );
 
 		$entityIdForTermLookup = new DispatchingEntityIdForTermLookup( $entityIdForTermLookupMock );
 		$this->assertEquals(
-			array( new PropertyId( 'P1' ) ),
+			[ new PropertyId( 'P1' ) ],
 			$entityIdForTermLookup->getPropertyIdsForTerm( new Term( 'en', 'foo' ) )
 		);
 	}

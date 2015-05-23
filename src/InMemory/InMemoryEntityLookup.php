@@ -18,7 +18,7 @@ class InMemoryEntityLookup implements EntityDocumentLookup {
 	/**
 	 * @var EntityDocument[]
 	 */
-	private $entities = array();
+	private $entities = [];
 
 	/**
 	 * @param EntityDocument[] $entities
@@ -51,7 +51,7 @@ class InMemoryEntityLookup implements EntityDocumentLookup {
 	 * @see EntityDocumentLookup::getEntityDocumentsForIds
 	 */
 	public function getEntityDocumentsForIds( array $entityIds ) {
-		$entities = array();
+		$entities = [];
 
 		foreach( $entityIds as $entityId ) {
 			try {

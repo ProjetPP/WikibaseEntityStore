@@ -18,6 +18,7 @@ use Wikibase\EntityStore\Config\EntityStoreFromConfigurationBuilder;
 class ApiTest extends \PHPUnit_Framework_TestCase {
 
 	public function testApiStore() {
+		date_default_timezone_set( 'UTC' );
 		$store = $this->getEntityStoreFromConfiguration();
 
 		$this->assertEquals(
@@ -26,22 +27,22 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
 		);
 
 		$results = $store->getEntityDocumentLookup()->getEntityDocumentsForIds(
-			array( new ItemId( 'Q1' ), new PropertyId( 'P18' ) )
+			[ new ItemId( 'Q1' ), new PropertyId( 'P18' ) ]
 		);
 		$this->assertEquals( 2, count( $results ) );
 
 		$this->assertEquals(
-			array( new ItemId( 'Q42' ) ),
+			[ new ItemId( 'Q42' ) ],
 			$store->getItemIdForTermLookup()->getItemIdsForTerm( new Term( 'en', 'Douglas Noël Adams' ) )
 		);
 
 		$this->assertEquals(
-			array( new PropertyId( 'P16' ) ),
+			[ new PropertyId( 'P16' ) ],
 			$store->getPropertyIdForTermLookup()->getPropertyIdsForTerm( new Term( 'en', 'highway system' ) )
 		);
 
 		$this->assertEquals(
-			array( new ItemId( 'Q1' ) ),
+			[ new ItemId( 'Q1' ) ],
 			$store->getItemIdForQueryLookup()->getItemIdsForQuery( new SomeProperty(
 				new EntityIdValue( new PropertyId( 'P18' ) ),
 				new ValueDescription( new StringValue( 'Hubble ultra deep field.jpg' ) )

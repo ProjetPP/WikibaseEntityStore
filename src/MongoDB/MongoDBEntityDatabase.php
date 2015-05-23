@@ -56,7 +56,7 @@ class MongoDBEntityDatabase implements EntityDocumentLookup, EntityDocumentSaver
 	 * @see EntityDocumentLookup::getEntityDocumentsForIds
 	 */
 	public function getEntityDocumentsForIds( array $entityIds ) {
-		$entities = array();
+		$entities = [];
 
 		foreach( $this->splitEntityIdsPerType( $entityIds ) as $type => $entityIdsForType ) {
 			$entities = array_merge(
@@ -69,7 +69,7 @@ class MongoDBEntityDatabase implements EntityDocumentLookup, EntityDocumentSaver
 	}
 
 	private function splitEntityIdsPerType( array $entityIds ) {
-		$entityIdsPerType = array();
+		$entityIdsPerType = [];
 
 		/** @var EntityId $entityId */
 		foreach( $entityIds as $entityId ) {
@@ -85,7 +85,7 @@ class MongoDBEntityDatabase implements EntityDocumentLookup, EntityDocumentSaver
 			->find( $this->buildGetEntitiesForIdsQuery( $entityIds ) );
 
 
-		$entities = array();
+		$entities = [];
 		foreach( $documents as $document ) {
 			$entities[] = $this->documentBuilder->buildEntityForDocument( $document );
 		}
@@ -113,7 +113,7 @@ class MongoDBEntityDatabase implements EntityDocumentLookup, EntityDocumentSaver
 	}
 
 	private function serializeEntityIds( array $entityIds ) {
-		$serializations = array();
+		$serializations = [];
 
 		/** @var EntityId $entityId */
 		foreach( $entityIds as $entityId ) {

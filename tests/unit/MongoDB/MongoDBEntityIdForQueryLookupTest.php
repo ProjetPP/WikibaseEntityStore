@@ -73,7 +73,7 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 			->getMock();
 		$documentBuilderMock->expects( $this->once() )
 			->method( 'buildEntityIdForDocument' )
-			->with( $this->equalTo( array( '_id' => 'Q1' ) ) )
+			->with( $this->equalTo( [ '_id' => 'Q1' ] ) )
 			->willReturn( new ItemId( 'Q1' ) );
 		$documentBuilderMock->expects( $this->any() )
 			->method( 'buildIntegerForType' )
@@ -87,36 +87,36 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 		$lookup = new MongoDBEntityIdForQueryLookup( $databaseMock, $documentBuilderMock );
 
 		$this->assertEquals(
-			array( new ItemId( 'Q1' ) ),
+			[ new ItemId( 'Q1' ) ],
 			$lookup->getEntityIdsForQuery( $queryDescription, $queryOptions, $type )
 		);
 	}
 
 	public function getEntityIdsForQueryProvider() {
-		return array(
-			array(
+		return [
+			[
 				new AnyValue(),
 				new QueryOptions( 10, 0 ),
 				null,
-				array(),
+				[],
 				0,
 				10,
-				array( array( '_id' => 'Q1' ) )
-			),
-			array(
+				[ [ '_id' => 'Q1' ] ]
+			],
+			[
 				new SomeProperty(
 					new EntityIdValue( new PropertyId( 'P1' ) ),
 					new ValueDescription( new EntityIdValue( new ItemId( 'Q1' ) ) )
 				),
 				new QueryOptions( 20, 10 ),
 				Item::ENTITY_TYPE,
-				array( 'sclaims.wikibase-entityid' => 'P1-Q1' ),
+				[ 'sclaims.wikibase-entityid' => 'P1-Q1' ],
 				10,
 				20,
-				array( array( '_id' => 'Q1' ) )
-			),
-			array(
-				new Conjunction( array(
+				[ [ '_id' => 'Q1' ] ]
+			],
+			[
+				new Conjunction( [
 					new SomeProperty(
 						new EntityIdValue( new PropertyId( 'P42' ) ),
 						new ValueDescription( new StringValue( 'foo' ) )
@@ -125,21 +125,21 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 						new EntityIdValue( new PropertyId( 'P1' ) ),
 						new ValueDescription( new EntityIdValue( new PropertyId( 'P42' ) ) )
 					)
-				) ),
+				] ),
 				new QueryOptions( 10, 0 ),
 				Item::ENTITY_TYPE,
-				array(
-					'$and' => array(
-						array( 'sclaims.string' => 'P42-foo' ),
-						array( 'sclaims.wikibase-entityid' => 'P1-P42' )
-					)
-				),
+				[
+					'$and' => [
+						[ 'sclaims.string' => 'P42-foo' ],
+						[ 'sclaims.wikibase-entityid' => 'P1-P42' ]
+					]
+				],
 				0,
 				10,
-				array( array( '_id' => 'Q1' ) )
-			),
-			array(
-				new Disjunction( array(
+				[ [ '_id' => 'Q1' ] ]
+			],
+			[
+				new Disjunction( [
 					new SomeProperty(
 						new EntityIdValue( new PropertyId( 'P42' ) ),
 						new ValueDescription( new StringValue( 'foo' ) )
@@ -148,48 +148,48 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 						new EntityIdValue( new PropertyId( 'P1' ) ),
 						new ValueDescription( new EntityIdValue( new PropertyId( 'P42' ) ) )
 					)
-				) ),
+				] ),
 				new QueryOptions( 10, 0 ),
 				Item::ENTITY_TYPE,
-				array(
-					'$or' => array(
-						array( 'sclaims.string' => 'P42-foo' ),
-						array( 'sclaims.wikibase-entityid' => 'P1-P42' )
-					)
-				),
+				[
+					'$or' => [
+						[ 'sclaims.string' => 'P42-foo' ],
+						[ 'sclaims.wikibase-entityid' => 'P1-P42' ]
+					]
+				],
 				0,
 				10,
-				array( array( '_id' => 'Q1' ) )
-			),
-			array(
+				[ [ '_id' => 'Q1' ] ]
+			],
+			[
 				new SomeProperty(
 					new EntityIdValue( new PropertyId( 'P42' ) ),
-					new Conjunction( array(
-						new Disjunction( array(
+					new Conjunction( [
+						new Disjunction( [
 							new ValueDescription( new StringValue( 'foo' ) )
-						) ),
+						] ),
 						new AnyValue(),
 						new ValueDescription( new EntityIdValue( new PropertyId( 'P42' ) ) )
-					) )
+					] )
 				),
 				new QueryOptions( 10, 0 ),
 				Item::ENTITY_TYPE,
-				array(
-					'$and' => array(
-						array(
-							'$or' => array(
-								array( 'sclaims.string' => 'P42-foo' )
-							)
-						),
-						array(),
-						array( 'sclaims.wikibase-entityid' => 'P42-P42' )
-					)
-				),
+				[
+					'$and' => [
+						[
+							'$or' => [
+								[ 'sclaims.string' => 'P42-foo' ]
+							]
+						],
+						[],
+						[ 'sclaims.wikibase-entityid' => 'P42-P42' ]
+					]
+				],
 				0,
 				10,
-				array( array( '_id' => 'Q1' ) )
-			),
-			array(
+				[ [ '_id' => 'Q1' ] ]
+			],
+			[
 				new SomeProperty(
 					new EntityIdValue( new PropertyId( 'P42' ) ),
 					new ValueDescription(
@@ -198,12 +198,12 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 				),
 				new QueryOptions( 10, 0 ),
 				Item::ENTITY_TYPE,
-				array( 'sclaims.time' => new MongoRegex( '/^P42\-\+00000001952\-03\-11/' ) ),
+				[ 'sclaims.time' => new MongoRegex( '/^P42\-\+00000001952\-03\-11/' ) ],
 				0,
 				10,
-				array( array( '_id' => 'Q1' ) )
-			),
-			array(
+				[ [ '_id' => 'Q1' ] ]
+			],
+			[
 				new SomeProperty(
 					new EntityIdValue( new PropertyId( 'P42' ) ),
 					new ValueDescription(
@@ -212,12 +212,12 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 				),
 				new QueryOptions( 10, 0 ),
 				Item::ENTITY_TYPE,
-				array( 'sclaims.time' => new MongoRegex( '/^P42\-\+00000001952/' ) ),
+				[ 'sclaims.time' => new MongoRegex( '/^P42\-\+00000001952/' ) ],
 				0,
 				10,
-				array( array( '_id' => 'Q1' ) )
-			),
-		);
+				[ [ '_id' => 'Q1' ] ]
+			],
+		];
 	}
 
 	public function testGetEntityIdsForQueryWithoutLimits() {
@@ -227,8 +227,8 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 			->getMock();
 		$collectionMock->expects( $this->once() )
 			->method( 'find' )
-			->with( $this->equalTo( array() ) )
-			->willReturn( new ArrayIterator( array( array( '_id' => 'Q1' ) ) ) );
+			->with( $this->equalTo( [] ) )
+			->willReturn( new ArrayIterator( [ [ '_id' => 'Q1' ] ] ) );
 
 		$databaseMock = $this->getMockBuilder( 'Doctrine\MongoDB\Database' )
 			->disableOriginalConstructor()
@@ -243,7 +243,7 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 			->getMock();
 		$documentBuilderMock->expects( $this->once() )
 			->method( 'buildEntityIdForDocument' )
-			->with( $this->equalTo( array( '_id' => 'Q1' ) ) )
+			->with( $this->equalTo( [ '_id' => 'Q1' ] ) )
 			->willReturn( new ItemId( 'Q1' ) );
 		$documentBuilderMock->expects( $this->any() )
 			->method( 'buildIntegerForType' )
@@ -253,7 +253,7 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 		$lookup = new MongoDBEntityIdForQueryLookup( $databaseMock, $documentBuilderMock );
 
 		$this->assertEquals(
-			array( new ItemId( 'Q1' ) ),
+			[ new ItemId( 'Q1' ) ],
 			$lookup->getEntityIdsForQuery( new AnyValue(), null, Item::ENTITY_TYPE )
 		);
 	}
@@ -288,23 +288,23 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function getEntityIdsForQueryWithFeatureNotSupportedExceptionProvider() {
-		return array(
-			array(
+		return [
+			[
 				$this->getMockForAbstractClass( 'Ask\Language\Description\Description' )
-			),
-			array(
+			],
+			[
 				new SomeProperty(
 					new StringValue( 'foo' ),
 					new ValueDescription( new EntityIdValue( new ItemId( 'Q1' ) ) )
 				)
-			),
-			array(
+			],
+			[
 				new SomeProperty(
 					new EntityIdValue( new ItemId( 'Q1' ) ),
 					new ValueDescription( new EntityIdValue( new ItemId( 'Q1' ) ) )
 				)
-			),
-			array(
+			],
+			[
 				new SomeProperty(
 					new EntityIdValue( new PropertyId( 'P42' ) ),
 					new SomeProperty(
@@ -313,27 +313,27 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 						true
 					)
 				)
-			),
-			array(
+			],
+			[
 				new SomeProperty(
 					new EntityIdValue( new PropertyId( 'P42' ) ),
 					new ValueDescription( new EntityIdValue( new ItemId( 'Q1' ) ), ValueDescription::COMP_GREATER )
 				)
-			),
-			array(
+			],
+			[
 				new SomeProperty(
 					new EntityIdValue( new PropertyId( 'P42' ) ),
 					new ValueDescription( new MonolingualTextValue( 'en', 'Foo' ) )
 				)
-			),
-			array(
+			],
+			[
 				new SomeProperty(
 					new EntityIdValue( new PropertyId( 'P42' ) ),
 					new ValueDescription( new EntityIdValue(
 						$this->getMockForAbstractClass( 'Wikibase\DataModel\Entity\EntityId' )
 					) )
 				)
-			),
-		);
+			],
+		];
 	}
 }

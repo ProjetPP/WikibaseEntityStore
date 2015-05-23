@@ -21,142 +21,142 @@ class EntityStoreConfigurationTest extends \PHPUnit_Framework_TestCase {
 
 		$this->assertEquals(
 			$processedConfig,
-			$processor->processConfiguration( $configuration, array( $initialConfig ) )
+			$processor->processConfiguration( $configuration, [ $initialConfig ] )
 		);
 	}
 
 	public function validConfigurationProvider() {
-		return array(
-			array(
-				array(
+		return [
+			[
+				[
 					'backend' => 'api',
-					'api' => array(
+					'api' => [
 						'url' => 'http://www.wikidata.org/w/api.php'
-					)
-				),
-				array(
+					]
+				],
+				[
 					'backend' => 'api',
-					'api' => array(
+					'api' => [
 						'url' => 'http://www.wikidata.org/w/api.php'
-					),
-					'options' => array()
-				)
-			),
-			array(
-				array(
+					],
+					'options' => []
+				]
+			],
+			[
+				[
 					'backend' => 'api',
-					'api' => array(
+					'api' => [
 						'url' => 'http://www.wikidata.org/w/api.php',
 						'wikidataquery-url' => 'http://wdq.wmflabs.org/api'
-					)
-				),
-				array(
+					]
+				],
+				[
 					'backend' => 'api',
-					'api' => array(
+					'api' => [
 						'url' => 'http://www.wikidata.org/w/api.php',
 						'wikidataquery_url' => 'http://wdq.wmflabs.org/api'
-					),
-					'options' => array()
-				)
-			),
-			array(
-				array(
+					],
+					'options' => []
+				]
+			],
+			[
+				[
 					'backend' => 'mongodb',
-					'mongodb' => array(
+					'mongodb' => [
 						'server' => ''
-					)
-				),
-				array(
+					]
+				],
+				[
 					'backend' => 'mongodb',
-					'mongodb' => array(
+					'mongodb' => [
 						'server' => '',
 						'database' => 'wikibase'
-					),
-					'options' => array()
-				)
-			),
-			array(
-				array(
+					],
+					'options' => []
+				]
+			],
+			[
+				[
 					'backend' => 'api',
-					'api' => array(
+					'api' => [
 						'url' => 'http://www.wikidata.org/w/api.php'
-					),
-					'cache' => array(
+					],
+					'cache' => [
 						'memcached' => true,
 						'array' => true
-					)
-				),
-				array(
+					]
+				],
+				[
 					'backend' => 'api',
-					'api' => array(
+					'api' => [
 						'url' => 'http://www.wikidata.org/w/api.php'
-					),
-					'cache' => array(
+					],
+					'cache' => [
 						'lifetime' => 0,
-						'memcached' => array(
+						'memcached' => [
 							'enabled' => true,
 							'host' => 'localhost',
 							'port' => 11211
-						),
-						'array' => array(
+						],
+						'array' => [
 							'enabled' => true
-						)
-					),
-					'options' => array()
-				)
-			),
-			array(
-				array(
+						]
+					],
+					'options' => []
+				]
+			],
+			[
+				[
 					'backend' => 'api',
-					'api' => array(
+					'api' => [
 						'url' => 'http://www.wikidata.org/w/api.php'
-					),
-					'cache' => array(
+					],
+					'cache' => [
 						'lifetime' => 30000,
 						'memcached' => false,
 						'array' => false
-					)
-				),
-				array(
+					]
+				],
+				[
 					'backend' => 'api',
-					'api' => array(
+					'api' => [
 						'url' => 'http://www.wikidata.org/w/api.php'
-					),
-					'cache' => array(
+					],
+					'cache' => [
 						'lifetime' => 30000,
-						'memcached' => array(
+						'memcached' => [
 							'enabled' => false,
 							'host' => 'localhost',
 							'port' => 11211
-						),
-						'array' => array(
+						],
+						'array' => [
 							'enabled' => false
-						)
-					),
-					'options' => array()
-				)
-			),
-			array(
-				array(
+						]
+					],
+					'options' => []
+				]
+			],
+			[
+				[
 					'backend' => 'api',
-					'api' => array(
+					'api' => [
 						'url' => 'http://www.wikidata.org/w/api.php'
-					),
-					'options' => array(
-						'languages' => array( 'en', 'fr' )
-					)
-				),
-				array(
+					],
+					'options' => [
+						'languages' => [ 'en', 'fr' ]
+					]
+				],
+				[
 					'backend' => 'api',
-					'api' => array(
+					'api' => [
 						'url' => 'http://www.wikidata.org/w/api.php'
-					),
-					'options' => array(
-						'languages' => array( 'en', 'fr' )
-					)
-				)
-			),
-		);
+					],
+					'options' => [
+						'languages' => [ 'en', 'fr' ]
+					]
+				]
+			],
+		];
 	}
 
 	/**
@@ -167,107 +167,107 @@ class EntityStoreConfigurationTest extends \PHPUnit_Framework_TestCase {
 		$configuration = new EntityStoreConfiguration();
 
 		$this->setExpectedException( 'Symfony\Component\Config\Definition\Exception\InvalidConfigurationException' );
-		$processor->processConfiguration( $configuration, array( $initialConfig ) );
+		$processor->processConfiguration( $configuration, [ $initialConfig ] );
 	}
 
 	public function invalidConfigurationProvider() {
-		return array(
-			array(
-				array()
-			),
-			array(
-				array(
+		return [
+			[
+				[]
+			],
+			[
+				[
 					'backend' => 'foo'
-				)
-			),
-			array(
-				array(
+				]
+			],
+			[
+				[
 					'backend' => 'api',
-					'api' => array()
-				)
-			),
-			array(
-				array(
+					'api' => []
+				]
+			],
+			[
+				[
 					'backend' => 'api',
-					'api' => array(
+					'api' => [
 						'url' => ''
-					)
-				)
-			),
-			array(
-				array(
+					]
+				]
+			],
+			[
+				[
 					'backend' => 'api',
-					'api' => array(
+					'api' => [
 						'url' => 'http://www.wikidata.org/w/api.php',
 						'wikidataquery-url' => ''
-					)
-				)
-			),
-			array(
-				array(
+					]
+				]
+			],
+			[
+				[
 					'backend' => 'mongodb',
-					'mongodb' => array()
-				)
-			),
-			array(
-				array(
+					'mongodb' => []
+				]
+			],
+			[
+				[
 					'backend' => 'api',
-					'api' => array(
+					'api' => [
 						'url' => 'http://www.wikidata.org/w/api.php'
-					),
-					'cache' => array(
+					],
+					'cache' => [
 						'memcached' => 'toto'
-					)
-				)
-			),
-			array(
-				array(
+					]
+				]
+			],
+			[
+				[
 					'backend' => 'api',
-					'api' => array(
+					'api' => [
 						'url' => 'http://www.wikidata.org/w/api.php'
-					),
-					'cache' => array(
+					],
+					'cache' => [
 						'lifetime' => 'tata'
-					)
-				)
-			),
-			array(
-				array(
+					]
+				]
+			],
+			[
+				[
 					'backend' => 'api',
-					'api' => array(
+					'api' => [
 						'url' => 'http://www.wikidata.org/w/api.php'
-					),
-					'cache' => array(
+					],
+					'cache' => [
 						'array' => 'tata'
-					)
-				)
-			),
-			array(
-				array(
+					]
+				]
+			],
+			[
+				[
 					'backend' => 'api',
-					'api' => array(
+					'api' => [
 						'url' => 'http://www.wikidata.org/w/api.php'
-					),
-					'cache' => array(
-						'memcached' => array(
-							'host' => array()
-						)
-					)
-				)
-			),
-			array(
-				array(
+					],
+					'cache' => [
+						'memcached' => [
+							'host' => []
+						]
+					]
+				]
+			],
+			[
+				[
 					'backend' => 'api',
-					'api' => array(
+					'api' => [
 						'url' => 'http://www.wikidata.org/w/api.php'
-					),
-					'cache' => array(
-						'memcached' => array(
+					],
+					'cache' => [
+						'memcached' => [
 							'port' => 'foo'
-						)
-					)
-				)
-			),
-		);
+						]
+					]
+				]
+			],
+		];
 	}
 }
