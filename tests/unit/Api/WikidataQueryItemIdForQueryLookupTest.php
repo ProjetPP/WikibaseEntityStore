@@ -119,13 +119,13 @@ class WikidataQueryItemIdForQueryLookupTest extends \PHPUnit_Framework_TestCase 
 				new SomeProperty(
 					new EntityIdValue( new PropertyId( 'P42' ) ),
 					new ValueDescription(
-						new TimeValue( '+00000001952-03-11T00:00:00Z', 0, 0, 0, TimeValue::PRECISION_DAY, '' )
+						new TimeValue( '+00000001952-03-11T00:00:00Z', 0, 0, 0, TimeValue::PRECISION_DAY, 'foo' )
 					)
 				),
 				new BetweenQuery(
 					new PropertyId( 'P42' ),
-					new TimeValue( '+00000001952-03-11T00:00:00Z', 0, 0, 0, TimeValue::PRECISION_DAY, '' ),
-					new TimeValue( '+00000001952-03-11T00:00:00Z', 0, 0, 0, TimeValue::PRECISION_DAY, '' )
+					new TimeValue( '+00000001952-03-11T00:00:00Z', 0, 0, 0, TimeValue::PRECISION_DAY, 'foo' ),
+					new TimeValue( '+00000001952-03-11T00:00:00Z', 0, 0, 0, TimeValue::PRECISION_DAY, 'foo' )
 				)
 			],
 		];

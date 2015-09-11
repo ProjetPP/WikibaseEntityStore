@@ -45,6 +45,13 @@ class SerializedEntity implements EntityDocument {
 	}
 
 	/**
+	 * @see EntityDocument::setId
+	 */
+	public function setId( $id ) {
+		throw new InvalidArgumentException( 'Read only entity' );
+	}
+
+	/**
 	 * @see EntityDocument::getType
 	 */
 	public function getType() {

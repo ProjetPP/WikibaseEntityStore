@@ -193,12 +193,12 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 				new SomeProperty(
 					new EntityIdValue( new PropertyId( 'P42' ) ),
 					new ValueDescription(
-						new TimeValue( '+00000001952-03-11T00:00:00Z', 0, 0, 0, TimeValue::PRECISION_DAY, '' )
+						new TimeValue( '+1952-03-11T00:00:00Z', 0, 0, 0, TimeValue::PRECISION_DAY, 'foo' )
 					)
 				),
 				new QueryOptions( 10, 0 ),
 				Item::ENTITY_TYPE,
-				[ 'sclaims.time' => new MongoRegex( '/^P42\-\+00000001952\-03\-11/' ) ],
+				[ 'sclaims.time' => new MongoRegex( '/^P42\-\+1952\-03\-11/' ) ],
 				0,
 				10,
 				[ [ '_id' => 'Q1' ] ]
@@ -207,12 +207,12 @@ class MongoDBEntityIdForQueryLookupTest extends \PHPUnit_Framework_TestCase {
 				new SomeProperty(
 					new EntityIdValue( new PropertyId( 'P42' ) ),
 					new ValueDescription(
-						new TimeValue( '+00000001952-00-00T00:00:00Z', 0, 0, 0, TimeValue::PRECISION_YEAR, '' )
+						new TimeValue( '+1952-00-00T00:00:00Z', 0, 0, 0, TimeValue::PRECISION_YEAR, 'foo' )
 					)
 				),
 				new QueryOptions( 10, 0 ),
 				Item::ENTITY_TYPE,
-				[ 'sclaims.time' => new MongoRegex( '/^P42\-\+00000001952/' ) ],
+				[ 'sclaims.time' => new MongoRegex( '/^P42\-\+1952/' ) ],
 				0,
 				10,
 				[ [ '_id' => 'Q1' ] ]
