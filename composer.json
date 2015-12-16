@@ -28,14 +28,14 @@
 		"addwiki/mediawiki-api-base": "~0.2",
 		"doctrine/cache": "~1.4",
 		"psr/log": "~1.0",
-		"symfony/config": "~2.6",
+		"symfony/config": "~3.0",
 		"ask/ask": "~1.0",
 		"ask/serialization": "~1.0",
 		"ppp/wikidataquery-api": "~1.2"
 	},
 	"require-dev": {
 		"squizlabs/php_codesniffer": "~2.1",
-		"symfony/console": "~2.6",
+		"symfony/console": "~3.0",
 		"doctrine/mongodb": "~1.1"
 	},
 	"suggest": {
