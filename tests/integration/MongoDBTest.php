@@ -25,7 +25,7 @@ class MongoDBTest extends \PHPUnit_Framework_TestCase {
 
 	public function testMongoDbStore() {
 		try {
-			$this->setupMongoDB();
+			$this->setupMongoDb();
 		} catch( MongoConnectionException $e ) {
 			$this->markTestSkipped( 'MongoDB is not running: ' . $e->getMessage() );
 			return;
@@ -84,7 +84,7 @@ class MongoDBTest extends \PHPUnit_Framework_TestCase {
 		);
 	}
 
-	private function setupMongoDB() {
+	private function setupMongoDb() {
 		$this->importCommand( 'import-json-dump', 'valid.json' );
 		$this->importCommand( 'import-incremental-xml-dump', 'valid-incremental.xml' );
 	}

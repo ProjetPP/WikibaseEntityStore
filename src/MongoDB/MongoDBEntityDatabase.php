@@ -79,7 +79,6 @@ class MongoDBEntityDatabase implements EntityDocumentLookup, EntityDocumentSaver
 			->selectCollection( $collectionName )
 			->find( $this->buildGetEntitiesForIdsQuery( $entityIds ) );
 
-
 		$entities = [];
 		foreach( $documents as $document ) {
 			$entities[] = $this->documentBuilder->buildEntityForDocument( $document );
@@ -114,7 +113,6 @@ class MongoDBEntityDatabase implements EntityDocumentLookup, EntityDocumentSaver
 		foreach( $entityIds as $entityId ) {
 			$serializations[] = $entityId->getSerialization();
 		}
-
 
 		return $serializations;
 	}
