@@ -25,7 +25,7 @@
 		"data-values/time": "~0.8.0",
 		"data-values/validators": "~0.1.0",
 		"data-values/serialization": "~1.0",
-		"addwiki/mediawiki-api-base": "~0.2",
+		"addwiki/mediawiki-api-base": "~1.1",
 		"doctrine/cache": "~1.4",
 		"psr/log": "~1.0",
 		"symfony/config": "~3.0",
