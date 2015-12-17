@@ -32,10 +32,9 @@ class InMemoryEntityLookupTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals( $item, $lookup->getEntityDocumentForId( new ItemId( 'Q42' ) ) );
 	}
 
-	public function testGetEntityDocumentWithException() {
+	public function testGetEntityDocumentWithoutDocument() {
 		$lookup = new InMemoryEntityLookup( [] );
 
-		$this->setExpectedException( 'Wikibase\EntityStore\EntityNotFoundException');
-		$lookup->getEntityDocumentForId( new ItemId( 'Q42' ) );
+		$this->assertNull( $lookup->getEntityDocumentForId( new ItemId( 'Q42' ) ) );
 	}
 }

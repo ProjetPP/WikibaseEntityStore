@@ -6,15 +6,51 @@ use Wikibase\DataModel\Entity\Item;
 use Wikibase\DataModel\Entity\ItemId;
 use Wikibase\DataModel\Entity\Property;
 use Wikibase\DataModel\Entity\PropertyId;
-use Wikibase\EntityStore\EntityNotFoundException;
+use Wikibase\DataModel\Services\Lookup\EntityLookupException;
 
 /**
- * @covers Wikibase\EntityStore\Internal\EntityLookup
+ * @covers Wikibase\EntityStore\Internal\DispatchingEntityLookup
  *
  * @licence GPLv2+
  * @author Thomas Pellissier Tanon
  */
-class EntityLookupTest extends \PHPUnit_Framework_TestCase {
+class DispatchingEntityLookupTest extends \PHPUnit_Framework_TestCase {
+
+	public function testGetEntity() {
+		$item = new Item( new ItemId( 'Q1' ) );
+
+		$entityDocumentLookupMock = $this->getMockBuilder( 'Wikibase\EntityStore\EntityDocumentLookup' )
+			->disableOriginalConstructor()
+			->getMock();
+		$entityDocumentLookupMock->expects( $this->once() )
+			->method( 'getEntityDocumentForId' )
+			->with( $this->equalTo( new ItemId( 'Q1' ) ) )
+			->willReturn( $item );
+
+		$entityLookup = new DispatchingEntityLookup( $entityDocumentLookupMock );
+		$this->assertEquals(
+			$item,
+			$entityLookup->getEntityDocumentForId( new ItemId( 'Q1' ) )
+		);
+	}
+
+	public function testHasEntity() {
+		$item = new Item( new ItemId( 'Q1' ) );
+
+		$entityDocumentLookupMock = $this->getMockBuilder( 'Wikibase\EntityStore\EntityDocumentLookup' )
+			->disableOriginalConstructor()
+			->getMock();
+		$entityDocumentLookupMock->expects( $this->once() )
+			->method( 'getEntityDocumentForId' )
+			->with( $this->equalTo( new ItemId( 'Q1' ) ) )
+			->willReturn( $item );
+
+		$entityLookup = new DispatchingEntityLookup( $entityDocumentLookupMock );
+		$this->assertEquals(
+			$item,
+			$entityLookup->getEntityDocumentForId( new ItemId( 'Q1' ) )
+		);
+	}
 
 	public function testGetEntityDocumentForId() {
 		$item = new Item( new ItemId( 'Q1' ) );
@@ -27,7 +63,7 @@ class EntityLookupTest extends \PHPUnit_Framework_TestCase {
 			->with( $this->equalTo( new ItemId( 'Q1' ) ) )
 			->willReturn( $item );
 
-		$entityLookup = new EntityLookup( $entityDocumentLookupMock );
+		$entityLookup = new DispatchingEntityLookup( $entityDocumentLookupMock );
 		$this->assertEquals(
 			$item,
 			$entityLookup->getEntityDocumentForId( new ItemId( 'Q1' ) )
@@ -41,10 +77,10 @@ class EntityLookupTest extends \PHPUnit_Framework_TestCase {
 		$entityDocumentLookupMock->expects( $this->once() )
 			->method( 'getEntityDocumentForId' )
 			->with( $this->equalTo( new ItemId( 'Q1' ) ) )
-			->willThrowException( new EntityNotFoundException( new ItemId( 'Q1' ) ) );
+			->willThrowException( new EntityLookupException( new ItemId( 'Q1' ) ) );
 
-		$entityLookup = new EntityLookup( $entityDocumentLookupMock );
-		$this->setExpectedException( 'Wikibase\EntityStore\EntityNotFoundException' );
+		$entityLookup = new DispatchingEntityLookup( $entityDocumentLookupMock );
+		$this->setExpectedException( 'Wikibase\DataModel\Services\Lookup\EntityLookupException' );
 		$entityLookup->getEntityDocumentForId( new ItemId( 'Q1' ) );
 	}
 
@@ -59,7 +95,7 @@ class EntityLookupTest extends \PHPUnit_Framework_TestCase {
 			->with( $this->equalTo( [ new ItemId( 'Q1' ) ] ) )
 			->willReturn( [ $item ] );
 
-		$entityLookup = new EntityLookup( $entityDocumentLookupMock );
+		$entityLookup = new DispatchingEntityLookup( $entityDocumentLookupMock );
 		$this->assertEquals(
 			[ $item ],
 			$entityLookup->getEntityDocumentsForIds( [ new ItemId( 'Q1' ) ] )
@@ -77,7 +113,7 @@ class EntityLookupTest extends \PHPUnit_Framework_TestCase {
 			->with( $this->equalTo( new ItemId( 'Q1' ) ) )
 			->willReturn( $item );
 
-		$entityLookup = new EntityLookup( $entityDocumentLookupMock );
+		$entityLookup = new DispatchingEntityLookup( $entityDocumentLookupMock );
 		$this->assertEquals(
 			$item,
 			$entityLookup->getItemForId( new ItemId( 'Q1' ) )
@@ -91,10 +127,10 @@ class EntityLookupTest extends \PHPUnit_Framework_TestCase {
 		$entityDocumentLookupMock->expects( $this->once() )
 			->method( 'getEntityDocumentForId' )
 			->with( $this->equalTo( new ItemId( 'Q1' ) ) )
-			->willThrowException( new EntityNotFoundException( new ItemId( 'Q1' ) ) );
+			->willThrowException( new EntityLookupException( new ItemId( 'Q1' ) ) );
 
-		$entityLookup = new EntityLookup( $entityDocumentLookupMock );
-		$this->setExpectedException( 'Wikibase\DataModel\Entity\ItemNotFoundException' );
+		$entityLookup = new DispatchingEntityLookup( $entityDocumentLookupMock );
+		$this->setExpectedException( 'Wikibase\DataModel\Services\Lookup\ItemLookupException' );
 		$entityLookup->getItemForId( new ItemId( 'Q1' ) );
 	}
 
@@ -109,7 +145,7 @@ class EntityLookupTest extends \PHPUnit_Framework_TestCase {
 			->with( $this->equalTo( new PropertyId( 'P1' ) ) )
 			->willReturn( $property );
 
-		$entityLookup = new EntityLookup( $entityDocumentLookupMock );
+		$entityLookup = new DispatchingEntityLookup( $entityDocumentLookupMock );
 		$this->assertEquals(
 			$property,
 			$entityLookup->getPropertyForId( new PropertyId( 'P1' ) )
@@ -123,10 +159,10 @@ class EntityLookupTest extends \PHPUnit_Framework_TestCase {
 		$entityDocumentLookupMock->expects( $this->once() )
 			->method( 'getEntityDocumentForId' )
 			->with( $this->equalTo( new PropertyId( 'P1' ) ) )
-			->willThrowException( new EntityNotFoundException( new PropertyId( 'P1' ) ) );
+			->willThrowException( new EntityLookupException( new PropertyId( 'P1' ) ) );
 
-		$entityLookup = new EntityLookup( $entityDocumentLookupMock );
-		$this->setExpectedException( 'Wikibase\DataModel\Entity\PropertyNotFoundException' );
+		$entityLookup = new DispatchingEntityLookup( $entityDocumentLookupMock );
+		$this->setExpectedException( 'Wikibase\DataModel\Services\Lookup\PropertyLookupException' );
 		$entityLookup->getPropertyForId( new PropertyId( 'P1' ) );
 	}
 }

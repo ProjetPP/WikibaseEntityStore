@@ -7,7 +7,6 @@ use Mediawiki\Api\MediawikiApi;
 use Mediawiki\Api\SimpleRequest;
 use Wikibase\DataModel\Entity\EntityId;
 use Wikibase\EntityStore\EntityDocumentLookup;
-use Wikibase\EntityStore\EntityNotFoundException;
 use Wikibase\EntityStore\EntityStore;
 use Wikibase\EntityStore\EntityStoreOptions;
 
@@ -51,12 +50,7 @@ class ApiEntityLookup implements EntityDocumentLookup {
 	 */
 	public function getEntityDocumentForId( EntityId $entityId ) {
 		$entities = $this->getEntityDocumentsForIds( [ $entityId ] );
-
-		if( empty( $entities ) ) {
-			throw new EntityNotFoundException( $entityId );
-		}
-
-		return reset( $entities );
+		return reset( $entities ) ?: null;
 	}
 
 	/**

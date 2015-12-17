@@ -6,7 +6,6 @@ use Doctrine\Common\Cache\Cache;
 use RuntimeException;
 use Wikibase\DataModel\Entity\EntityDocument;
 use Wikibase\DataModel\Entity\EntityId;
-use Wikibase\EntityStore\EntityNotFoundException;
 
 /**
  * Cache of Entity objects.
@@ -41,17 +40,10 @@ class EntityDocumentCache {
 	 * Returns an Entity from the cache
 	 *
 	 * @param EntityId $entityId
-	 * @return EntityDocument
-	 * @throws EntityNotFoundException
+	 * @return EntityDocument|null
 	 */
 	public function fetch( EntityId $entityId ) {
-		$result = $this->cache->fetch( $this->getCacheIdFromEntityId( $entityId ) );
-
-		if( $result === false ) {
-			throw new EntityNotFoundException( $entityId );
-		}
-
-		return $result;
+		return $this->cache->fetch( $this->getCacheIdFromEntityId( $entityId ) ) ?: null;
 	}
 
 	/**
@@ -69,7 +61,7 @@ class EntityDocumentCache {
 	 *
 	 * @param EntityDocument $entity
 	 */
-	public function save(EntityDocument $entity) {
+	public function save( EntityDocument $entity ) {
 		if( !$this->cache->save(
 			$this->getCacheIdFromEntityId( $entity->getId() ),
 			$entity,

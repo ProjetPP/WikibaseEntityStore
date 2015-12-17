@@ -4,7 +4,6 @@ namespace Wikibase\EntityStore\Cache;
 
 use Wikibase\DataModel\Entity\EntityId;
 use Wikibase\EntityStore\EntityDocumentLookup;
-use Wikibase\EntityStore\EntityNotFoundException;
 
 /**
  * Internal class
@@ -37,13 +36,16 @@ class CachedEntityDocumentLookup implements EntityDocumentLookup {
 	 * @see EntityDocumentLookup::getEntityDocumentForId
 	 */
 	public function getEntityDocumentForId( EntityId $entityId ) {
-		try {
-			return $this->entityCache->fetch( $entityId );
-		} catch( EntityNotFoundException $e ) {
+		$entity = $this->entityCache->fetch( $entityId );
+
+		if( $entity === null ) {
 			$entity = $this->entityLookup->getEntityDocumentForId( $entityId );
-			$this->entityCache->save( $entity );
-			return $entity;
+			if( $entity !== null ) {
+				$this->entityCache->save( $entity );
+			}
 		}
+
+		return $entity;
 	}
 
 	/**
@@ -54,10 +56,12 @@ class CachedEntityDocumentLookup implements EntityDocumentLookup {
 		$entityIdsToRetrieve = [];
 
 		foreach( $entityIds as $entityId ) {
-			try {
-				$entities[] = $this->entityCache->fetch( $entityId );
-			} catch( EntityNotFoundException $e ) {
+			$entity = $this->entityCache->fetch( $entityId );
+
+			if( $entity === null ) {
 				$entityIdsToRetrieve[] = $entityId;
+			} else {
+				$entities[] = $entity;
 			}
 		}
 

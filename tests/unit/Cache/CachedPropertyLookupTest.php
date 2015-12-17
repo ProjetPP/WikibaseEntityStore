@@ -4,8 +4,6 @@ namespace Wikibase\EntityStore\Cache;
 
 use Wikibase\DataModel\Entity\Property;
 use Wikibase\DataModel\Entity\PropertyId;
-use Wikibase\DataModel\Entity\PropertyNotFoundException;
-use Wikibase\EntityStore\EntityNotFoundException;
 
 /**
  * @covers Wikibase\EntityStore\Cache\CachedPropertyLookup
@@ -18,7 +16,7 @@ class CachedPropertyLookupTest extends \PHPUnit_Framework_TestCase {
 	public function testGetPropertyForIdWithCacheHit() {
 		$property = new Property( new PropertyId( 'P1' ), null, 'string' );
 
-		$propertyLookupMock = $this->getMockBuilder( 'Wikibase\DataModel\Entity\PropertyLookup' )
+		$propertyLookupMock = $this->getMockBuilder( 'Wikibase\DataModel\Services\Lookup\PropertyLookup' )
 			->disableOriginalConstructor()
 			->getMock();
 
@@ -40,7 +38,7 @@ class CachedPropertyLookupTest extends \PHPUnit_Framework_TestCase {
 	public function testGetPropertyForIdWithCacheMiss() {
 		$property = new Property( new PropertyId( 'P1' ), null, 'string' );
 
-		$propertyLookupMock = $this->getMockBuilder( 'Wikibase\DataModel\Entity\PropertyLookup' )
+		$propertyLookupMock = $this->getMockBuilder( 'Wikibase\DataModel\Services\Lookup\PropertyLookup' )
 			->disableOriginalConstructor()
 			->getMock();
 		$propertyLookupMock->expects( $this->once() )
@@ -54,7 +52,7 @@ class CachedPropertyLookupTest extends \PHPUnit_Framework_TestCase {
 		$entityDocumentCacheMock->expects( $this->once() )
 			->method( 'fetch' )
 			->with( $this->equalTo( new PropertyId( 'P1' ) ) )
-			->willThrowException( new EntityNotFoundException( new PropertyId( 'P1' ) ) );
+			->willReturn( null );
 
 		$entityLookup = new CachedPropertyLookup( $propertyLookupMock, $entityDocumentCacheMock );
 		$this->assertEquals(
@@ -64,13 +62,13 @@ class CachedPropertyLookupTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function testGetPropertyForIdWithException() {
-		$propertyLookupMock = $this->getMockBuilder( 'Wikibase\DataModel\Entity\PropertyLookup' )
+		$propertyLookupMock = $this->getMockBuilder( 'Wikibase\DataModel\Services\Lookup\PropertyLookup' )
 			->disableOriginalConstructor()
 			->getMock();
 		$propertyLookupMock->expects( $this->once() )
 			->method( 'getPropertyForId' )
 			->with( $this->equalTo( new PropertyId( 'P1' ) ) )
-			->willThrowException( new PropertyNotFoundException( new PropertyId( 'P1' ) ) );
+			->willReturn( null );
 
 		$entityDocumentCacheMock = $this->getMockBuilder( 'Wikibase\EntityStore\Cache\EntityDocumentCache' )
 			->disableOriginalConstructor()
@@ -78,10 +76,10 @@ class CachedPropertyLookupTest extends \PHPUnit_Framework_TestCase {
 		$entityDocumentCacheMock->expects( $this->once() )
 			->method( 'fetch' )
 			->with( $this->equalTo( new PropertyId( 'P1' ) ) )
-			->willThrowException( new EntityNotFoundException( new PropertyId( 'P1' ) ) );
+			->willReturn( null );
 
 		$entityLookup = new CachedPropertyLookup( $propertyLookupMock, $entityDocumentCacheMock );
-		$this->setExpectedException( 'Wikibase\DataModel\Entity\PropertyNotFoundException' );
-		$entityLookup->getPropertyForId( new PropertyId( 'P1' ) );
+
+		$this->assertNull( $entityLookup->getPropertyForId( new PropertyId( 'P1' ) ) );
 	}
 }

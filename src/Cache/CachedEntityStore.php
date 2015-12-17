@@ -37,6 +37,8 @@ class CachedEntityStore extends EntityStore {
 	 * @param int $lifeTime
 	 */
 	public function __construct( EntityStore $entityStore, Cache $cache, $lifeTime = 0 ) {
+		parent::__construct();
+
 		$this->entityStore = $entityStore;
 		$this->entityCache = new EntityDocumentCache( $cache, $lifeTime );
 		$this->entityIdForTermCache = new EntityIdForTermCache( $cache, $lifeTime );

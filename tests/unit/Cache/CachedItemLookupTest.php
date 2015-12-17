@@ -4,8 +4,6 @@ namespace Wikibase\EntityStore\Cache;
 
 use Wikibase\DataModel\Entity\Item;
 use Wikibase\DataModel\Entity\ItemId;
-use Wikibase\DataModel\Entity\ItemNotFoundException;
-use Wikibase\EntityStore\EntityNotFoundException;
 
 /**
  * @covers Wikibase\EntityStore\Cache\CachedItemLookup
@@ -18,7 +16,7 @@ class CachedItemLookupTest extends \PHPUnit_Framework_TestCase {
 	public function testGetItemForIdWithCacheHit() {
 		$item = new Item( new ItemId( 'Q1' ) );
 
-		$itemLookupMock = $this->getMockBuilder( 'Wikibase\DataModel\Entity\ItemLookup' )
+		$itemLookupMock = $this->getMockBuilder( 'Wikibase\DataModel\Services\Lookup\ItemLookup' )
 			->disableOriginalConstructor()
 			->getMock();
 
@@ -40,7 +38,7 @@ class CachedItemLookupTest extends \PHPUnit_Framework_TestCase {
 	public function testGetItemForIdWithCacheMiss() {
 		$item = new Item( new ItemId( 'Q1' ) );
 
-		$itemLookupMock = $this->getMockBuilder( 'Wikibase\DataModel\Entity\ItemLookup' )
+		$itemLookupMock = $this->getMockBuilder( 'Wikibase\DataModel\Services\Lookup\ItemLookup' )
 			->disableOriginalConstructor()
 			->getMock();
 		$itemLookupMock->expects( $this->once() )
@@ -54,7 +52,7 @@ class CachedItemLookupTest extends \PHPUnit_Framework_TestCase {
 		$entityDocumentCacheMock->expects( $this->once() )
 			->method( 'fetch' )
 			->with( $this->equalTo( new ItemId( 'Q1' ) ) )
-			->willThrowException( new EntityNotFoundException( new ItemId( 'Q1' ) ) );
+			->willReturn( null );
 
 		$entityLookup = new CachedItemLookup( $itemLookupMock, $entityDocumentCacheMock );
 		$this->assertEquals(
@@ -63,14 +61,14 @@ class CachedItemLookupTest extends \PHPUnit_Framework_TestCase {
 		);
 	}
 
-	public function testGetItemForIdWithException() {
-		$itemLookupMock = $this->getMockBuilder( 'Wikibase\DataModel\Entity\ItemLookup' )
+	public function testGetItemForIdWithoutDocument() {
+		$itemLookupMock = $this->getMockBuilder( 'Wikibase\DataModel\Services\Lookup\ItemLookup' )
 			->disableOriginalConstructor()
 			->getMock();
 		$itemLookupMock->expects( $this->once() )
 			->method( 'getItemForId' )
 			->with( $this->equalTo( new ItemId( 'Q1' ) ) )
-			->willThrowException( new ItemNotFoundException( new ItemId( 'Q1' ) ) );
+			->willReturn( null );
 
 		$entityDocumentCacheMock = $this->getMockBuilder( 'Wikibase\EntityStore\Cache\EntityDocumentCache' )
 			->disableOriginalConstructor()
@@ -78,10 +76,10 @@ class CachedItemLookupTest extends \PHPUnit_Framework_TestCase {
 		$entityDocumentCacheMock->expects( $this->once() )
 			->method( 'fetch' )
 			->with( $this->equalTo( new ItemId( 'Q1' ) ) )
-			->willThrowException( new EntityNotFoundException( new ItemId( 'Q1' ) ) );
+			->willReturn( null );
 
 		$entityLookup = new CachedItemLookup( $itemLookupMock, $entityDocumentCacheMock );
-		$this->setExpectedException( 'Wikibase\DataModel\Entity\ItemNotFoundException' );
-		$entityLookup->getItemForId( new ItemId( 'Q1' ) );
+
+		$this->assertNull( $entityLookup->getItemForId( new ItemId( 'Q1' ) ) );
 	}
 }

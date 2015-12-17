@@ -12,6 +12,15 @@ use Wikibase\EntityStore\EntityStoreTest;
  */
 class ApiEntityStoreTest extends EntityStoreTest {
 
+	public function testGetEntityLookup() {
+		$mediawikiApiMock = $this->getMockBuilder( 'Mediawiki\Api\MediawikiApi' )
+			->disableOriginalConstructor()
+			->getMock();
+		$store = new ApiEntityStore( $mediawikiApiMock );
+
+		$this->assertInstanceOf( 'Wikibase\DataModel\Services\Lookup\EntityLookup', $store->getEntityLookup() );
+	}
+
 	public function testGetEntityDocumentLookup() {
 		$mediawikiApiMock = $this->getMockBuilder( 'Mediawiki\Api\MediawikiApi' )
 			->disableOriginalConstructor()
@@ -27,7 +36,7 @@ class ApiEntityStoreTest extends EntityStoreTest {
 			->getMock();
 		$store = new ApiEntityStore( $mediawikiApiMock );
 
-		$this->assertInstanceOf( 'Wikibase\DataModel\Entity\ItemLookup', $store->getItemLookup() );
+		$this->assertInstanceOf( 'Wikibase\DataModel\Services\Lookup\ItemLookup', $store->getItemLookup() );
 	}
 
 	public function testGetPropertyLookup() {
@@ -36,7 +45,7 @@ class ApiEntityStoreTest extends EntityStoreTest {
 			->getMock();
 		$store = new ApiEntityStore( $mediawikiApiMock );
 
-		$this->assertInstanceOf( 'Wikibase\DataModel\Entity\PropertyLookup', $store->getPropertyLookup() );
+		$this->assertInstanceOf( 'Wikibase\DataModel\Services\Lookup\PropertyLookup', $store->getPropertyLookup() );
 	}
 
 	public function testGetItemForTermLookup() {

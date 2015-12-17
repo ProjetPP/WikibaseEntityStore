@@ -31,10 +31,10 @@ class CachedEntityStoreTest extends EntityStoreTest {
 			->getMock();
 		$storeMock->expects( $this->once() )
 			->method( 'getItemLookup' )
-			->willReturn( $this->getMock( 'Wikibase\DataModel\Entity\ItemLookup' ) );
+			->willReturn( $this->getMock( 'Wikibase\DataModel\Services\Lookup\ItemLookup' ) );
 		$store = new CachedEntityStore( $storeMock, new ArrayCache() );
 
-		$this->assertInstanceOf( 'Wikibase\DataModel\Entity\ItemLookup', $store->getItemLookup() );
+		$this->assertInstanceOf( 'Wikibase\DataModel\Services\Lookup\ItemLookup', $store->getItemLookup() );
 	}
 
 	public function testGetPropertyLookup() {
@@ -43,10 +43,10 @@ class CachedEntityStoreTest extends EntityStoreTest {
 			->getMock();
 		$storeMock->expects( $this->once() )
 			->method( 'getPropertyLookup' )
-			->willReturn( $this->getMock( 'Wikibase\DataModel\Entity\PropertyLookup' ) );
+			->willReturn( $this->getMock( 'Wikibase\DataModel\Services\Lookup\PropertyLookup' ) );
 		$store = new CachedEntityStore( $storeMock, new ArrayCache() );
 
-		$this->assertInstanceOf( 'Wikibase\DataModel\Entity\PropertyLookup', $store->getPropertyLookup() );
+		$this->assertInstanceOf( 'Wikibase\DataModel\Services\Lookup\PropertyLookup', $store->getPropertyLookup() );
 	}
 
 	public function testGetEntityDocumentSaver() {

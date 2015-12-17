@@ -3,8 +3,7 @@
 namespace Wikibase\EntityStore\Cache;
 
 use Wikibase\DataModel\Entity\PropertyId;
-use Wikibase\DataModel\Entity\PropertyLookup;
-use Wikibase\EntityStore\EntityNotFoundException;
+use Wikibase\DataModel\Services\Lookup\PropertyLookup;
 
 /**
  * Internal class
@@ -17,7 +16,7 @@ class CachedPropertyLookup implements PropertyLookup {
 	/**
 	 * @var PropertyLookup
 	 */
-	private $itemLookup;
+	private $propertyLookup;
 
 	/**
 	 * @var EntityDocumentCache
@@ -25,11 +24,11 @@ class CachedPropertyLookup implements PropertyLookup {
 	private $entityCache;
 
 	/**
-	 * @param PropertyLookup $itemLookup
+	 * @param PropertyLookup $propertyLookup
 	 * @param EntityDocumentCache $entityCache
 	 */
-	public function __construct( PropertyLookup $itemLookup, EntityDocumentCache $entityCache ) {
-		$this->itemLookup = $itemLookup;
+	public function __construct( PropertyLookup $propertyLookup, EntityDocumentCache $entityCache ) {
+		$this->propertyLookup = $propertyLookup;
 		$this->entityCache = $entityCache;
 	}
 
@@ -37,12 +36,15 @@ class CachedPropertyLookup implements PropertyLookup {
 	 * @see PropertyLookup::getPropertyForId
 	 */
 	public function getPropertyForId( PropertyId $propertyId ) {
-		try {
-			return $this->entityCache->fetch( $propertyId );
-		} catch( EntityNotFoundException $e ) {
-			$property = $this->itemLookup->getPropertyForId( $propertyId );
-			$this->entityCache->save( $property );
-			return $property;
+		$property = $this->entityCache->fetch( $propertyId );
+
+		if( $property === null ) {
+			$property = $this->propertyLookup->getPropertyForId( $propertyId );
+			if( $property !== null ) {
+				$this->entityCache->save( $property );
+			}
 		}
+
+		return $property;
 	}
 }

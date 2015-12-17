@@ -12,6 +12,15 @@ use Wikibase\EntityStore\EntityStoreTest;
  */
 class MongoDBEntityStoreTest extends EntityStoreTest {
 
+	public function testGetEntityLookup() {
+		$collectionMock = $this->getMockBuilder( 'Doctrine\MongoDB\Database' )
+			->disableOriginalConstructor()
+			->getMock();
+		$store = new MongoDBEntityStore( $collectionMock );
+
+		$this->assertInstanceOf( 'Wikibase\DataModel\Services\Lookup\EntityLookup', $store->getEntityLookup() );
+	}
+
 	public function testGetEntityDocumentLookup() {
 		$collectionMock = $this->getMockBuilder( 'Doctrine\MongoDB\Database' )
 			->disableOriginalConstructor()
@@ -27,7 +36,7 @@ class MongoDBEntityStoreTest extends EntityStoreTest {
 			->getMock();
 		$store = new MongoDBEntityStore( $collectionMock );
 
-		$this->assertInstanceOf( 'Wikibase\DataModel\Entity\ItemLookup', $store->getItemLookup() );
+		$this->assertInstanceOf( 'Wikibase\DataModel\Services\Lookup\ItemLookup', $store->getItemLookup() );
 	}
 
 	public function testGetPropertyLookup() {
@@ -36,7 +45,7 @@ class MongoDBEntityStoreTest extends EntityStoreTest {
 			->getMock();
 		$store = new MongoDBEntityStore( $collectionMock );
 
-		$this->assertInstanceOf( 'Wikibase\DataModel\Entity\PropertyLookup', $store->getPropertyLookup() );
+		$this->assertInstanceOf( 'Wikibase\DataModel\Services\Lookup\PropertyLookup', $store->getPropertyLookup() );
 	}
 
 	public function testGetEntityDocumentSaver() {
