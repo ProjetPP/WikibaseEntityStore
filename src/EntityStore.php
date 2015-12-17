@@ -2,8 +2,9 @@
 
 namespace Wikibase\EntityStore;
 
-use Wikibase\DataModel\Entity\ItemLookup;
-use Wikibase\DataModel\Entity\PropertyLookup;
+use Wikibase\DataModel\Services\Lookup\EntityLookup;
+use Wikibase\DataModel\Services\Lookup\ItemLookup;
+use Wikibase\DataModel\Services\Lookup\PropertyLookup;
 
 /**
  * @licence GPLv2+
@@ -38,6 +39,13 @@ abstract class EntityStore {
 	private function setupOptions() {
 		$this->defaultOption( self::OPTION_LANGUAGES, null );
 		$this->defaultOption( self::OPTION_LANGUAGE_FALLBACK, false );
+	}
+
+	/**
+	 * @return EntityLookup
+	 */
+	public function getEntityLookup() {
+		throw new FeatureNotSupportedException( 'EntityLookup not supported.' );
 	}
 
 	/**

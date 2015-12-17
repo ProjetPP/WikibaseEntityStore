@@ -125,7 +125,7 @@ class ApiEntityLookupTest extends \PHPUnit_Framework_TestCase {
 		);
 	}
 
-	public function testGetEntityDocumentWithException() {
+	public function testGetEntityDocumentWithoutDocument() {
 		$mediawikiApiMock = $this->getMockBuilder( 'Mediawiki\Api\MediawikiApi' )
 			->disableOriginalConstructor()
 			->getMock();
@@ -151,7 +151,6 @@ class ApiEntityLookupTest extends \PHPUnit_Framework_TestCase {
 				EntityStore::OPTION_LANGUAGE_FALLBACK => false
 			] ) );
 
-		$this->setExpectedException( 'Wikibase\EntityStore\EntityNotFoundException');
-		$lookup->getEntityDocumentForId( new ItemId( 'Q42' ) );
+		$this->assertNull( $lookup->getEntityDocumentForId( new ItemId( 'Q42' ) ) );
 	}
 }

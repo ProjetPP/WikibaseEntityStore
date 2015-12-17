@@ -3,8 +3,7 @@
 namespace Wikibase\EntityStore\Cache;
 
 use Wikibase\DataModel\Entity\ItemId;
-use Wikibase\DataModel\Entity\ItemLookup;
-use Wikibase\EntityStore\EntityNotFoundException;
+use Wikibase\DataModel\Services\Lookup\ItemLookup;
 
 /**
  * Internal class
@@ -37,12 +36,15 @@ class CachedItemLookup implements ItemLookup {
 	 * @see ItemLookup::getItemForId
 	 */
 	public function getItemForId( ItemId $itemId ) {
-		try {
-			return $this->entityCache->fetch( $itemId );
-		} catch( EntityNotFoundException $e ) {
+		$item = $this->entityCache->fetch( $itemId );
+
+		if( $item === null ) {
 			$item = $this->itemLookup->getItemForId( $itemId );
-			$this->entityCache->save( $item );
-			return $item;
+			if( $item !== null ) {
+				$this->entityCache->save( $item );
+			}
 		}
+
+		return $item;
 	}
 }

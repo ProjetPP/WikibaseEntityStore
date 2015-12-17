@@ -8,7 +8,6 @@ use Wikibase\DataModel\Entity\EntityDocument;
 use Wikibase\DataModel\Entity\EntityId;
 use Wikibase\EntityStore\EntityDocumentLookup;
 use Wikibase\EntityStore\EntityDocumentSaver;
-use Wikibase\EntityStore\EntityNotFoundException;
 
 /**
  * Internal class
@@ -45,11 +44,7 @@ class MongoDBEntityDatabase implements EntityDocumentLookup, EntityDocumentSaver
 			->selectCollection( $entityId->getEntityType() )
 			->findOne( $this->buildGetEntityForIdQuery( $entityId ) );
 
-		if( $document === null ) {
-			throw new EntityNotFoundException( $entityId );
-		}
-
-		return $this->documentBuilder->buildEntityForDocument( $document );
+		return ( $document === null ) ? null : $this->documentBuilder->buildEntityForDocument( $document );
 	}
 
 	/**

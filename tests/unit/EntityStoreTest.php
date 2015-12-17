@@ -10,6 +10,13 @@ namespace Wikibase\EntityStore;
  */
 class EntityStoreTest extends \PHPUnit_Framework_TestCase {
 
+	public function testGetEntityLookup() {
+		$storeMock = $this->getMockForAbstractClass( 'Wikibase\EntityStore\EntityStore' );
+
+		$this->setExpectedException( 'Wikibase\EntityStore\FeatureNotSupportedException');
+		$storeMock->getEntityLookup();
+	}
+
 	public function testGetEntityDocumentLookup() {
 		$storeMock = $this->getMockForAbstractClass( 'Wikibase\EntityStore\EntityStore' );
 

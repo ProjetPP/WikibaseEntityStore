@@ -5,7 +5,6 @@ namespace Wikibase\EntityStore\InMemory;
 use Wikibase\DataModel\Entity\EntityDocument;
 use Wikibase\DataModel\Entity\EntityId;
 use Wikibase\EntityStore\EntityDocumentLookup;
-use Wikibase\EntityStore\EntityNotFoundException;
 
 /**
  * Internal class
@@ -39,12 +38,7 @@ class InMemoryEntityLookup implements EntityDocumentLookup {
 	 */
 	public function getEntityDocumentForId( EntityId $entityId ) {
 		$key = $entityId->getSerialization();
-
-		if( !array_key_exists( $key, $this->entities ) ) {
-			throw new EntityNotFoundException( $entityId );
-		}
-
-		return $this->entities[$key];
+		return array_key_exists( $key, $this->entities ) ? $this->entities[$key] : null;
 	}
 
 	/**
@@ -54,9 +48,9 @@ class InMemoryEntityLookup implements EntityDocumentLookup {
 		$entities = [];
 
 		foreach( $entityIds as $entityId ) {
-			try {
-				$entities[] = $this->getEntityDocumentForId( $entityId );
-			} catch( EntityNotFoundException $e ) {
+			$entity = $this->getEntityDocumentForId( $entityId );
+			if( $entity !== null ) {
+				$entities[] = $entity;
 			}
 		}
 

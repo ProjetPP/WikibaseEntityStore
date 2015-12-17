@@ -8,7 +8,7 @@ use Wikibase\EntityStore\EntityStore;
 use Wikibase\EntityStore\EntityStoreOptions;
 use Wikibase\EntityStore\FeatureNotSupportedException;
 use Wikibase\EntityStore\Internal\DispatchingEntityIdForTermLookup;
-use Wikibase\EntityStore\Internal\EntityLookup;
+use Wikibase\EntityStore\Internal\DispatchingEntityLookup;
 use Wikibase\EntityStore\Internal\EntitySerializationFactory;
 use WikidataQueryApi\WikidataQueryApi;
 use WikidataQueryApi\WikidataQueryFactory;
@@ -20,7 +20,7 @@ use WikidataQueryApi\WikidataQueryFactory;
 class ApiEntityStore extends EntityStore {
 
 	/**
-	 * @var EntityLookup
+	 * @var DispatchingEntityLookup
 	 */
 	private $entityLookup;
 
@@ -53,13 +53,20 @@ class ApiEntityStore extends EntityStore {
 
 	private function newEntityLookup( MediawikiApi $api ) {
 		$serializationFactory = new EntitySerializationFactory();
-		return new EntityLookup(
+		return new DispatchingEntityLookup(
 			new ApiEntityLookup( $api, $serializationFactory->newEntityDeserializer(), $this->getOptions() )
 		);
 	}
 
 	private function newEntityForTermLookup( MediawikiApi $api ) {
 		return new DispatchingEntityIdForTermLookup( new ApiEntityIdForTermLookup( $api, new BasicEntityIdParser() ) );
+	}
+
+	/**
+	 * @see EntityStore::getEntityLookup
+	 */
+	public function getEntityLookup() {
+		return $this->entityLookup;
 	}
 
 	/**

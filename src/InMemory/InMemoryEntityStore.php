@@ -4,7 +4,7 @@ namespace Wikibase\EntityStore\InMemory;
 
 use Wikibase\DataModel\Entity\EntityDocument;
 use Wikibase\EntityStore\EntityStore;
-use Wikibase\EntityStore\Internal\EntityLookup;
+use Wikibase\EntityStore\Internal\DispatchingEntityLookup;
 
 /**
  * @licence GPLv2+
@@ -13,7 +13,7 @@ use Wikibase\EntityStore\Internal\EntityLookup;
 class InMemoryEntityStore extends EntityStore {
 
 	/**
-	 * @var EntityLookup
+	 * @var DispatchingEntityLookup
 	 */
 	private $entityLookup;
 
@@ -21,7 +21,16 @@ class InMemoryEntityStore extends EntityStore {
 	 * @param EntityDocument[] $entities
 	 */
 	public function __construct( array $entities ) {
-		$this->entityLookup = new EntityLookup( new InMemoryEntityLookup( $entities ) );
+		parent::__construct();
+
+		$this->entityLookup = new DispatchingEntityLookup( new InMemoryEntityLookup( $entities ) );
+	}
+
+	/**
+	 * @see EntityStore::getEntityLookup
+	 */
+	public function getEntityLookup() {
+		return $this->entityLookup;
 	}
 
 	/**

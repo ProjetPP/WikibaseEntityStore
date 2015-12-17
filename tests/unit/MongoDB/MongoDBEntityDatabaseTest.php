@@ -48,7 +48,7 @@ class MongoDBEntityDatabaseTest extends \PHPUnit_Framework_TestCase {
 		);
 	}
 
-	public function testGetEntityDocumentForIdWithException() {
+	public function testGetEntityDocumentForIdWithoutDocument() {
 		$collectionMock = $this->getMockBuilder( 'Doctrine\MongoDB\Collection' )
 			->disableOriginalConstructor()
 			->getMock();
@@ -71,8 +71,7 @@ class MongoDBEntityDatabaseTest extends \PHPUnit_Framework_TestCase {
 
 		$entityStore = new MongoDBEntityDatabase( $databaseMock, $documentBuilderMock );
 
-		$this->setExpectedException( 'Wikibase\EntityStore\EntityNotFoundException' );
-		$entityStore->getEntityDocumentForId( new ItemId( 'Q1' ) );
+		$this->assertNull( $entityStore->getEntityDocumentForId( new ItemId( 'Q1' ) ) );
 	}
 
 	public function testGetEntityDocumentsForIds() {

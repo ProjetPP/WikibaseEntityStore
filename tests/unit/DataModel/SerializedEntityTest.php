@@ -32,6 +32,16 @@ class SerializedEntityTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals( 'foo', $entity->getType() );
 	}
 
+	public function testIsEmptyYes() {
+		$entity = new SerializedEntity( new ItemId( 'Q1' ), [ 'type' => 'item' ] );
+		$this->assertTrue( $entity->isEmpty() );
+	}
+
+	public function testIsEmptyNo() {
+		$entity = new SerializedEntity( null, [ 'type' => 'item', 'foo' => 'bar' ] );
+		$this->assertFalse( $entity->isEmpty() );
+	}
+
 	public function testGetSerialization() {
 		$entity = new SerializedEntity( null, [ 'type' => 'foo' ] );
 		$this->assertEquals( [ 'type' => 'foo' ], $entity->getSerialization() );

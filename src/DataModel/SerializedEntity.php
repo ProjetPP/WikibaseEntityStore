@@ -59,6 +59,19 @@ class SerializedEntity implements EntityDocument {
 	}
 
 	/**
+	 * @see EntityDocument::isEmpty
+	 */
+	public function isEmpty() {
+		foreach( array_keys( $this->serialization ) as $key ) {
+			if( !in_array( $key, [ 'type', 'id' ] ) ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
 	 * @return array
 	 */
 	public function getSerialization() {

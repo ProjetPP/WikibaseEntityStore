@@ -9,7 +9,7 @@ use Wikibase\EntityStore\EntityStore;
 use Wikibase\EntityStore\EntityStoreOptions;
 use Wikibase\EntityStore\Internal\DispatchingEntityIdForQueryLookup;
 use Wikibase\EntityStore\Internal\DispatchingEntityIdForTermLookup;
-use Wikibase\EntityStore\Internal\EntityLookup;
+use Wikibase\EntityStore\Internal\DispatchingEntityLookup;
 use Wikibase\EntityStore\Internal\EntitySerializationFactory;
 
 /**
@@ -31,7 +31,7 @@ class MongoDBEntityStore extends EntityStore {
 	private $database;
 
 	/**
-	 * @var EntityLookup
+	 * @var DispatchingEntityLookup
 	 */
 	private $entityLookup;
 
@@ -61,7 +61,7 @@ class MongoDBEntityStore extends EntityStore {
 		$this->defaultOption( self::OPTION_QUERY_TIME_LIMIT, null );
 
 		$entityDatabase = $this->newEntityDatabase( $database );
-		$this->entityLookup = new EntityLookup( $entityDatabase );
+		$this->entityLookup = new DispatchingEntityLookup( $entityDatabase );
 		$this->entityForTermLookup = new DispatchingEntityIdForTermLookup( $this->newEntityIdForTermLookup( $database ) );
 		$this->entityForQueryLookup = new DispatchingEntityIdForQueryLookup( $this->newEntityIdForQueryLookup( $database ) );
 		$this->entitySaver = $entityDatabase;
@@ -91,6 +91,13 @@ class MongoDBEntityStore extends EntityStore {
 			new BasicEntityIdParser(),
 			$this->getOptions()
 		);
+	}
+
+	/**
+	 * @see EntityStore::getEntityLookup
+	 */
+	public function getEntityLookup() {
+		return $this->entityLookup;
 	}
 
 	/**

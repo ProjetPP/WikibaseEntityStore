@@ -14,7 +14,7 @@ use Wikibase\DataModel\Entity\ItemId;
  */
 class EntityDocumentCacheTest extends \PHPUnit_Framework_TestCase {
 
-	public function testFetch() {
+	public function testFetchWithHit() {
 		$item = new Item( new ItemId( 'Q42' ) );
 
 		$cache = new EntityDocumentCache( new ArrayCache() );
@@ -23,11 +23,9 @@ class EntityDocumentCacheTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals( $item, $cache->fetch( new ItemId( 'Q42' ) ) );
 	}
 
-	public function testFetchWithException() {
-		$this->setExpectedException( 'Wikibase\EntityStore\EntityNotFoundException' );
-
+	public function testFetchWithMiss() {
 		$cache = new EntityDocumentCache( new ArrayCache() );
-		$cache->fetch( new ItemId( 'Q42' ) );
+		$this->assertNull( $cache->fetch( new ItemId( 'Q42' ) ) );
 	}
 
 	public function testContainsTrue() {

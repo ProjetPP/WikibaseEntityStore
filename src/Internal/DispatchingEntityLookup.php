@@ -4,13 +4,14 @@ namespace Wikibase\EntityStore\Internal;
 
 use Wikibase\DataModel\Entity\EntityId;
 use Wikibase\DataModel\Entity\ItemId;
-use Wikibase\DataModel\Entity\ItemLookup;
-use Wikibase\DataModel\Entity\ItemNotFoundException;
 use Wikibase\DataModel\Entity\PropertyId;
-use Wikibase\DataModel\Entity\PropertyLookup;
-use Wikibase\DataModel\Entity\PropertyNotFoundException;
+use Wikibase\DataModel\Services\Lookup\EntityLookup;
+use Wikibase\DataModel\Services\Lookup\EntityLookupException;
+use Wikibase\DataModel\Services\Lookup\ItemLookup;
+use Wikibase\DataModel\Services\Lookup\ItemLookupException;
+use Wikibase\DataModel\Services\Lookup\PropertyLookup;
+use Wikibase\DataModel\Services\Lookup\PropertyLookupException;
 use Wikibase\EntityStore\EntityDocumentLookup;
-use Wikibase\EntityStore\EntityNotFoundException;
 
 /**
  * Internal class
@@ -18,7 +19,7 @@ use Wikibase\EntityStore\EntityNotFoundException;
  * @licence GPLv2+
  * @author Thomas Pellissier Tanon
  */
-class EntityLookup implements ItemLookup, PropertyLookup, EntityDocumentLookup {
+class DispatchingEntityLookup implements ItemLookup, PropertyLookup, EntityLookup, EntityDocumentLookup {
 
 	/**
 	 * @var EntityDocumentLookup
@@ -30,6 +31,20 @@ class EntityLookup implements ItemLookup, PropertyLookup, EntityDocumentLookup {
 	 */
 	public function __construct( EntityDocumentLookup $entityDocumentLookup ) {
 		$this->entityDocumentLookup = $entityDocumentLookup;
+	}
+
+	/**
+	 * @see EntityLookup:getEntity
+	 */
+	public function getEntity( EntityId $entityId ) {
+		return $this->entityDocumentLookup->getEntityDocumentForId( $entityId );
+	}
+
+	/**
+	 * @see EntityLookup:hasEntity
+	 */
+	public function hasEntity( EntityId $entityId ) {
+		return $this->entityDocumentLookup->getEntityDocumentForId( $entityId ) !== null;
 	}
 
 	/**
@@ -52,8 +67,8 @@ class EntityLookup implements ItemLookup, PropertyLookup, EntityDocumentLookup {
 	public function getItemForId( ItemId $itemId ) {
 		try {
 			return $this->entityDocumentLookup->getEntityDocumentForId( $itemId );
-		} catch(EntityNotFoundException $e) {
-			throw new ItemNotFoundException( $e->getEntityId() );
+		} catch(EntityLookupException $e) {
+			throw new ItemLookupException( $e->getEntityId(), $e->getMessage(), $e );
 		}
 	}
 
@@ -63,8 +78,8 @@ class EntityLookup implements ItemLookup, PropertyLookup, EntityDocumentLookup {
 	public function getPropertyForId( PropertyId $propertyId ) {
 		try {
 			return $this->entityDocumentLookup->getEntityDocumentForId( $propertyId );
-		} catch(EntityNotFoundException $e) {
-			throw new PropertyNotFoundException( $e->getEntityId() );
+		} catch(EntityLookupException $e) {
+			throw new PropertyLookupException( $e->getEntityId(), $e->getMessage(), $e );
 		}
 	}
 }

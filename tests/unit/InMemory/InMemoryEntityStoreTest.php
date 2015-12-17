@@ -12,6 +12,12 @@ use Wikibase\EntityStore\EntityStoreTest;
  */
 class InMemoryEntityStoreTest extends EntityStoreTest {
 
+	public function testGetEntityLookup() {
+		$store = new InMemoryEntityStore( [] );
+
+		$this->assertInstanceOf( 'Wikibase\DataModel\Services\Lookup\EntityLookup', $store->getEntityLookup() );
+	}
+
 	public function testGetEntityDocumentLookup() {
 		$store = new InMemoryEntityStore( [] );
 
@@ -21,12 +27,12 @@ class InMemoryEntityStoreTest extends EntityStoreTest {
 	public function testGetItemLookup() {
 		$store = new InMemoryEntityStore( [] );
 
-		$this->assertInstanceOf( 'Wikibase\DataModel\Entity\ItemLookup', $store->getItemLookup() );
+		$this->assertInstanceOf( 'Wikibase\DataModel\Services\Lookup\ItemLookup', $store->getItemLookup() );
 	}
 
 	public function testGetPropertyLookup() {
 		$store = new InMemoryEntityStore( [] );
 
-		$this->assertInstanceOf( 'Wikibase\DataModel\Entity\PropertyLookup', $store->getPropertyLookup() );
+		$this->assertInstanceOf( 'Wikibase\DataModel\Services\Lookup\PropertyLookup', $store->getPropertyLookup() );
 	}
 }
