@@ -82,4 +82,3 @@ class EntityIdForTermCache {
 			$entityType . '-' . $term->getLanguageCode() . '-' . hash( 'md5', $term->getText() );
 	}
 }
-
