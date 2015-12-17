@@ -60,7 +60,11 @@
     <rule ref="Squiz.Scope" />
     <rule ref="Squiz.Strings.DoubleQuoteUsage" />
     <rule ref="Squiz.WhiteSpace.CastSpacing" />
-    <rule ref="Squiz.WhiteSpace.FunctionSpacing" />
+    <rule ref="Squiz.WhiteSpace.FunctionSpacing">
+        <properties>
+            <property name="spacing" value="1" />
+        </properties>
+    </rule>
     <rule ref="Squiz.WhiteSpace.LanguageConstructSpacing" />
     <rule ref="Squiz.WhiteSpace.LogicalOperatorSpacing" />
     <rule ref="Squiz.WhiteSpace.OperatorSpacing" />
