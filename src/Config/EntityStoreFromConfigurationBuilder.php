@@ -69,7 +69,7 @@ class EntityStoreFromConfigurationBuilder {
 	}
 
 	private function getWikibaseApi( $config ) {
-		return new MediawikiApi( $config['url'] );
+		return MediawikiApi::newFromApiEndpoint( $config['url'] );
 	}
 
 	private function getWikidataQueryApi( $config ) {
