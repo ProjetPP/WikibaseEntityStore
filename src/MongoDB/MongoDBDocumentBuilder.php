@@ -140,7 +140,7 @@ class MongoDBDocumentBuilder {
 		$text = mb_strtolower( $text, 'UTF-8' ); //TODO: said to be very slow
 		$text = trim( $text );
 
-		return new MongoBinData( $text, MongoBinData::GENERIC );
+		return new MongoBinData( md5( $text, true ), MongoBinData::GENERIC );
 	}
 
 	private function buildSearchClaimsForEntity( array $serialization ) {
@@ -198,11 +198,11 @@ class MongoDBDocumentBuilder {
 	 * @return string
 	 */
 	public function buildSearchedStringValue( $value ) {
-		if( strlen( $value ) <= 128 ) {
+		if( strlen( $value ) <= 32 ) {
 			return $value;
 		}
 
-		return hash( 'md5', $value );
+		return md5( $value );
 	}
 
 	private function buildSearchedEntityIdValue( array $value ) {

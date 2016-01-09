@@ -27,9 +27,9 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 		$item = new Item(
 			new ItemId( 'Q1' ),
 			new Fingerprint(
-				new TermList( [ new Term( 'en', 'foo' ) ] ),
+				new TermList( [ new Term( 'en', 'foo ' ) ] ),
 				new TermList( [ new Term( 'en', 'bar' ) ] ),
-				new AliasGroupList( [ new AliasGroup( 'fr', [ 'bÊz', 'bat' ] ) ] )
+				new AliasGroupList( [ new AliasGroup( 'fr', [ 'BAZée', 'bat' ] ) ] )
 			)
 		);
 
@@ -41,14 +41,14 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 				'type' => 'item',
 				'id' => 'Q1',
 				'labels' => [
-					'en' => [ 'language' => 'en', 'value' => 'foo' ]
+					'en' => [ 'language' => 'en', 'value' => 'foo ' ]
 				],
 				'descriptions' => [
 					'en' => [ 'language' => 'en', 'value' => 'bar' ],
 				],
 				'aliases' => [
 					'fr' => [
-						[ 'language' => 'fr', 'value' => 'baz' ],
+						[ 'language' => 'fr', 'value' => 'BAZée' ],
 						[ 'language' => 'fr', 'value' => 'bat' ]
 					]
 				],
@@ -135,14 +135,14 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 				'type' => 'item',
 				'id' => 'Q1',
 				'labels' => [
-					'en' => [ 'language' => 'en', 'value' => 'foo' ],
+					'en' => [ 'language' => 'en', 'value' => 'foo ' ],
 				],
 				'descriptions' => [
 					'en' => [ 'language' => 'en', 'value' => 'bar' ],
 				],
 				'aliases' => [
 					'fr' => [
-						[ 'language' => 'fr', 'value' => 'baz' ],
+						[ 'language' => 'fr', 'value' => 'BAZée' ],
 						[ 'language' => 'fr', 'value' => 'bat' ]
 					]
 				],
@@ -213,10 +213,10 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 					]
 				],
 				'sterms' => [
-					'en' => [ new MongoBinData( 'foo', MongoBinData::GENERIC ) ],
+					'en' => [ new MongoBinData( md5( 'foo', true ), MongoBinData::GENERIC ) ],
 					'fr' => [
-						new MongoBinData( 'baz', MongoBinData::GENERIC ),
-						new MongoBinData( 'bat', MongoBinData::GENERIC )
+						new MongoBinData( md5( 'bazée', true ), MongoBinData::GENERIC ),
+						new MongoBinData( md5( 'bat', true ), MongoBinData::GENERIC )
 					]
 				],
 				'sclaims' => [
@@ -250,7 +250,7 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 				'type' => 'item',
 				'id' => 'Q1',
 				'labels' => [
-					'en' => [ 'language' => 'en', 'value' => 'foo' ],
+					'en' => [ 'language' => 'en', 'value' => 'foo ' ],
 					'de' => [ 'language' => 'en', 'value' => 'bar' ],
 				],
 				'descriptions' => [
@@ -258,7 +258,7 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 				],
 				'aliases' => [
 					'fr' => [
-						[ 'language' => 'fr', 'value' => 'baz' ],
+						[ 'language' => 'fr', 'value' => 'BAzée' ],
 						[ 'language' => 'fr', 'value' => 'bat' ]
 					],
 					'it' => [ [ 'language' => 'it', 'value' => 'goo' ] ]
@@ -280,22 +280,22 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 				'id' => 'Q1',
 				'type' => 'item',
 				'labels' => [
-					'en' => [ 'language' => 'en', 'value' => 'foo' ],
+					'en' => [ 'language' => 'en', 'value' => 'foo ' ],
 				],
 				'descriptions' => [
 					'en' => [ 'language' => 'en', 'value' => 'bar' ],
 				],
 				'aliases' => [
 					'fr' => [
-						[ 'language' => 'fr', 'value' => 'baz' ],
+						[ 'language' => 'fr', 'value' => 'BAzée' ],
 						[ 'language' => 'fr', 'value' => 'bat' ]
 					]
 				],
 				'sterms' => [
-					'en' => [ new MongoBinData( 'foo', MongoBinData::GENERIC ) ],
+					'en' => [ new MongoBinData( md5( 'foo', true ), MongoBinData::GENERIC ) ],
 					'fr' => [
-						new MongoBinData( 'baz', MongoBinData::GENERIC ),
-						new MongoBinData( 'bat', MongoBinData::GENERIC )
+						new MongoBinData( md5( 'bazée', true ), MongoBinData::GENERIC ),
+						new MongoBinData( md5( 'bat', true ), MongoBinData::GENERIC )
 					]
 				],
 				'sclaims' => []
@@ -373,15 +373,15 @@ class MongoDBDocumentBuilderTest extends \PHPUnit_Framework_TestCase {
 		return [
 			[
 				'test',
-				new MongoBinData( 'test', MongoBinData::GENERIC )
+				new MongoBinData( md5( 'test', true ), MongoBinData::GENERIC )
 			],
 			[
 				'TODO',
-				new MongoBinData( 'todo', MongoBinData::GENERIC )
+				new MongoBinData( md5( 'todo', true ), MongoBinData::GENERIC )
 			],
 			[
 				'Être',
-				new MongoBinData( 'être', MongoBinData::GENERIC )
+				new MongoBinData( md5( 'être', true ), MongoBinData::GENERIC )
 			],
 		];
 	}
