@@ -239,6 +239,11 @@ $cachedStore = new \Wikibase\EntityStore\Cache\CachedEntityStore( $store, $cache
 
 ## Release notes
 
+### 0.3.0 (2016-01-11)
+
+* Update to WikibaseDataModel 4.0, WikibaseDataModelServices 3.2 and MediaWikiApiBase 2.0
+* Change encoding of label indexes in MongoDB
+
 ### 0.1.0 (2015-04-21)
 
 Initial release with these features:
