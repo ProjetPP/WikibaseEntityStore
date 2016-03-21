@@ -3,6 +3,7 @@ language: php
 php:
   - 5.5
   - 5.6
+  - 7.0
 
 sudo: false
 
@@ -11,7 +12,7 @@ services:
   - memcached
 
 install:
-  - echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - echo "extension = memcached.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - travis_retry composer install --prefer-source
 
