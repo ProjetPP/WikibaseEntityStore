@@ -77,4 +77,18 @@ class SerializedEntity implements EntityDocument {
 	public function getSerialization() {
 		return $this->serialization;
 	}
+
+	/**
+	 * @see Comparable::equals
+	 */
+	public function equals( $target ) {
+		$target instanceof SerializedEntity && $this->serialization === $target->serialization;
+	}
+
+	/**
+	 * @see EntityDocument::copy
+	 */
+	public function copy() {
+		return $this; // Read only entity
+	}
 }

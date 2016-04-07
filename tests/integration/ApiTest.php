@@ -32,8 +32,8 @@ class ApiTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals( 2, count( $results ) );
 
 		$this->assertEquals(
-			[ new ItemId( 'Q42' ) ],
-			$store->getItemIdForTermLookup()->getItemIdsForTerm( new Term( 'en', 'Douglas Noël Adams' ) )
+			[ new ItemId( 'Q260' ) ],
+			$store->getItemIdForTermLookup()->getItemIdsForTerm( new Term( 'fr', 'Jean-François Champollion' ) )
 		);
 
 		$this->assertEquals(
