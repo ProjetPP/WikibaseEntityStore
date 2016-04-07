@@ -82,7 +82,7 @@ class SerializedEntity implements EntityDocument {
 	 * @see Comparable::equals
 	 */
 	public function equals( $target ) {
-		$target instanceof SerializedEntity && $this->serialization === $target->serialization;
+		$target instanceof SerializedEntity && $this->serialization == $target->serialization;
 	}
 
 	/**
