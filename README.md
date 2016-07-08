@@ -239,6 +239,10 @@ $cachedStore = new \Wikibase\EntityStore\Cache\CachedEntityStore( $store, $cache
 
 ## Release notes
 
+### 0.3.1 (2016-01-11)
+
+* Adds support of WikibaseDataModel 5.0 and 6.0 and Number 0.7
+
 ### 0.3.0 (2016-01-11)
 
 * Update to WikibaseDataModel 4.0, WikibaseDataModelServices 3.2 and MediaWikiApiBase 2.0
